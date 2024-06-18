@@ -227,3 +227,34 @@ public class HelloWorldConfiguration {
 	}
 }
 ```
+## 9단계 - Spring Java 설정 파일에서 더 많은 Java Spring Bean 만들기
+
+#### 레코드 (record)
+![record-ex.png](image/record-ex.png)
+```java
+package com.in28minutes.learn_spring_framework;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+record Person(String name, int age) { };
+
+@Configuration
+public class HelloWorldConfiguration {
+
+	@Bean
+	public String name() {
+		return "EH13";
+	}
+
+	@Bean
+	public int age() {
+		return 30;
+	}
+}
+```
+JDK 16에서 새로 추가된 기능
+- 간단한 선언 : 필드, 생성자, Getter 메서드 자동 생성
+- 불변성 : 필드 값을 변경할 수 없음 (Setter 사용 불가)
+- 필수 메서드 자동 구현 : equals(), hashCode(), toString() 메서드 자동 구현
+- 직렬화 지원 : Serializable 인터페이스로 구현함.
