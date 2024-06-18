@@ -258,3 +258,84 @@ JDK 16에서 새로 추가된 기능
 - 불변성 : 필드 값을 변경할 수 없음 (Setter 사용 불가)
 - 필수 메서드 자동 구현 : equals(), hashCode(), toString() 메서드 자동 구현
 - 직렬화 지원 : Serializable 인터페이스로 구현함.
+
+## 10단계 - Spring Framework Java 구성 파일에서 자동 연결 구현
+#### 스프링 빈 이름 커스텀
+```java
+@Configuration
+public class HelloWorldConfiguration {
+//...(생략)
+	@Bean(name = "yourCustomBeanName")
+	public Address address() {
+		return new Address("강남구", "서울특별시");
+	}
+}
+```
+```java
+public class App02HelloWorldSpring {
+
+	public static void main(String[] args) {
+//...(생략)
+		System.out.println(context.getBean("yourCustomBeanName"));
+		System.out.println(context.getBean(Address.class)); // 클래스를 사용해서 불러오는 것도 가능
+	}
+}
+```
+
+#### 빈 재활용
+1. 메서드 직접 호출 방식
+```java
+record Person(String name, int age, Address address) { };
+record Address(String firstLine, String cit) { };
+//...(생략)
+
+@Configuration
+public class HelloWorldConfiguration {
+//...(생략)
+	@Bean
+	public Person person2MethodCall() {
+		return new Person(name(), age(), address());
+	}
+//...(생략)
+}
+```
+
+2. 파라미터 사용 방식
+```java
+@Configuration
+public class HelloWorldConfiguration {
+	//...(생략)
+	@Bean
+	public Person person3Parameters(String name, int age, Address address2) {
+		return new Person(name, age, address2);
+	}
+//...(생략)
+}
+```
+
+#### 여러 개의 빈 불러오기
+```java
+@Configuration
+public class HelloWorldConfiguration {
+//...(생략)
+	@Bean(name = "address2")
+	public Address address() {
+		return new Address("강남구", "서울특별시");
+	}
+
+	@Bean(name = "address3")
+	public Address address3() {
+		return new Address("동작구", "서울특별시");
+	}
+}
+```
+```java
+public class App02HelloWorldSpring {
+
+	public static void main(String[] args) {
+//...(생략)
+		//System.out.println(context.getBean(Address.class)); Address 클래스를 사용하는 빈이 2개 이상이기 때문에 예외가 발생함.
+		System.out.println(context.getBeansOfType(Address.class));
+	}
+}
+```
