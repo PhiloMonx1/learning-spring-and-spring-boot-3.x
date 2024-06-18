@@ -386,3 +386,46 @@ public class HelloWorldConfiguration {
 - Spring 은 객체를 관리하고 자동 연결도 수행한다.
   - 그러나 `HelloWorldConfiguration`의 현재 코드에서 프로그래머가 직접 객체를 작성하고 있다. (new를 사용해서 인스턴스를 부르고 있음)
   - Spring이 직접 객체를 만들 수는 없을까?
+
+## 12단계 - Spring IOC 컨테이너 살펴보기 - 애플리케이션 컨텍스트 및 Bean Factory
+
+#### Spring 컨테이너란? 
+    - Spring 컨테이너 == Spring 컨텍스트 ?? (강의에서는 같다고 함)
+    - Spring 컨테이너는 Spring Bean과 생명 주기를 관리
+![spring-bean-ex-prac.png](image/spring-bean-ex-prac.png)
+해당 이미지를 기준으로
+- 초록색 Spring 영역이 Spring 컨텍스트이다. 
+- name, age 등의 '텍스트'가 Spring Bean 이다.
+- '텍스트'를 감싸는 '도형'이 Spring 컨테이너이다.
+
+#### Spring 컨텍스트는 Spring 컨테이너의 상위 개념이다.
+- 컨텍스트는 애플리케이션 전체의 설정 정보를 관리하고, 컨테이너를 포함한다.
+- 컨텍스트는 애플리케이션의 실행 환경을 나타내며, 여러 개의 컨테이너를 포함한다.
+
+Spring 컨테이너는 Bean의 생성, 관리. 의존성 주입 등 Bean과 관련된 직접적인 작업을 담당하고, <br>
+컨텍스트는 컨테이너와 그 외의 환경, 보안 설정 등 설정 정보를 통합적으로 관리한다.
+
+#### IoC 컨테이너
+- IoC는 '제어의 역전'으로 해석된다.
+- IoC 컨테이너는 객체의 생성, 관리, 의존성 주입 등을 담당하는 프레임워크의 핵심 구성 요소로 일반적인 개념이며
+- Spring 컨테이너가 대표적인 IoC 컨테이너의 원칙을 구현한 것이라고 할 수 있다. 
+![IoC-Container.png](image/IoC-Container.png)
+
+#### IoC 컨테이너의 종류
+1. Bean Factory : 기본 Spring 컨테이너
+   - 메모리에 제약이 심한 IoT 애플리케이션 등 특수한 경우가 아닌 이상 잘 사용하지 않음.
+2. Application Context : 엔터프라이즈 전용 기능이 있는 고급 Spring 컨테이너
+   - 쉬운 웹 애플리케이션 구축
+   - 쉬운 국제화(internationalization) 기능 (ex : 다국어 지원)
+   - 쉬운 Spring AOP , Spring 측면 지향 프로그래밍과의 통합
+   - 주로 웹 애플리케이션, REST API, MSA(마이크로서비스)에 사용됨
+```java
+public class App02HelloWorldSpring {
+
+	public static void main(String[] args) {
+		var context = new AnnotationConfigApplicationContext(HelloWorldConfiguration.class);
+//...(생략)
+	}
+}
+```
+`AnnotationConfigApplicationContext` 또한 Application Context의 구현체이다.
