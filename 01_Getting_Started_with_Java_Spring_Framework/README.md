@@ -535,3 +535,27 @@ public class HelloWorldConfiguration {
 
 ## 15단계 - Spring Framework를 사용하여 Java 게이밍 앱의 Bean 관리
 [팩맨 게임 스프링 Bean 등록 & 관리](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/d36833e7ce6721a347be34184a03264389e1e35c) 구현
+
+## 16단계 - Java Spring Framework에 대한 더 많은 질문 - 학습할 내용
+#### Spring이 객체를 직접 생성하도록 할 순 없을까?
+
+```java
+@Configuration
+public class GamingConfiguration {
+
+	@Bean
+	public GamingConsole game() {
+		var game = new PacmanGame();
+		return game;
+	}
+
+	@Bean
+	public GameRunner gameRunner(GamingConsole game) {
+		var gameRunner = new GameRunner(game);
+		return gameRunner;
+	}
+}
+```
+객체를 만들기 위해서 직접 코드를 작성하고 있다. (new를 사용해서 객체를 선언하는 코드가 있음)
+
+<b>Srping을 통해 이 과정을 더 쉽게 할 수 있을까? 아니면 더 어려워질까?</b>
