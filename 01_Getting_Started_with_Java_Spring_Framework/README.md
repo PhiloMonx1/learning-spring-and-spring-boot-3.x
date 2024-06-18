@@ -62,3 +62,43 @@ Java Spring Framework 를 사용하면 Spring Boot 를 빠르게 이해할 수 �
    - 반복 4 : Spring 프레임워크로 느슨한 결합 2단계 구현
      - 어노테이션 (Annotations) 사용
      - 스프링이 객체를 직접 생성, 관리, 자동 연결하도록 구현
+
+ ## 3단계 - Maven과 Java로 새 Spring Framework 프로젝트 생성하기
+#### [Spring Initializr](https://start.spring.io/) 사용하기.
+사용 버전은 릴리즈 기준 최신 버전으로 사용하고, 스냅샷은 피해야 함.
+ ![Spring Initializr setting.png](image/Spring%20Initializr%20setting.png)
+- Project : 프로젝트 유형 Maven 또는 Gradle을 선택 가능 (Maven&Gradle은 Java 프로젝트에서 가장 널리 사용되는 빌드 도구이다.)
+- Language : 프로젝트에서 사용할 프로그래밍 언어 Java, Kotlin, Groovy 중 선택
+- Spring Boot : Spring Boot 버전 (릴리즈 된 가장 최신 버전 사용)
+- Project Metadata
+  - Group : 프로젝트의 그룹 ID를 지정합니다. 일반적으로 역순의 도메인 이름을 사용 (기본 패키지 구조, 빌드 의존성 관리에 영향)
+  - Artifact : 아티팩트 ID (프로젝트의 고유한 이름)
+  - Name : 프로젝트 이름
+  - Description : 프로젝트 설명
+  - Package name : 일반적으로 그룹 ID와 동일한 형태 (프로젝트 기본 JAVA 파일 생성 위치를 결정)
+  - Packaging : 프로젝트의 패키징 유형을 선택
+- Java : 프로젝트에서 사용할 Java 버전
+
+#### 인텔리제이 사용 시
+![IJ Spring Initializr setting.png](image/IJ%20Spring%20Initializr%20setting.png)
+인텔리제이에서 제공하는 Spring Initializr 프로젝트 생성 기능을 사용할 수 있음.
+
+#### 프로젝트 연결
+IDE 에서 프로젝트를 연결해야 하나 강의에서는 이클립스를 사용하고, 나는 인텔리제이를 사용하기 때문에 해당 내용은 무시했음 <br>
+GitHub에 연결된 프로젝트를 유지하기 위해서 Spring Initializr로 생성한 프로젝트를 모듈로 추가.
+
+1. 프로젝트 구조 설정 (Ctrl + Alt + Shift + S)
+
+![IntelliJ-module-01.png](image/IntelliJ-module-01.png)
+2. '모듈' 탭에서 '추가' (Alt + Insert)
+
+![IntelliJ-module-02.png](image/IntelliJ-module-02.png)
+3. '모듈 가져오기' 후 모듈 경로 선택 ([learn-spring-framework](..%2F00_module%2Flearn-spring-framework) 경로 선택)
+
+![IntelliJ-module-03.png](image/IntelliJ-module-03.png)
+
+4. 모듈을 가져올 때 사용할 빌드 도구를 선택 해당 프로젝트는 메이븐으로 생성했기 때문에 메이븐으로 가져왔음.
+
+![IntelliJ-module-04.png](image/IntelliJ-module-04.png)
+
+만약 모듈로 불러오는 프로젝트 연결이 어렵다면, 실습 프로젝트를 직접 인텔리제이로 실행할 수도 있음.
