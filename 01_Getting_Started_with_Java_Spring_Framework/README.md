@@ -532,3 +532,6 @@ public class HelloWorldConfiguration {
     }
 }
 ```
+
+## 15단계 - Spring Framework를 사용하여 Java 게이밍 앱의 Bean 관리
+[팩맨 게임 스프링 Bean 등록 & 관리](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/d36833e7ce6721a347be34184a03264389e1e35c) 구현
