@@ -339,3 +339,50 @@ public class App02HelloWorldSpring {
 	}
 }
 ```
+
+## 11단계 - Spring Framework에 대한 질문 - 학습할 내용
+#### 질문 1 
+- Spring 컨테이너란?
+- Spring 컨텍스트란?
+- IOC 컨테이너란?
+- 애플리케이션 컨텍스트란?
+
+#### 질문 2
+- Bean이란?
+- Java Bean vs Spring Bean
+
+#### 질문 3
+- 스프링 프레임워크가 관리하는 Bean을 모두 나열하려면 어떻게 해야 하는가?
+
+#### 질문 4
+- 여러 개의 Bean을 사용할 수 있으면 어떻게 해야 하는가? (=Srping은 사용 가능한 여러 개의 후보 중에 무엇을 사용해야 하는가)
+```java
+public class App02HelloWorldSpring {
+
+	public static void main(String[] args) {
+		System.out.println(context.getBean(Address.class));
+	}
+}
+```
+해당 코드에서 검색하는 것은 Bean의 유형이다. (Bean의 유형은 Bean의 Bean이다.)
+```java
+@Configuration
+public class HelloWorldConfiguration {
+	//...(생략)
+	@Bean(name = "address2")
+	public Address address() {
+		return new Address("강남구", "서울특별시");
+	}
+
+	@Bean(name = "address3")
+	public Address address3() {
+		return new Address("동작구", "서울특별시");
+	}
+}
+```
+현 상태가 여러 개의 Bean을 사용 할 수 있는 상태이다. 이 때 Spring은 어떤 Bean을 사용해야 하는가? (우선 순위는?)
+
+#### 질문 5
+- Spring 은 객체를 관리하고 자동 연결도 수행한다.
+  - 그러나 `HelloWorldConfiguration`의 현재 코드에서 프로그래머가 직접 객체를 작성하고 있다. (new를 사용해서 인스턴스를 부르고 있음)
+  - Spring이 직접 객체를 만들 수는 없을까?
