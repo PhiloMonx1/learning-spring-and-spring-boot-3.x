@@ -1,4 +1,4 @@
-package com.in28minutes.learn_spring_framework;
+package com.in28minutes.learn_spring_framework.helloworld;
 
 import java.util.Arrays;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
