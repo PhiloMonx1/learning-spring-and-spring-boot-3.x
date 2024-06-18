@@ -429,3 +429,66 @@ public class App02HelloWorldSpring {
 }
 ```
 `AnnotationConfigApplicationContext` 또한 Application Context의 구현체이다.
+
+## 13단계 - Java Bean, POJO, Spring Bean 살펴보기
+
+#### POJO
+```java
+class Pojo {
+	private String text;
+	private int number;
+	
+	public String toString() {
+		return text + ":" + number;
+    }
+}
+
+public class SpringBeanVsJavaBean {
+	public static void main(String[] args) {
+		Pojo pojo = new Pojo();
+		System.out.println(pojo);
+    }
+}
+```
+- POJO(Plain Old Java Object)는 "순수한 자바 객체"를 의미한다. 정확히는 "POJO는 특정 프레임워크나 라이브러리에 종속되지 않은 일반적인 자바 객체"를 말한다.
+- 모든 자바 객체는 본질적으로 POJO 이다.
+
+아래 코드는 Pojo를 순수 Java Bean으로 구현한 것이다.
+```java
+class JavaBean implements Serializable { //EJB
+	//1. 퍼블릭한 no-arg 생성자 (반드시 명시할 필요는 없음)
+	public JavaBean() {
+		
+    }
+	private String text;
+	private int number;
+	
+	//2. 게터 & 세터
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	public int getNumber() {
+		return number;
+	}
+
+	public void setNumber(int number) {
+		this.number = number;
+	}
+}
+```
+무언가를 Java Bean이라고 부를 때 세 가지 제한이 따른다.
+1. 인수 생성자가 없어야 한다.
+2. Getter & Setter 가 있어야 한다.
+3. Serializable 인터페이스 구현 필수 (인터페이스 구현 메서드는 존재하지 않음)
+
+위의 세 가지 규칙을 따르는 클래스를 Java Bean이라고 한다.
+
+#### Java Bean vs POJO vs Spring Bean
+- Java Bean : 위에서 언급한 3개의 규칙을 따르는 클래스
+- POJO : 아무 제약이 없는 Java로만 생성한 클래스
+- Spring Bean : Spring IoC 컨테이너가 관리하는 모든 Java 객체
