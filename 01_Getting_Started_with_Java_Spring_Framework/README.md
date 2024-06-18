@@ -161,3 +161,32 @@ ex) 자동차와 바퀴의 관계는 느슨한 결합이다. <br>
 ![ex-interface.png](image/ex-interface.png)
 
 #### 인터페이스 : 특정 클래스 세트에서 수행할 수 있는 공통 작업 
+
+## 7단계 - Spring Framework를 도입하여 Java 앱 느슨하게 결합하기
+```java
+public class AppGamingBasicJava {
+
+	public static void main(String[] args) {
+
+//		var game = new MarioGame();
+//		var game = new SuperContraGame(); 
+        
+		var game = new PacmanGame(); //*1
+		
+		var gameRunner = new GameRunner(game); //*2
+		gameRunner.run();
+	}
+}
+```
+- *1 : 객체의 생성 
+- *2 : 객체 생성 + 종속성 연결
+
+#### 종속성 연결?
+`GameRunner`의 생성자는 `GamingConsole`가 필요하다. 즉 게임이 의존적이라고 할 수 있다. <br>
+`GamingConsole`은 `GameRunner` 클래스의 의존성이다. <br>
+'*2' 라인은 의존성 주입을 하고 있는 것이다. (`GameRunner` 클래스 내부가 아닌 외부에서 주입을 하고 있음.)
+
+#### 스프링 프레임워크
+기본적으로 프로그래머는 객체를 생성하고, 생성된 객체는 JVM에 등록된다.
+![spring-beans-jvm.png](image/spring-beans-jvm.png)
+직접 객체를 생성하는 대신 Spring이 객체를 대신 생성하도록 할 수 있다.
