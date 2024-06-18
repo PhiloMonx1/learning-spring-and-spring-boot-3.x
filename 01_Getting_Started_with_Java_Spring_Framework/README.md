@@ -190,3 +190,40 @@ public class AppGamingBasicJava {
 기본적으로 프로그래머는 객체를 생성하고, 생성된 객체는 JVM에 등록된다.
 ![spring-beans-jvm.png](image/spring-beans-jvm.png)
 직접 객체를 생성하는 대신 Spring이 객체를 대신 생성하도록 할 수 있다.
+
+## 8단계 - 첫 번째 Java Spring Bean 및 Java Spring 설정 시작
+
+#### 실습 목표
+![spring-bean-ex-prac.png](image/spring-bean-ex-prac.png)
+예시 실습으로 해당 이미지의 구조를 먼저 구현할 것이다.
+
+#### Spring Context 생성
+1. `App02HelloWorldSpring` 선언.
+2. `HelloWorldConfiguration` 선언 후 `@Configuration` 어노테이션 기입
+3. `AnnotationConfigApplicationContext` 인스턴스 생성.
+```java
+public class App02HelloWorldSpring {
+
+	public static void main(String[] args) {
+		//1: 스프링 컨텍스트 실행 -
+
+		var context = new AnnotationConfigApplicationContext(HelloWorldConfiguration.class);
+
+		//2: 스프링 프레이워크가 관리하도록 설정 -@Configuration
+	}
+}
+```
+![create-spring-context.png](image/create-spring-context.png)
+3번까지 진행한 상태이다. (스프링 컨텍스트가 생성됨.)
+
+4. `name` Bean 등록
+```java
+@Configuration
+public class HelloWorldConfiguration {
+
+	@Bean
+	public String name() {
+		return "EH13";
+	}
+}
+```
