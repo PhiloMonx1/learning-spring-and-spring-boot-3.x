@@ -559,3 +559,30 @@ public class GamingConfiguration {
 객체를 만들기 위해서 직접 코드를 작성하고 있다. (new를 사용해서 객체를 선언하는 코드가 있음)
 
 <b>Srping을 통해 이 과정을 더 쉽게 할 수 있을까? 아니면 더 어려워질까?</b>
+
+## 17단계 - Java Spring Framework 살펴보기 - 섹션 1 - 검토
+
+#### 현재까지 배워온 것
+![examine.png](image/examine.png)
+1. 강한 결합
+2. 느슨한 결합
+3. 자바 인터페이스
+4. 스프링 컨테이너
+5. 애플리케이션 컨텍스트
+6. 빈 어노테이션
+7. `@Configuration` 어노테이션
+8. `@Bean` 어노테이션
+9. 자동 연결
+10. 자바 Bean vs 스프링 Bean
+
+#### 다음 챕터에서 배울 내용
+![will-learn.png](image/will-learn.png)
+1. 코드를 훨씬 간단하게 만드는 방법
+   - 지금까지는 Bean을 등록하기 위해 많은 코드를 적었다. 이것을 심플하게 바꿀 것.
+2. 다양한 Spring 어노테이션
+3. @Primary, @Qualifier에 대해서도 더 깊이 있게 다룰 것.
+   - + Component 주석 및 그 여러 가지 파생에 대한 내용.
+4. Spring 프레임워크에 대한 더 많은 용어
+5. 의존성 주입
+6. Spring 프레임워크에서 지원되는 다양한 유형의 의존성 주입 방식
+7. 실제 Spring 예시
