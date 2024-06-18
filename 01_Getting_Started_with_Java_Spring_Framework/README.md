@@ -63,7 +63,7 @@ Java Spring Framework 를 사용하면 Spring Boot 를 빠르게 이해할 수 �
      - 어노테이션 (Annotations) 사용
      - 스프링이 객체를 직접 생성, 관리, 자동 연결하도록 구현
 
- ## 3단계 - Maven과 Java로 새 Spring Framework 프로젝트 생성하기
+## 3단계 - Maven과 Java로 새 Spring Framework 프로젝트 생성하기
 #### [Spring Initializr](https://start.spring.io/) 사용하기.
 사용 버전은 릴리즈 기준 최신 버전으로 사용하고, 스냅샷은 피해야 함.
  ![Spring Initializr setting.png](image/Spring%20Initializr%20setting.png)
@@ -102,3 +102,57 @@ GitHub에 연결된 프로젝트를 유지하기 위해서 Spring Initializr로 
 ![IntelliJ-module-04.png](image/IntelliJ-module-04.png)
 
 만약 모듈로 불러오는 프로젝트 연결이 어렵다면, 실습 프로젝트를 직접 인텔리제이로 실행할 수도 있음.
+
+## 4단계 - Java 게이밍 애플리케이션 시작하기
+[마리오 게임](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/17cb81aed8344bbf54f5d6b053f9f088c7e042f7) 구현
+
+## 5단계 - 느슨한 결합과 강한 결합 알아보기
+4단계에서 구현한 [마리오 게임](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/17cb81aed8344bbf54f5d6b053f9f088c7e042f7)은 강한 결합이라고 부른다. 
+
+#### 강한 결합이란?
+```java
+public class AppGamingBasicJava {
+
+	public static void main(String[] args) {
+
+//		var marioGame = new MarioGame();
+        var superContraGame = new SuperContraGame();
+		var gameRunner = new GameRunner(superContraGame);
+		gameRunner.run();
+	}
+}
+```
+`AppGamingBasicJava` 에서 `MarioGame` 게임이 아닌 다른 게임 예를 들어 `SuperContraGame`을 실행하고 싶을 때 이와 같이 작성할 수 있다. <br>
+그러나 실제로는 `SuperContraGame`를 구현한다고 해도 해당 코드에서 컴파일 에러가 발생한다. <br>
+`GameRunner` 클래스에서 `SuperContraGame`를 받는 생성자가 없기 때문이다.
+
+```java
+public class GameRunner {
+
+	MarioGame game;
+
+	public GameRunner(MarioGame game) {
+		this.game = game;
+	}
+
+	public void run() {
+		System.out.println("게임 시작 : " + game);
+		game.up();
+		game.down();
+		game.left();
+		game.right();
+	}
+}
+```
+`GameRunner` 클래스는 `MarioGame` 하고 강하게 결합되어 있다. <br>
+단순히 생성자를 추가하는 것으로 해결되는 문제가 아니다. `GameRunner` 클래스의 필드인 `game` 역시 결합되어 있기 때문이다.
+
+이를 '강한 결합' 이라고 한다.
+
+
+#### - 결합
+무언가를 변경하기 위해 얼마나 많은 작업이 영향을 받는지에 대한 측정.
+
+ex) 마리오 게임 대신 슈퍼콘트라 게임을 실행하기 위해 얼마나 많은 것이 변경되어야 하는지. <br>
+ex) 자동차와 엔진의 관계는 강한 결합이다. <br>
+ex) 자동차와 바퀴의 관계는 느슨한 결합이다. <br>
