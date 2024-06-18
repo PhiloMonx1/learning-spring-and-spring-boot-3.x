@@ -492,3 +492,43 @@ class JavaBean implements Serializable { //EJB
 - Java Bean : 위에서 언급한 3개의 규칙을 따르는 클래스
 - POJO : 아무 제약이 없는 Java로만 생성한 클래스
 - Spring Bean : Spring IoC 컨테이너가 관리하는 모든 Java 객체
+
+## 14단계 - Spring Framework Bean 자동 연결 살펴보기 - 기본 및 한정자
+#### Spring이 관리하는 Bean 모두 나열하기
+
+- getBeanDefinitionNames() : 스프링 컨텍스트가 관리하고 있는 모든 Bean의 이름 반환
+- getBeanDefinitionCount() : 스프링 컨텍스트가 관리하고 있는 Bean의 갯수 반환
+- getBeanDefinition() : 파라미터에 주입한 이름의 Bean의 정의 (속성, 생성방식, 의존성) 반환
+
+#### 동일한 객체의 Bean 중 우선순위 부여하기
+1. `@Primary` 어노테이션 사용해서 기본 값 정해주는 방식.
+```java
+@Configuration
+public class HelloWorldConfiguration {
+//...(생략)
+	@Bean
+	@Primary
+	public Person person() {
+		return new Person("Van", 33, new Address("서초구", "서울특별시"));
+	}
+//...(생략)
+}
+```
+
+2. `@Qualifier` 어노테이션 사용해서 한정자를 만들어 자동 연결하기.
+```java
+@Configuration
+public class HelloWorldConfiguration {
+//...(생략)
+    @Bean
+    public Person person5Qualifier(String name, int age, @Qualifier("address3qualifier") Address address) {
+        return new Person(name, age, address);
+    }
+//...(생략)
+    @Bean(name = "address3")
+    @Qualifier("address3qualifier")
+    public Address address3() {
+        return new Address("동작구", "서울특별시");
+    }
+}
+```

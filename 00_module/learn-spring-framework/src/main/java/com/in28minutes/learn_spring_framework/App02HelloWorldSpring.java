@@ -1,5 +1,6 @@
 package com.in28minutes.learn_spring_framework;
 
+import java.util.Arrays;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class App02HelloWorldSpring {
@@ -21,5 +22,13 @@ public class App02HelloWorldSpring {
 		System.out.println(context.getBean("address2"));
 		//System.out.println(context.getBean(Address.class));
 		System.out.println(context.getBeansOfType(Address.class));
+
+		//스프링이 관리하고 있는 모든 Bean 이름 찾기
+		Arrays.stream(context.getBeanDefinitionNames())
+				.forEach(System.out::println);
+
+		//동일한 유형의 Bean
+		System.out.println(context.getBean(Person.class));
+
 	}
 }
