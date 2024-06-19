@@ -240,3 +240,101 @@ class AnotherComplexAlgorithm {
 - @Primary : 자격 있는 후보가 여러개 인 경우 Bean에게 우선권을 준다. (`ComplexAlgorithm` 에서 사용)
 - @Qualifier : 특정 Bean을 지정해서 자동 연결되도록 연결점을 만들어 준다. (`AnotherComplexAlgorithm` 에서 사용)
   - @Qualifier 는 @Primary 보다 더 높은 우선 순위를 가지고 있다.
+
+## 4단계 - Spring Framework 알아보기 - 의존성 주입의 다양한 유형
+
+1. 생성자 기반 : 생성자의 파라미터를 통한 주입
+2. 수정자(Setter) 기반 : Setter 메서드를 통한 주입
+3. 필드 기반 : 생성자나 Setter가 없을 경우 리플렉션을 이용해서 주입
+
+```java
+@Component
+class YourBusinessClass {
+
+}
+@Component
+class Dependency1 {
+
+}
+@Component
+class Dependency2 {
+
+}
+@Configuration
+@ComponentScan
+public class DepInjectionAppLauncherApplication {
+	public static void main(String[] args) {
+		try (var context = new AnnotationConfigApplicationContext(
+				DepInjectionAppLauncherApplication.class)) {
+
+			Arrays.stream(context.getBeanDefinitionNames())
+					.forEach(System.out::println);
+		}
+	}
+}
+```
+파라미터 없이 `@ComponentScan` 어노테이션을 사용하면, 같은 패키지를 대상으로 스캔한다.
+
+#### @Autowired
+`@Autowired` 어노테이션을 부여하여 `YourBusinessClass` 에 `Dependency1`, `Dependency2` 의존성을 주입할 수 있다.
+
+#### 필드 주입
+```java
+@Component
+class YourBusinessClass {
+	@Autowired
+	Dependency1 dependency1;
+	@Autowired
+	Dependency2 dependency2;
+
+	public String toString() {
+		return "Using " + dependency1 + " and " + dependency2;
+	}
+}
+```
+- `YourBusinessClass` 의 필드인 `Dependency1`, `Dependency2` 에 직접 `@Autowired`를 사용해서 필드 주입 방식으로 의존성 주입을 할 수 있다.
+- `YourBusinessClass` 클래스는 생성자나 Setter 메서드가 존재하지 않는다.
+- Java '리플렉션'을 사용해서 의존성을 주입한다.
+
+#### Setter 주입
+```java
+@Component
+class YourBusinessClass {
+	Dependency1 dependency1;
+	Dependency2 dependency2;
+
+	@Autowired
+	public void setDependency1(Dependency1 dependency1) {
+		this.dependency1 = dependency1;
+	}
+	@Autowired
+	public void setDependency2(Dependency2 dependency2) {
+		this.dependency2 = dependency2;
+	}
+
+	public String toString() {
+		return "Using " + dependency1 + " and " + dependency2;
+	}
+}
+```
+
+#### 생성자 주입
+```java
+@Component
+class YourBusinessClass {
+	Dependency1 dependency1;
+	Dependency2 dependency2;
+
+	@Autowired
+	public YourBusinessClass(Dependency1 dependency1, Dependency2 dependency2) {
+		this.dependency1 = dependency1;
+		this.dependency2 = dependency2;
+	}
+
+	public String toString() {
+		return "Using " + dependency1 + " and " + dependency2;
+	}
+}
+```
+- 생성자 주입의 경우 `@Autowired` 어노테이션이 없어도 된다.
+- Spring 에서 권장하는 방법이다. (하나의 메서드에서 모든 초기화가 발생하기 때문)
