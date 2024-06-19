@@ -1,6 +1,26 @@
 # 📒학습 노트
 
+## 목차
+1. [Java Spring Framework가 필요한 이유 이해하기](#1단계---java-spring-framework가-필요한-이유-이해하기)
+2. [Java Spring Framework 시작하기](#2단계---java-spring-framework-시작하기)
+3. [Maven과 Java로 새 Spring Framework 프로젝트 생성하기](#3단계---maven과-java로-새-spring-framework-프로젝트-생성하기)
+4. [Java 게이밍 애플리케이션 시작하기](#4단계---java-게이밍-애플리케이션-시작하기)
+5. [느슨한 결합과 강한 결합 알아보기](#5단계---느슨한-결합과-강한-결합-알아보기)
+6. [Java 인터페이스를 도입하여 느슨하게 결합된 앱 만들기](#6단계---java-인터페이스를-도입하여-느슨하게-결합된-앱-만들기)
+7. [Spring Framework를 도입하여 Java 앱 느슨하게 결합하기](#7단계---spring-framework를-도입하여-java-앱-느슨하게-결합하기)
+8. [첫 번째 Java Spring Bean 및 Java Spring 설정 시작](#8단계---첫-번째-java-spring-bean-및-java-spring-설정-시작)
+9. [Spring Java 설정 파일에서 더 많은 Java Spring Bean 만들기](#9단계---spring-java-설정-파일에서-더-많은-java-spring-bean-만들기)
+10. [Spring Framework Java 구성 파일에서 자동 연결 구현](#10단계---spring-framework-java-구성-파일에서-자동-연결-구현)
+11. [Spring Framework에 대한 질문 - 학습할 내용](#11단계---spring-framework에-대한-질문---학습할-내용)
+12. [Spring IOC 컨테이너 살펴보기 - 애플리케이션 컨텍스트 및 Bean Factory](#12단계---spring-ioc-컨테이너-살펴보기---애플리케이션-컨텍스트-및-bean-factory)
+13. [Java Bean, POJO, Spring Bean 살펴보기](#13단계---java-bean-pojo-spring-bean-살펴보기)
+14. [Spring Framework Bean 자동 연결 살펴보기 - 기본 및 한정자](#14단계---spring-framework-bean-자동-연결-살펴보기---기본-및-한정자)
+15. [Spring Framework를 사용하여 Java 게이밍 앱의 Bean 관리](#15단계---spring-framework를-사용하여-java-게이밍-앱의-bean-관리)
+16. [Java Spring Framework에 대한 더 많은 질문 - 학습할 내용](#16단계---java-spring-framework에-대한-더-많은-질문---학습할-내용)
+17. [Java Spring Framework 살펴보기 - 섹션 1 - 검토](#17단계---java-spring-framework-살펴보기---섹션-1---검토)
+
 ## 1단계 - Java Spring Framework가 필요한 이유 이해하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/78be9cc0bab5837fabf7e1a53c0d7edc3be9d961)
 
 #### 애플케이션 아키텍처의 발전 
 Wep App -> REST API -> Full Stack -> Microservices
@@ -27,6 +47,7 @@ Wep App -> REST API -> Full Stack -> Microservices
 8. 컴포넌트 스캔 (Component Scan)
 
 ## 2단계 - Java Spring Framework 시작하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/b98565d118274749de344a77dd62fce4501b884f)
 
 #### Java Spring Framework 를 사용하여 구축 가능한 애플리케이션
 1. Web
@@ -64,6 +85,8 @@ Java Spring Framework 를 사용하면 Spring Boot 를 빠르게 이해할 수 �
      - 스프링이 객체를 직접 생성, 관리, 자동 연결하도록 구현
 
 ## 3단계 - Maven과 Java로 새 Spring Framework 프로젝트 생성하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/8a24ca8bfa7b4ad51fcfdb58eb9020d3f086f2f3)
+
 #### [Spring Initializr](https://start.spring.io/) 사용하기.
 사용 버전은 릴리즈 기준 최신 버전으로 사용하고, 스냅샷은 피해야 함.
  ![Spring Initializr setting.png](image/Spring%20Initializr%20setting.png)
@@ -104,9 +127,11 @@ GitHub에 연결된 프로젝트를 유지하기 위해서 Spring Initializr로 
 만약 모듈로 불러오는 프로젝트 연결이 어렵다면, 실습 프로젝트를 직접 인텔리제이로 실행할 수도 있음.
 
 ## 4단계 - Java 게이밍 애플리케이션 시작하기
-[마리오 게임](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/17cb81aed8344bbf54f5d6b053f9f088c7e042f7) 구현
+[커밋내역 : 마리오 게임](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/17cb81aed8344bbf54f5d6b053f9f088c7e042f7) 구현
 
 ## 5단계 - 느슨한 결합과 강한 결합 알아보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/e11dc497d907978806e7a451075004152f50c1f6)
+
 4단계에서 구현한 [마리오 게임](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/17cb81aed8344bbf54f5d6b053f9f088c7e042f7)은 강한 결합이라고 부른다. 
 
 #### 강한 결합이란?
@@ -158,11 +183,15 @@ ex) 자동차와 엔진의 관계는 강한 결합이다. <br>
 ex) 자동차와 바퀴의 관계는 느슨한 결합이다. <br>
 
 ## 6단계 - Java 인터페이스를 도입하여 느슨하게 결합된 앱 만들기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/b62a05614c10631b5dcdd6a6b6e4af04b5b20bfa)
+
 ![ex-interface.png](image/ex-interface.png)
 
 #### 인터페이스 : 특정 클래스 세트에서 수행할 수 있는 공통 작업 
 
 ## 7단계 - Spring Framework를 도입하여 Java 앱 느슨하게 결합하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/61db96ff140de23b5c2f64e8bdc99e98041f1042)
+
 ```java
 public class AppGamingBasicJava {
 
@@ -192,6 +221,7 @@ public class AppGamingBasicJava {
 직접 객체를 생성하는 대신 Spring이 객체를 대신 생성하도록 할 수 있다.
 
 ## 8단계 - 첫 번째 Java Spring Bean 및 Java Spring 설정 시작
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/d1d2acf935a2f71f4bd97b7cfa1db53392674ebf)
 
 #### 실습 목표
 ![spring-bean-ex-prac.png](image/spring-bean-ex-prac.png)
@@ -227,7 +257,9 @@ public class HelloWorldConfiguration {
 	}
 }
 ```
+
 ## 9단계 - Spring Java 설정 파일에서 더 많은 Java Spring Bean 만들기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/76add339c34312fd48013bde834f2a33c4797cb5)
 
 #### 레코드 (record)
 ![record-ex.png](image/record-ex.png)
@@ -260,6 +292,8 @@ JDK 16에서 새로 추가된 기능
 - 직렬화 지원 : Serializable 인터페이스로 구현함.
 
 ## 10단계 - Spring Framework Java 구성 파일에서 자동 연결 구현
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/02accd60b78d837824aa040d73d3eb67a50e7212)
+
 #### 스프링 빈 이름 커스텀
 ```java
 @Configuration
@@ -341,6 +375,8 @@ public class App02HelloWorldSpring {
 ```
 
 ## 11단계 - Spring Framework에 대한 질문 - 학습할 내용
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/934716fb232f499e5ce1d48640bb189562213323)
+
 #### 질문 1 
 - Spring 컨테이너란?
 - Spring 컨텍스트란?
@@ -388,6 +424,7 @@ public class HelloWorldConfiguration {
   - Spring이 직접 객체를 만들 수는 없을까?
 
 ## 12단계 - Spring IOC 컨테이너 살펴보기 - 애플리케이션 컨텍스트 및 Bean Factory
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/7df3003f9b8efd2bad7f4aaf56fd49d7c3a21f64)
 
 #### Spring 컨테이너란? 
     - Spring 컨테이너 == Spring 컨텍스트 ?? (강의에서는 같다고 함)
@@ -431,6 +468,7 @@ public class App02HelloWorldSpring {
 `AnnotationConfigApplicationContext` 또한 Application Context의 구현체이다.
 
 ## 13단계 - Java Bean, POJO, Spring Bean 살펴보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/7b35c39f29931bfeffbf74a5a884da0ef2ef3803)
 
 #### POJO
 ```java
@@ -494,6 +532,8 @@ class JavaBean implements Serializable { //EJB
 - Spring Bean : Spring IoC 컨테이너가 관리하는 모든 Java 객체
 
 ## 14단계 - Spring Framework Bean 자동 연결 살펴보기 - 기본 및 한정자
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/30d6b25594e3307961ac2c33b1f6754a2ebfa5d8)
+
 #### Spring이 관리하는 Bean 모두 나열하기
 
 - getBeanDefinitionNames() : 스프링 컨텍스트가 관리하고 있는 모든 Bean의 이름 반환
@@ -534,9 +574,11 @@ public class HelloWorldConfiguration {
 ```
 
 ## 15단계 - Spring Framework를 사용하여 Java 게이밍 앱의 Bean 관리
-[팩맨 게임 스프링 Bean 등록 & 관리](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/d36833e7ce6721a347be34184a03264389e1e35c) 구현
+[커밋 내역 : 팩맨 게임 스프링 Bean 등록 & 관리](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/d36833e7ce6721a347be34184a03264389e1e35c) 구현
 
 ## 16단계 - Java Spring Framework에 대한 더 많은 질문 - 학습할 내용
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/ea3a2c9017ab55a8016929566c2291be392341df)
+
 #### Spring이 객체를 직접 생성하도록 할 순 없을까?
 
 ```java
@@ -561,6 +603,7 @@ public class GamingConfiguration {
 <b>Srping을 통해 이 과정을 더 쉽게 할 수 있을까? 아니면 더 어려워질까?</b>
 
 ## 17단계 - Java Spring Framework 살펴보기 - 섹션 1 - 검토
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/8e960ad6c32f865138f785194966b9b32deaaff7)
 
 #### 현재까지 배워온 것
 ![examine.png](image/examine.png)
