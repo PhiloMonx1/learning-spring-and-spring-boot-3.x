@@ -109,7 +109,6 @@ public class App03GamingSpringBeansJava {
   - @ComponentScan({"com.in28minutes.learn_spring_framework.game", "com.example.myapp"}) 와 같이 여러 패키지 경로를 설정할 수도 있다.
     - @ComponentScan을 여러개 사용하는 것도 가능하다.
 
-
 ## 2단계 - Spring 컴포넌트에 대한 Primary 및 Qualifier 어노테이션 알아보기
 
 #### @Component 가 여러 클래스에 있을 경우
@@ -208,3 +207,36 @@ public class GameRunner {
 }
 ```
 이와 같이 `@Qualifier` 어노테이션을 사용할 수 있다.
+
+## 3단계 - Primary와 Qualifier - 어떤 Spring 어노테이션을 사용할까요?
+
+#### @Primary 와 @Qualifier 중 어떤 것을 사용해야 할까?
+
+```java
+@Component @Primary
+class QuickSort implements SortingAlgorithm {}
+
+@Component
+class BubbleSort implements SortingAlgorithm {}
+
+@Component @Qualifier("RadixSortQualifier")
+class RadixSort implements SortingAlgorithm {}
+
+@Component
+class ComplexAlgorithm {
+    @Autowired
+    private SortingAlgorithm algorithm;
+}
+
+@Component
+class AnotherComplexAlgorithm {
+    @Autowired @Qualifier("RadixSortQualifier")
+    private SortingAlgorithm iWantToUseRadixSortOnly;
+}
+
+```
+해당 예시를 참고할 수 있다.
+
+- @Primary : 자격 있는 후보가 여러개 인 경우 Bean에게 우선권을 준다. (`ComplexAlgorithm` 에서 사용)
+- @Qualifier : 특정 Bean을 지정해서 자동 연결되도록 연결점을 만들어 준다. (`AnotherComplexAlgorithm` 에서 사용)
+  - @Qualifier 는 @Primary 보다 더 높은 우선 순위를 가지고 있다.
