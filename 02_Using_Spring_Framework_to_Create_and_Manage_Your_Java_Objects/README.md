@@ -1,6 +1,19 @@
 # 📒 [학습 노트] 챕터 2 : Spring Framework를 사용하여 Java 객체를 생성하고 관리하기
 
+## 목차
+1. [Java 객체의 생성 및 관리를 위한 Spring Framework 이해하기](#1단계---java-객체의-생성-및-관리를-위한-spring-framework-이해하기)
+2. [Spring 컴포넌트에 대한 Primary 및 Qualifier 어노테이션 알아보기](#2단계---spring-컴포넌트에-대한-primary-및-qualifier-어노테이션-알아보기)
+3. [Primary와 Qualifier - 어떤 Spring 어노테이션을 사용할까요?](#3단계---primary와-qualifier---어떤-spring-어노테이션을-사용할까요)
+4. [Spring Framework 알아보기 - 의존성 주입의 다양한 유형](#4단계---spring-framework-알아보기---의존성-주입의-다양한-유형)
+5. [Java Spring Framework - 중요한 용어 이해하기](#5단계---java-spring-framework---중요한-용어-이해하기)
+6. [Java Spring Framework - @Component와 @Bean 비교하기](#6단계---java-spring-framework---component와-bean-비교하기)
+7. [Java Spring 애플리케이션에 의존성이 있는 이유가 무엇일까요?](#7단계---java-spring-애플리케이션에-의존성이-있는-이유가-무엇일까요)
+8. [예제: Real World Java Spring Framework Example의 솔루션](#8단계---예제-real-world-java-spring-framework-example의-솔루션)
+9. [Java와 함께 Spring Framework 알아보기 - 섹션 2 - 복습](#9단계---java와-함께-spring-framework-알아보기---섹션-2---복습)
+
+
 ## 1단계 - Java 객체의 생성 및 관리를 위한 Spring Framework 이해하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/46f87c1fcb5e183dc52c449fe3dcc8a7c20bfdaa)
 
 #### 스프링이 객체를 자동 생성하도록 하는 방법
 1. configuration 클래스와 app 클래스 하나의 파일로 통합
@@ -110,6 +123,7 @@ public class App03GamingSpringBeansJava {
     - @ComponentScan을 여러개 사용하는 것도 가능하다.
 
 ## 2단계 - Spring 컴포넌트에 대한 Primary 및 Qualifier 어노테이션 알아보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/c01a688934e468e6dd32905b50ceabd456be2af4)
 
 #### @Component 가 여러 클래스에 있을 경우
 
@@ -209,6 +223,7 @@ public class GameRunner {
 이와 같이 `@Qualifier` 어노테이션을 사용할 수 있다.
 
 ## 3단계 - Primary와 Qualifier - 어떤 Spring 어노테이션을 사용할까요?
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/a18899b993566631bac34d964f1949a0ab95c246)
 
 #### @Primary 와 @Qualifier 중 어떤 것을 사용해야 할까?
 
@@ -242,6 +257,7 @@ class AnotherComplexAlgorithm {
   - @Qualifier 는 @Primary 보다 더 높은 우선 순위를 가지고 있다.
 
 ## 4단계 - Spring Framework 알아보기 - 의존성 주입의 다양한 유형
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/bebd795bce03ed33e8a4ebd254fcbef844e112c1)
 
 1. 생성자 기반 : 생성자의 파라미터를 통한 주입
 2. 수정자(Setter) 기반 : Setter 메서드를 통한 주입
@@ -340,6 +356,7 @@ class YourBusinessClass {
 - Spring 에서 권장하는 방법이다. (하나의 메서드에서 모든 초기화가 발생하기 때문)
 
 ## 5단계 - Java Spring Framework - 중요한 용어 이해하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/71ce445c9c7def4e90cbde99c31dbd0578213491)
 
 #### Spring Bean
 - Spring 프레임워크가 관리하는 모든 객체 (인스턴스)
@@ -470,6 +487,7 @@ public class GameRunner {
   - 이를 파악해서 자동으로 적절한 `GamingConsole` Bean을 찾아서 연결하는 프로세스
 
 ## 6단계 - Java Spring Framework - @Component와 @Bean 비교하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/3fb2f435c871c9c5b58e87ec536504f72c870052)
 
 @Component와 @Bean 중 어떤 것을 사용해야 할까?
 
@@ -519,6 +537,7 @@ public class HelloWorldConfiguration {
   - 환경에 따른 Bean 구성이 필요한 경우
 
 ## 7단계 - Java Spring 애플리케이션에 의존성이 있는 이유가 무엇일까요?
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/3bcb7b4406a6f3c61c2026db3c8fbc806453383a)
 
 #### Hello World App 에는 클래스가 별로 없지만 Real World 애플리케이션은 훨씬 복잡하다.
 ![Application-Layer.png](image/Application-Layer.png)
@@ -615,10 +634,13 @@ public class BusinessCalculationService {
 3. `MongoDbDataService` 클래스에 `@Primary` 를 부여해서 참조하는 Bean이 겹치는 경우를 방지한다.
 
 ## 8단계 - 예제: Real World Java Spring Framework Example의 솔루션
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/98c32b527404e6ddf100253c72e2ee5882470120)
+
 - `DataService` 인터페이스에는 `@Component` 어노테이션을 부여하지 않아도 된다.
   - `BusinessCalculationService` 에서 `DataService`이 필요할 경우 스프링은 타입 매칭을 통해 MongoDbDataService 또는 MySQLDataService 중 하나를 자동으로 주입하기 때문이다.
 
 ## 9단계 - Java와 함께 Spring Framework 알아보기 - 섹션 2 - 복습
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/1c30776e5a1bba8f6006dff69b79d68a427dbd24)
 
 #### 이번 챕터에서 배운 내용
 ![review.png](image/review.png)
