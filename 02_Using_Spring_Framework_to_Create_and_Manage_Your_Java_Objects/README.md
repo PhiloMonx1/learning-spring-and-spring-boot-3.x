@@ -338,3 +338,133 @@ class YourBusinessClass {
 ```
 - 생성자 주입의 경우 `@Autowired` 어노테이션이 없어도 된다.
 - Spring 에서 권장하는 방법이다. (하나의 메서드에서 모든 초기화가 발생하기 때문)
+
+## 5단계 - Java Spring Framework - 중요한 용어 이해하기
+
+#### Spring Bean
+- Spring 프레임워크가 관리하는 모든 객체 (인스턴스)
+
+#### @Component
+- 특정 클래스에 붙여서 사용하는 어노테이션
+- 특정 클래스가 컴포넌트 스캔 대상이라면 해당 클래스의 인스턴스(Spring Bean)가 생성되고, Spring 프레임워크에 의해 관리됨
+  - 컴포넌트는 Bean으로 등록되기 위해 예약된 객체로 볼 수 있다.
+  - '컴포넌트'는 '객체', 'Bean'은 '인스턴스'로 비유할 수 있다.
+
+#### 의존성 (Dependency)
+- 특정 객체를 사용(생성)하기 위해 다른 객체를 함께 사용(생성)해야 하는 관계성
+- ex) `MarioGame` 은 `GameRunner`의 의존성이다.
+
+#### 컴포넌트 스갠 (Component Scan)
+- 스프링은 `@Component` 어노테이션이 부여된 클래스를 Bean으로 등록하기 위해서 검색을 해야 한다.
+- `@Component Scan` 어노테이션을 통해 검색 위치(패키지 경로)를 알려줄 수 있다.
+- `@Component Scan` 어노테이션이 부여되는 클래스는 Bean으로 등록된 클래스를 사용하는 주체이다.
+- 경로를 지정하지 않을 시 현재 클래스가 위치한 경로를 검색한다.
+
+#### 의존성 주입 (Dependency Injection)
+```java
+@Component
+class YourBusinessClass {
+	Dependency1 dependency1;
+	Dependency2 dependency2;
+
+	public YourBusinessClass(Dependency1 dependency1, Dependency2 dependency2) {
+		this.dependency1 = dependency1;
+		this.dependency2 = dependency2;
+	}
+
+	public String toString() {
+		return "Using " + dependency1 + " and " + dependency2;
+	}
+}
+@Component
+class Dependency1 {
+
+}
+@Component
+class Dependency2 {
+
+}
+@Configuration
+@ComponentScan
+public class DepInjectionAppLauncherApplication {
+	public static void main(String[] args) {
+		try (var context = new AnnotationConfigApplicationContext(
+				DepInjectionAppLauncherApplication.class)) {
+
+			Arrays.stream(context.getBeanDefinitionNames())
+					.forEach(System.out::println);
+
+			System.out.println(context.getBean(YourBusinessClass.class));
+		}
+	}
+}
+```
+해당 코드를 실행하면 어떤 일이 일어날까?
+1. 가장 먼저 Component Scan을 통해 모든 컴포넌트 즉 코드를 구동하기 위한 모든 요소를 찾아낸다.
+2. 특정 컴포넌트의 의존성을 식별하고 연결을 진행한다. (코드의 `YourBusinessClass` 해당)
+
+이 전체 프로세스를 '의존성 주입'이라고 부른다.
+
+#### IOC-제어의 역전 (Inversion of Control)
+```java
+public class App01GamingBasicJava {
+	public static void main(String[] args) {
+//		var game = new MarioGame();
+//		var game = new SuperContraGame();
+		var game = new PacmanGame();
+		var gameRunner = new GameRunner(game);
+		gameRunner.run();
+	}
+}
+```
+`App01GamingBasicJava` 클래스에서는 명시적으로 객체 생성 및 의존성을 주입하는 코드를 작성하고 있다.
+
+```java
+@Configuration
+@ComponentScan("com.in28minutes.learn_spring_framework.game")
+public class GamingAppLauncherApplication {
+	public static void main(String[] args) {
+		try (var context = new AnnotationConfigApplicationContext(GamingAppLauncherApplication.class)) {
+			context.getBean(GamingConsole.class).up();
+			context.getBean(GameRunner.class).run();
+		}
+	}
+}
+```
+`GamingAppLauncherApplication` 클래스에서는 객체 생성 및 의존성 주입을 Spring 프레임워크가 처리하고 있다. <br>
+프로그래머가 하는 일은 컴포넌트 스캔을 정의하고, `@Component` 어노테이션을 클래스에 부여한 것 뿐이다.
+
+<b>이를 '제어의 역전' 이라고 부른다.</b>
+
+객체 관리의 제어권이 프로그래머에서 Spring 프레임워크로 넘어간 것이다.
+
+#### IOC 컨테이너
+- Bean의 생명 주기와 의존성을 관리하는 Spring 프레임워크의 컴포넌트.
+  - BeanFactory : 비교적 간단한 기능 (잘 쓰이지 않음)
+  - ApplicationContext : 많은 기능을 지원
+
+#### 자동 연결 (Autowiring)
+- Spring Bean에 대한 의존성의 자동 연결 프로세스
+- Spring이 특정한 Bean을 만났을 때 필요한 의존성을 식별
+```java
+@Component
+public class GameRunner {
+
+	private GamingConsole game;
+
+	public GameRunner(@Qualifier("SuperContraGameQualifier") GamingConsole game) {
+		this.game = game;
+	}
+
+	public void run() {
+		System.out.println("게임 시작 : " + game);
+		game.up();
+		game.down();
+		game.left();
+		game.right();
+	}
+}
+
+```
+- Spring이 `GameRunner`을 Bean으로 만났을 때, 생성자에 필요한 `GamingConsole` 객체를 의존성으로 식별함.
+  - 이를 파악해서 자동으로 적절한 `GamingConsole` Bean을 찾아서 연결하는 프로세스
