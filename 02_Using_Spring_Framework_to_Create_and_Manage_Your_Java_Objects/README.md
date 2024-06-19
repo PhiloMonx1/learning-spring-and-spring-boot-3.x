@@ -468,3 +468,49 @@ public class GameRunner {
 ```
 - Spring이 `GameRunner`을 Bean으로 만났을 때, 생성자에 필요한 `GamingConsole` 객체를 의존성으로 식별함.
   - 이를 파악해서 자동으로 적절한 `GamingConsole` Bean을 찾아서 연결하는 프로세스
+
+## 6단계 - Java Spring Framework - @Component와 @Bean 비교하기
+
+@Component와 @Bean 중 어떤 것을 사용해야 할까?
+
+#### @Component
+- 모든 자바 클래스에 사용 가능
+- 쉬운 사용성 : 클래스를 정의한 후 어노테이션을 붙이는 것으로 사용 가능
+- Autowiring 방법 : 생성자 주입, Setter 주입, 필드 주입
+- Bean 생성 주체 : Spring 프레임워크 (컴포넌트 스캔을 통해서)
+
+#### @Bean
+- 특정 메서드에 사용 가능 (일반적으로 Spring Configuration 클래스 내부 메소드에서 사용)
+- 비교적 복잡함
+- Autowiring 방법 : 메서드 호출 방식, 파라미터 방식
+- Bean 생성 주체 : 코드 작성으로 직접 선언
+
+<b>일반적으로 대부분 @Component가 권장됨.</b>
+
+#### @Bean 을 사용하는 것이 더 나은 경우
+```java
+@Configuration
+public class HelloWorldConfiguration {
+	@Bean
+	public Person person() {
+		return new Person("Van", 33, new Address("서초구", "서울특별시"));
+	}
+    @Bean
+    public Person person2MethodCall() {
+      return new Person(name(), age(), address());
+    }
+  
+    @Bean
+    public Person person3Parameters(String name, int age, Address address3) {
+      return new Person(name, age, address3);
+    }
+}
+```
+`Person`의 Bean을 생성하기 위해서는 여러 사항을 점검해야 한다. (생성 방식이 다른 다양한 `Person` 인스턴스가 있을 수 있다.)
+
+예시와 같이 특정 객체의 Bean을 생성하기 위해 여러가지를 점검해야 하고, 생성에 있어서 특수한 비즈니스 로직이 필요한 경우에는 @Bean 을 사용하는 것이 더 나을 수 있다.
+- 그 외에도 아래와 같은 경우 @Bean의 사용이 더 적절할 수 있다.
+  - 외부 라이브러리 클래스를 Bean으로 등록하는 경우
+    - ex) Spring 시큐리티
+  - 복잡한 Bean 생성 로직이 필요한 경우
+  - 환경에 따른 Bean 구성이 필요한 경우
