@@ -514,3 +514,99 @@ public class HelloWorldConfiguration {
     - ex) Spring 시큐리티
   - 복잡한 Bean 생성 로직이 필요한 경우
   - 환경에 따른 Bean 구성이 필요한 경우
+
+## 7단계 - Java Spring 애플리케이션에 의존성이 있는 이유가 무엇일까요?
+
+#### Hello World App 에는 클래스가 별로 없지만 Real World 애플리케이션은 훨씬 복잡하다.
+![Application-Layer.png](image/Application-Layer.png)
+- 실제 애플리케이션에는 많은 레이어가 있다.
+  - 웹 레이어
+  - 비즈니스 레이어
+  - 데이터 레이어
+- 각 레이어는 아래에 있는 레이어에 의존한다.
+  - 웹 레이어의 클래스는 비즈니스 레이어의 클래스에게 말을 걸 수 있다(요청할 수 있다).
+  - 따라서 웹 레이어 클래스는 비즈니스 레이어 클래스의 의존성이다.
+- Spring 프레임워크
+  - 프로그래머는 객체가 아닌 '의존성'과 '연결(wiring)'에 집중 할 수 있다.
+  - 프레임워크가 객체의 생명주기를 대신 관리해준다. 
+    - Spring의 규칙에 따라 어노테이션을 설정하기만 하면 된다.
+
+```java
+import java.util.Arrays;
+
+public interface DataService {
+
+  int[] retrieveData();
+}
+
+public class MongoDbDataService implements DataService {
+
+  public int[] retrieveData() {
+    return new int[]{11, 22, 33, 44, 55};
+  }
+}
+
+public class MySQLDataService implements DataService {
+
+  public int[] retrieveData() {
+    return new int[]{1, 2, 3, 4, 5};
+  }
+}
+
+public class BusinessCalculationService {
+
+  public int findMax() {
+    return Arrays.stream(dataService.retrieveData())
+            .max().orElse(0);
+  }
+}
+```
+![Example-code-dependencies.png](image/Example-code-dependencies.png)
+예시 코드는 다음과 같은 의존성을 가진다.
+- `MongoDbDataService` 와 `MySQLDataService` 를 쉽게 바꾸기 위해서 `DataService` 인터페이스가 필요하다.
+- `BusinessCalculationService` 는 `DataService`에게 요청을 해야 한다.
+
+해당 코드를 Spring 프레임워크가 관리하도록 완성 시켜야 한다.
+
+```java
+@Component
+ interface DataService {
+
+	int[] retrieveData();
+}
+
+@Component
+@Primary
+ class MongoDbDataService implements DataService {
+
+	public int[] retrieveData() {
+		return new int[]{11, 22, 33, 44, 55};
+	}
+}
+
+@Component
+ class MySQLDataService implements DataService {
+
+	public int[] retrieveData() {
+		return new int[]{1, 2, 3, 4, 5};
+	}
+}
+
+@Component
+ class BusinessCalculationService {
+	private DataService dataService;
+
+	public BusinessCalculationService(DataService dataService) {
+		this.dataService = dataService;
+	}
+
+	public int findMax() {
+		return Arrays.stream(dataService.retrieveData())
+				.max().orElse(0);
+	}
+}
+```
+이와 같은 방식으로 예제 코드의 객체들을 Spring 프레임워크가 관리하도록 할 수 있다.
+1. 모든 클래스에 `@Component` 를 부여해서 Bean으로 예약한다.
+2. `BusinessCalculationService` 클래스에 `DataService` 필드를 선언하고 생성자를 선언한다.
+3. `MongoDbDataService` 클래스에 `@Primary` 를 부여해서 참조하는 Bean이 겹치는 경우를 방지한다.
