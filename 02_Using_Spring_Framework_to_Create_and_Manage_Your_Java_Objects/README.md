@@ -109,3 +109,102 @@ public class App03GamingSpringBeansJava {
   - @ComponentScan({"com.in28minutes.learn_spring_framework.game", "com.example.myapp"}) 와 같이 여러 패키지 경로를 설정할 수도 있다.
     - @ComponentScan을 여러개 사용하는 것도 가능하다.
 
+
+## 2단계 - Spring 컴포넌트에 대한 Primary 및 Qualifier 어노테이션 알아보기
+
+#### @Component 가 여러 클래스에 있을 경우
+
+```java
+@Component
+public class GameRunner {
+	private GamingConsole game;
+	public GameRunner(GamingConsole game) {
+		this.game = game;
+	}
+	public void run() {
+		System.out.println("게임 시작 : " + game);
+		game.up();
+		game.down();
+		game.left();
+		game.right();
+	}
+}
+```
+`GameRunner` 의 경우 `GamingConsole` 타입을 생성자의 파라미터로 받는다. <br>
+만약 `GamingConsole`를 상속하고 있는 `PacmanGame`과 `MarioGame` 두 곳에 `@Component` 어노테이션을 부여하면 어떻게 될까?
+
+```agsl
+[main] WARN org.springframework.context.annotation.AnnotationConfigApplicationContext -- Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'gameRunner' defined in file [C:\Users\benecl\IdeaProjects\learning-spring-and-spring-boot-3.x\00_module\learn-spring-framework-02\target\classes\com\in28minutes\learn_spring_framework\game\GameRunner.class]: Unsatisfied dependency expressed through constructor parameter 0: No qualifying bean of type 'com.in28minutes.learn_spring_framework.game.GamingConsole' available: expected single matching bean but found 2: marioGame,pacmanGame
+Exception in thread "main" org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'gameRunner' defined in file [C:\Users\benecl\IdeaProjects\learning-spring-and-spring-boot-3.x\00_module\learn-spring-framework-02\target\classes\com\in28minutes\learn_spring_framework\game\GameRunner.class]: Unsatisfied dependency expressed through constructor parameter 0: No qualifying bean of type 'com.in28minutes.learn_spring_framework.game.GamingConsole' available: expected single matching bean but found 2: marioGame,pacmanGame
+```
+고유한 Bean 을 찾을 수 없다는 예외가 발생한다.
+
+#### @Primary
+
+```java
+@Component
+@Primary
+public class MarioGame implements GamingConsole {
+	@Override
+	public void up() {
+		System.out.println("점프");
+	}
+	@Override
+	public void down() {
+		System.out.println("파이프로 이동");
+	}
+	@Override
+	public void left() {
+		System.out.println("뒤로 이동");
+	}
+	@Override
+	public void right() {
+		System.out.println("가속");
+	}
+}
+```
+컴포넌트에도 `@Primary` 어노테이션을 사용해 우선 순위를 부여하는 것이 가능하다.
+
+#### @Qualifier
+`MarioGame`의 `@Primary`를 유지한 상태로 `SuperContraGame` 게임에 `@Component`를 부여하면, 앱을 실행했을 때 여전히 `MarioGame`이 실행된다. <br>
+`SuperContraGame` 게임이 실행되도록 할 수 없을까?
+```java
+@Component
+@Qualifier("SuperContraGameQualifier")
+public class SuperContraGame implements GamingConsole {
+	@Override
+	public void up() {
+		System.out.println("위로 이동");
+	}
+	@Override
+	public void down() {
+		System.out.println("앉기");
+	}
+	@Override
+	public void left() {
+		System.out.println("뒤로 이동");
+	}
+	@Override
+	public void right() {
+		System.out.println("총알 발사");
+	}
+}
+```
+
+```java
+@Component
+public class GameRunner {
+	private GamingConsole game;
+	public GameRunner(@Qualifier("SuperContraGameQualifier") GamingConsole game) {
+		this.game = game;
+	}
+	public void run() {
+		System.out.println("게임 시작 : " + game);
+		game.up();
+		game.down();
+		game.left();
+		game.right();
+	}
+}
+```
+이와 같이 `@Qualifier` 어노테이션을 사용할 수 있다.
