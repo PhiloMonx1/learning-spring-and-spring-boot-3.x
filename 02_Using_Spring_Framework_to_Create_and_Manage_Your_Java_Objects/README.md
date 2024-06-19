@@ -614,3 +614,48 @@ public class BusinessCalculationService {
 ## 8단계 - 예제: Real World Java Spring Framework Example의 솔루션
 - `DataService` 인터페이스에는 `@Component` 어노테이션을 부여하지 않아도 된다.
   - `BusinessCalculationService` 에서 `DataService`이 필요할 경우 스프링은 타입 매칭을 통해 MongoDbDataService 또는 MySQLDataService 중 하나를 자동으로 주입하기 때문이다.
+
+## 9단계 - Java와 함께 Spring Framework 알아보기 - 섹션 2 - 복습
+
+#### 이번 챕터에서 배운 내용
+![review.png](image/review.png)
+1. 결합도
+2. 자바 인터페이스
+3. 스프링 컨테이너
+4. Java Bean vs Spring Bean 차이점
+5. 의존성 주입
+6. 의존성 주입의 여러 유형
+7. 어노테이션
+8. @Bean vs @Component 차이점과 언제 사용해야 하는지
+9. @Primary vs Qualifier 차이점과 언제 사용해야 하는지
+10. 예시 실습
+
+#### 다음 챕터에서 배울 내용 : 심화 내용
+![future.png](image/future.png)
+1. 지연 초기화
+   - 지금까지 생성한 모든 Bean은 Spring 컨테이너의 시작에서 초기화 되었음
+   - 원하는 시점에 초기화를 진행하는 지연 초기화를 적용하는 방법은?
+2. 스프링 프레임워크에 있는 다양한 Bean의 범위
+   - 프로토타입
+   - 싱글톤
+3. PostConstruct & PreDestroy
+   - Bean의 의존성이 준비된 후 특정 작업 수행 방법 
+   - Spring 컨텍스트에서 Bean이 제거되기 전 작업 수행 방법 
+4. Jakarta EE의 역사
+   - J2EE
+   - 자바 EE
+   - 자카르타 EE
+5. CDI 컨텍스트 & 의존성 주입
+   - 자카르타 EE의 의존성 주입과 관련된 중요한 사항 중 하나
+6. XML 설정
+   - 지금까지는 자바 설정을 사용했음 (모든 설정이 자바 소스 파일에 저장됨)
+   - 과거(20년 전)에는 대다수가 XML 설정을 사용했음.
+   - 자바 설정과의 차이점 및 어떤 것을 언제 사용해야 하는지
+7. `@Component`의 여러 가지 대안
+   - Spring 스테레오 타입 어노테이션
+     - @Component
+     - @Service
+     - @Repository
+8. Spring 프레임워크에 대한 전반적인 모습을 그려보기
+9. Spring 모듈 & Spring 프로젝트 다뤄보기
+10. Spring이 왜 최고인지에 대한 견해
