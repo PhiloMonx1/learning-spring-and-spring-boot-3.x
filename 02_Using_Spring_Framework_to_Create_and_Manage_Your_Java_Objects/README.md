@@ -610,3 +610,7 @@ public class BusinessCalculationService {
 1. 모든 클래스에 `@Component` 를 부여해서 Bean으로 예약한다.
 2. `BusinessCalculationService` 클래스에 `DataService` 필드를 선언하고 생성자를 선언한다.
 3. `MongoDbDataService` 클래스에 `@Primary` 를 부여해서 참조하는 Bean이 겹치는 경우를 방지한다.
+
+## 8단계 - 예제: Real World Java Spring Framework Example의 솔루션
+- `DataService` 인터페이스에는 `@Component` 어노테이션을 부여하지 않아도 된다.
+  - `BusinessCalculationService` 에서 `DataService`이 필요할 경우 스프링은 타입 매칭을 통해 MongoDbDataService 또는 MySQLDataService 중 하나를 자동으로 주입하기 때문이다.
