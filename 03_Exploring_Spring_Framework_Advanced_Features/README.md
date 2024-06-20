@@ -258,3 +258,57 @@ class BusinessService {
 ```
 - `@Component` 대신 `@Named` 를 사용할 수 있다.
 - `@Autowired` 대신 `@Inject` 을 사용할 수 있다.
+
+## 8단계 - Java Spring XML 설정 알아보기
+[HelloWorldConfiguration.java](..%2F00_module%2Flearn-spring-framework-01%2Fsrc%2Fmain%2Fjava%2Fcom%2Fin28minutes%2Flearn_spring_framework%2Fhelloworld%2FHelloWorldConfiguration.java)
+`HelloWorldConfiguration`에선 Java 문법으로 설정을 하고, Bean을 정의한다. 
+
+과거에는 Java 설정이 없었기에 XML으로 설정을 해야 했었다.
+
+#### XML 설정 파일 초안 작성
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"> <!-- bean definitions here -->
+</beans>
+```
+- 프로젝트 경로 '/src/main/resources'에 작성한다.
+- Spring 팀에서 [예시](https://docs.spring.io/spring-framework/docs/4.2.x/spring-framework-reference/html/xsd-configuration.html)를 제공한다.
+  - '40.2.8 the context schema' 대목을 참고.
+
+#### XML 설정 파일 실행
+```java
+public class XmlConfigurationContextLauncherApplication {
+	public static void main(String[] args) {
+		try (var context = new ClassPathXmlApplicationContext("contextConfiguration.xml")) {
+			Arrays.stream(context.getBeanDefinitionNames())
+					.forEach(System.out::println);
+		}
+	}
+}
+```
+- `ClassPathXmlApplicationContext` 클래스에 Xml 파일 이름을 줄 수 있다. ('/src/main/resources' 경로에 있어야 함)
+
+#### XML에서 Bean 정의하기 
+```xml
+<bean id="name" class="java.lang.String">
+  <constructor-arg value="EH13" />
+</bean>
+```
+- 기존 Xml 파일 `beans` 태그 내부에 Bean을 정의할 수 있다.
+
+```xml
+  <context:component-scan base-package="com.in28minutes.learn_spring_framework.game" />
+```
+- 이와 같은 방식으로 컴포넌트 스캔을 정의하는 것도 가능하다.
+
+```xml
+  <bean id="game" class="com.in28minutes.learn_spring_framework.game.PacmanGame" />
+  <bean id="gameRunner" class="com.in28minutes.learn_spring_framework.game.GameRunner">
+    <constructor-arg ref="game" />
+  </bean>
+```
+- 커스텀 클래스에 Bean 등록 및 의존성 주입도 가능하다.
