@@ -445,3 +445,71 @@ public class XmlConfigurationContextLauncherApplication {
 
 #### 자동 연결 (Auto-wiring)
 - 특정 Spring Bean이 의존성이 필요하다면 Spring이 올바른 의존성을 찾아서 Bean에 연결하는 과정
+
+## 13단계 - Spring 전체 구조 알아보기 - Framework, 모듈, 프로젝트
+
+![Spring-Big-Feature.png](image/Spring-Big-Feature.png)
+
+#### 스프링 코어 (Spring Core)
+- IoC 컨테이너, 의존성 주입, 자동 연결 등 지금까지 배운 내용을 스프링 코어라고 한다.
+- Spring의 기본적인 구성
+
+#### Big Feature
+- Spring Framework
+- Spring 모듈
+- Spring 프로젝트
+
+#### Spring Modules Big Feature
+![Spring-Modules-Big-Feature.png](image/Spring-Modules-Big-Feature.png)
+Spring 프레임워크에는 Spring 모듈이 여러 개 포함되어 있다.
+
+- Core 모듈 (Fundamental Features)
+  - IoC 컨테이너
+  - 의존성 주입
+  - 자동 연결
+- Spring MVC
+  - 웹 애플리케이션
+  - REST API
+- Spring WebFlux
+  - 리액티브 웹 애플리케이션 (비동기 웹 애플리케이션)
+- Spring JDBC, JPA
+  - 데이터 베이스 엑세스
+- Spring JMS
+  - 다른 애플리케이션과 통합
+- Mock Objects, Spring MVC Test
+  - 단위 테스트 작성
+
+스프링 프레임워크가 모듈로 나누어져 있기 때문에 각각의 애플리케이션 요구사항에 맞춰 유연한 선택이 가능하다.
+
+
+#### Spring Projects Big Feature
+![Spring-Projects-Big-Feature.png](image/Spring-Projects-Big-Feature.png)
+
+- 애플리케이션 아키텍쳐는 계속해서 발전한다.
+  - Web > REST API > MSA > Cloud > ...
+- Spring은 아직까지 자주 쓰이는 프레임워크이다. Spring이 계속해서 발전하기 때문이다.
+  - Spring Framework : 스프링의 첫 번째 프로젝트
+  - Spring Security : 웹 애플리케이션이나 REST API에 보안을 추가 or 마이크로서비스에 인증. 권한을 부여할 때 사용
+  - Spring Data : 데이터베이스와 통합할 때 사용 (NoSQL, SQL DB에 연결하는 모든 경우에 사용됨)
+  - Spring Integration : 다른 애플리케이션과 통합애 사용
+  - Spring Boot : 마이크로서비스를 빌드할 때 사용
+    - 마이크로서비스 : 하나의 큰 애플리케이션을 작고 독립적인 서비스 단위로 쪼개어 개발하고 배포하는 아키텍처 스타일
+  - Spring Cloud : 네이티브 애플리케이션을 빌드할 때 사용
+    - 네이티브 애플리케이션 : 특정 운영 체제(OS)에 최적화된 애플리케이션
+
+#### Spring Big Feature - Framework, Modules and Projects
+![Spring-Big-Feature.png](image/Spring-Big-Feature.png)
+계증 : Spring 프로젝트 > Spring 프레임워크 > Spring 모듈
+
+#### 스프링 생태계는 왜 인기가 많을까?
+1. Spring에서는 느슨한 결합이 가능하다.
+   - Spring은 Bean의 생성, 의존성을 관리한다.
+   - 장기적인 유지보수에 유리한 애플리케이션 개발이 가능하다.
+   - 단위 테스트 작성이 수월하다.
+2. 보일러플레이트 코드(Boilerplate Code)를 줄여준다.
+   - 보일러플레이트 코드 : 프로그래밍에서 반복적으로 사용되는 표준 코드 패턴
+   - 메서드마다 예외 처리를 작성팔 필요가 없어서 비즈니스 로직에 집중이 가능하다.
+3. 아키텍처 유연성
+   - 다양한 모듈 제공
+4. 시간에 따라 발전함
+   - 애플리케이션 요구가 늘어남에 따라 다양한 프로젝트를 도입
