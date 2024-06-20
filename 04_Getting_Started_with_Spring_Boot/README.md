@@ -111,3 +111,27 @@ public class CourseController {
 4. API 확인
 ![courses-api-check.png](image/courses-api-check.png)
 `RequestMapping`에 매핑된 '/courses' 경로에서 API를 확인할 수 있다.
+
+## 5단계 - Spring Boot의 목표 이해하기
+
+#### Spring Boot의 목표 
+프로덕션 환경에서 사용가능한 애플리케이션을 빠르게 빌드할 수 있도록 돕는 것
+
+- 빠르게
+  - Spring Initializer
+    - Spring Boot 프로젝트를 간단하게 생성 가능함
+  - Spring Boot Starter Projects
+    - 프로젝트의 의존성을 빠르게 정의할 수 있음
+  - Spring Boot Auto Configuration 
+    - 클래스 경로에 있는 의존성에 따라 자동 설정이 제공됨
+  - Spring Boot DevTools
+    - 수동으로 서버를 재시작 하지 않고 애플리케이션 변경 가능
+- 프로덕션 환경에서 사용 가능한
+  - 로깅(Logging)
+    - Spring Boot는 기본 로깅을 제공함
+  - 환경(dev, qa, stage, prod 등)에 맞는 다양한 설정 제공 
+    - Profiles
+    - ConfigurationProperties
+  - 모니터링 (Spring Boot Actuator)
+    - 메모리가 충분한지 살펴보기
+    - 애플리케이션의 측정항목 살펴보기
