@@ -55,3 +55,27 @@ pom.xml에서 프레임워크와 버전을 관리해야 함
 - 이 모든 작업은 새로운 프로젝트를 만들 때마다 반복해야 했었다.
 - 이러한 작업을 설정하는 데에는 며칠씩 걸리는게 일반적었다.
 - 유지보수에 어려움을 겪었다.
+
+## 3단계 - Spring Initializer로 새 Spring Boot Project 설정하기
+
+#### Spring Boot 프로젝트 만들기
+[spring initializer](https://start.spring.io/)
+![spring-boot-crate.png](image/spring-boot-crate.png)
+- 가장 최신 버전의 Release를 사용하는 것을 권장.
+- Java 17 이상부터 Spring Boot 3을 사용할 수 있다.
+- Spring Web 라이브러리를 추가한다.
+  - Spring MVC로 웹 애플리케이션과 REST API를 빌드할 때 사용하는 라이브러리
+  - Apache Tomcat을 임베디드 컨테이너로 사용
+
+#### 인텔리제이에서 모듈 추가
+[챕터1 ReadME 3단계 참고](..%2F01_Getting_Started_with_Java_Spring_Framework%2FREADME.md)
+
+#### 애플리케이션 실행
+-`LearnSpringBootApplication` 애플리케이션을 실행한다.
+
+![run-spring-web.png](image/run-spring-web.png)
+- 8080 포트의 Tomcat 서버 실행을 성공했다고 나타난다.
+
+![localhost-8080.png](image/localhost-8080.png)
+- http://localhost:8080/ 주소로 접근시 'Whitelabel Error Page'가 나타나면 성공이다.
+  - 포트 번호가 다르다면 해당 포트 번호 주소로 접근해야 한다.
