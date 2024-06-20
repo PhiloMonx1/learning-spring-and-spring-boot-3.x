@@ -128,3 +128,51 @@ class NormalClass { }
 - Spring 기본 값
 - 사용 방법 : @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON) | 디폴트
 - 사용 시나리오 : Stateless beans (상태 정보를 가지고 있지 않은 Bean)
+
+## 5단계 - Spring Bean 알아보기 - PostConstruct 및 PreDestroy
+
+#### PostConstruct : 빈 생성 후 작업
+```java
+import jakarta.annotation.PostConstruct;
+
+@Component
+class SomeClass {
+	private SomeDependency someDependency;
+	public SomeClass(SomeDependency someDependency) {
+		this.someDependency = someDependency;
+		System.out.println("모든 의존성이 준비되었습니다.");
+	}
+
+	@PostConstruct
+	public void initialize() {
+		someDependency.getReady();
+	}
+}
+
+@Component
+class SomeDependency {
+	public void getReady() {
+		System.out.println("SomeDependency : 로직 실행");
+	}
+}
+```
+![PostConstruct.png](image/PostConstruct.png)
+- 특정 메서드에 `@PostConstruct` 어노테이션을 부여하면 의존성이 준비된 후 자동으로 메서드가 실행된다.
+- 초기화가 필요한 경우, 예를들어 데이터베이스 등에서 데이터를 가져와서 Bean을 초기화 하는 경우
+  - `User`라는 Bean이 있을 경우 데이터베이스에서 User의 정보를 가져와 필드를 초기화
+
+
+
+#### PreDestroy : 빈 소멸 전 작업
+```java
+@Component
+class SomeClass {
+	@PreDestroy
+	public void cleanup() {
+		System.out.println("정리");
+	}
+}
+```
+![PreDestroy.png](image/PreDestroy.png)
+- Bean이 삭제될 때 해당 어노테이션이 부여된 메서드가 실행된다.
+- 가령, 데이터베이스의 연결을 끊는 경우나 데이터 저장 등
