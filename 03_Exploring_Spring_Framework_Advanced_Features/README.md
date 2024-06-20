@@ -359,3 +359,64 @@ public class XmlConfigurationContextLauncherApplication {
   - 프레임워크에 개발자의 의도를 더 자세하게 전달할 수 있다.
   - AOP(관점 지향 프로그래밍)을 통해 어노테이션을 감지하고 부가 동작을 추가하는 것이 가능하다.
     - ex) `@Repository` 어노테이션이 부여되어 있으면 Spring이 자동으로 JDBC 예외 변화 기능에 연결을 진행한다.
+
+## 11단계 - 간단한 복습 - 중요한 Spring Framework 어노테이션
+
+#### Spring 프레임워크의 중요한 어노테이션 
+- @Configuration 
+  - Java 설정 파일을 생성한다는 의미
+  - 클래스가 @Bean 메서드를 하나 이상 선언함을 나타냄
+  - Spring 컨테이너에서 처리해서 자동으로 Bean 정의를 생성
+  - ex) [GamingConfiguration.java](..%2F00_module%2Flearn-spring-framework-01%2Fsrc%2Fmain%2Fjava%2Fcom%2Fin28minutes%2Flearn_spring_framework%2FGamingConfiguration.java)
+- @ComponentScan
+  - 컴포넌트 스캔을 실행할 특정 패키지를 정의
+  - 파라미터로 별도 패키지를 지정하지 않을 시 해당 어노테이션을 부여한 클래스의 패키지(하위 패키지 포함)에서 스캔 실행
+- @Bean
+  - 메서드에 부여하는 어노테이션
+  - Spring이 Bean을 생성함
+- @Component
+  - 부여한 클래스가 컴포넌트임을 나타냄
+  - 컴포넌트 스캔 대상에 속한다면 Spring이 Bean을 생성함
+- @Service
+  - @Component 어노테이션의 구체적인 구현체 어노테이션
+  - 부여한 클래스에 비즈니스 로직이 있음을 나타냄
+- @Controller
+  - @Component 어노테이션의 구체적인 구현체 어노테이션
+  - 부여한 클래스가 컨트롤러임을 나타냄 ex) 웹 컨트롤러
+  - 일반적으로 웹 애플리케이션과 REST API 에서 컨트롤러를 정의하는데 사용
+- @Repository
+  - @Component 어노테이션의 구체적인 구현체 어노테이션
+  - 부여된 클래스가 데이터베이스에서 데이터를 검색하거나 조작하는데 사용됨을 나타냄
+
+#### Spring 프레임워크의 중요한 어노테이션 2
+- @Primary
+  - 여러 Bean이 단일 값 의존성에 연결될 후보일 경우 우선 순위를 부여함
+  - ex) [MarioGame.java](..%2F00_module%2Flearn-spring-framework-02%2Fsrc%2Fmain%2Fjava%2Fcom%2Fin28minutes%2Flearn_spring_framework%2Fgame%2FMarioGame.java)
+- @Qualifier
+  - 의존성 자동 연결 시 Bean 후보의 고유한 한정자를 부여함
+  - 필드나 매개변수에서 사용됨
+  - @Primary 보다 우선도가 높음
+  - ex 선언) [SuperContraGame.java](..%2F00_module%2Flearn-spring-framework-02%2Fsrc%2Fmain%2Fjava%2Fcom%2Fin28minutes%2Flearn_spring_framework%2Fgame%2FSuperContraGame.java)
+  - ex 사용) [GameRunner.java](..%2F00_module%2Flearn-spring-framework-02%2Fsrc%2Fmain%2Fjava%2Fcom%2Fin28minutes%2Flearn_spring_framework%2Fgame%2FGameRunner.java)
+- @Lazy
+  - Bean의 초기화 시점을 Spring 컨텍스트 실행 시점이 아닌 Bean 호출 시점으로 변경
+- @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+  - 부여된 클래스를 프로토타입 형식의 Bean으로 정의
+    - 프로토타입 : Bean을 참조할 때마다 신규 인스턴스를 생성
+  - @Scope의 기본 값은 '싱글톤'
+    - 싱글톤 : 하나의 Bean 인스턴스를 재활용
+    - 별도 지정하지 않아도 기본 값으로 설정됨
+    - 명시적 지정은 `@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)`
+
+#### Spring 프레임워크의 중요한 어노테이션 3
+- @PostConstruct
+  - 의존성 주입이 수행된 이후 초기화를 위해 실행될 메서드를 의미
+  - 부여된 메서드는 Bean이 생성된 이후 자동으로 호출됨
+- @PreDestroy
+  - 부여된 메서드는 Bean이 삭제되기 전 자동으로 호출됨
+- @Named
+  - jakarta CDI에서 제공하는 메서드
+  - Spring의 @Component를 대체 가능함
+- @Inject
+  - jakarta CDI에서 제공하는 메서드
+  - Spring의 @Autowired를 대체 가능함
