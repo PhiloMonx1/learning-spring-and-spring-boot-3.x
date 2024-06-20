@@ -79,3 +79,35 @@ pom.xml에서 프레임워크와 버전을 관리해야 함
 ![localhost-8080.png](image/localhost-8080.png)
 - http://localhost:8080/ 주소로 접근시 'Whitelabel Error Page'가 나타나면 성공이다.
   - 포트 번호가 다르다면 해당 포트 번호 주소로 접근해야 한다.
+
+## 4단계 - Spring Boot를 사용하여 Hello World API 빌드하기
+
+#### 만들고자 하는 API
+![example-api.png](image/example-api.png)
+
+1. `Course` 클래스 생성
+[Course.java](..%2F00_module%2Flearn-spring-boot%2Fsrc%2Fmain%2Fjava%2Fcom%2Fin28minutes%2Fspringboot%2Flearn_spring_boot%2FCourse.java)
+2. 컨트롤러 작성
+```java
+@RestController
+public class CourseController { }
+```
+컨트롤러 클래스에 `@RestController` 어노테이션을 부여한다.
+3. 메서드에 리퀘스트 매핑
+```java
+@RestController
+public class CourseController {
+
+	@RequestMapping("/courses")
+	public List<Course> retrieveAllCourses() {
+		return Arrays.asList(
+				new Course(1, "Learn AWS", "in28minutes"),
+				new Course(2, "Learn DevOps", "in28minutes")
+		);
+	}
+}
+```
+실행할 메서드에 `@RequestMapping` 어노테이션을 부여해서 매핑한다.
+4. API 확인
+![courses-api-check.png](image/courses-api-check.png)
+`RequestMapping`에 매핑된 '/courses' 경로에서 API를 확인할 수 있다.
