@@ -52,7 +52,6 @@ class ClassB {
 - 실제 의존성 대신 '해결 프록시(Lazy-resolution proxy)'가 주입된다.
   - 실제 의존성 객체와 동일한 인터페이스를 구현하고 있다.
 
-
 ## 2단계 - 지연 초기화와 즉시 초기화 비교하기
 
 #### 지연 초기화 (Lazy Initialization)
@@ -72,3 +71,40 @@ class ClassB {
 - 사용빈도 : 기본 사용됨
 - 메모리 : 애플리케이션 실행 단계에서 모든 Bean을 미리 등록
 - 시나리오 : 일반적인 Bean의 경우
+
+## 3단계 - Java Spring Framework Bean 스코프 - 프로토타입 및 싱글톤
+
+#### 프로토타입 스코프 (Prototype)
+```java
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Component
+class PrototypeClass { }
+```
+![Get-Prototype-Bean.png](image/Get-Prototype-Bean.png)
+- `ConfigurableBeanFactory.SCOPE_PROTOTYPE`는 "prototype" 문자열을 리턴한다.
+- 프로토타입 Bean은 호출 할 때마다 다른 해시 값을 가진다. (새로운 인스턴스를 생성)
+
+#### 싱글톤 스코프 (Singleton)
+
+```java
+@Component
+class NormalClass { }
+```
+![Get-Singleton-Bean.png](image/Get-Singleton-Bean.png)
+- Spring의 기본 값이다.
+- 호출할 때마다 새로운 인스턴스를 생성하는 것이 아닌 고유한 인스턴스를 참조한다.
+- Spring IoC 컨테이너 당 Bean 객체의 인스턴스가 단 하나.
+
+#### 웹 애플리케이션에서 사용되는 특수한 스코프
+- 리퀘스트 (Request) : 'HTTP 요청' 당 하나의 인스턴스가 사용됨
+- 세션 (Session) : '사용자 HTTP 세션' 당 하나의 인스턴스가 사용됨
+- 애플리케이션 (Application) : '웹 애플리케이션 전체'에 하나의 인스턴스가 사용됨.
+- 웹소켓 (Websocket) : '웹소켓 인스턴스' 당 하나의 인스턴스가 사용됨.
+
+#### Java Singleton (GOF) vs Spring Singleton
+- 자바 싱글톤은 '디자인 패턴' 이다.
+- Java 싱글톤과 Spring 싱글톤의 차이
+  - 자바 싱글톤 : JVM 당 객체 인스턴스가 하나.
+  - 스프링 싱글톤 : Spring IoC 컨테이너 하나에 객체 인스턴스가 하나.
+    - JVM에 Spring IoC 컨테이너를 하나만 실한다면 Java 싱글톤과 같은 의미가 될 수 있다. 
+    - 일반적으로 JVM에 여러 개의 Spring IoC 컨테이너를 사용하지는 않기 때문에 99.99%의 경우 Java 싱글톤과 같다.
