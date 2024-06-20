@@ -108,3 +108,23 @@ class NormalClass { }
   - 스프링 싱글톤 : Spring IoC 컨테이너 하나에 객체 인스턴스가 하나.
     - JVM에 Spring IoC 컨테이너를 하나만 실한다면 Java 싱글톤과 같은 의미가 될 수 있다. 
     - 일반적으로 JVM에 여러 개의 Spring IoC 컨테이너를 사용하지는 않기 때문에 99.99%의 경우 Java 싱글톤과 같다.
+
+## 4단계 - 프로토타입과 싱글톤 비교하기 - Spring Framework Bean 스코프
+
+#### 프로토타입 (Prototype)
+- 인스턴스 갯수 : Spring IoC 컨테이너 당 여러 개
+- Bean : 호출 할 때마다 새로운 인스턴스
+- 기본 값 아님
+- 사용 방법 : @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+- 사용 시나리오 : Stateful beans (상태 정보를 가지고 있는 Bean)
+  - ex) 사용자 정보의 경우 사용자마다 별도의 Bean을 생성해야 함
+  - 주의점
+    - 요청 간 상태 정보를 유지해야 하므로, 스레드 안전성(Thread-safe)을 고려
+    - 상태 정보를 관리하는 메커니즘이 필요 (HTTP 세션, 데이터베이스 등)
+
+#### 싱글톤 (Singleton)
+- 인스턴스 갯수 : Spring IoC 컨테이너 당 하나
+- Bean : 하나의 인스턴스를 다시 사용
+- Spring 기본 값
+- 사용 방법 : @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON) | 디폴트
+- 사용 시나리오 : Stateless beans (상태 정보를 가지고 있지 않은 Bean)
