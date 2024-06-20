@@ -158,7 +158,7 @@ class SomeDependency {
 ```
 ![PostConstruct.png](image/PostConstruct.png)
 - 특정 메서드에 `@PostConstruct` 어노테이션을 부여하면 의존성이 준비된 후 자동으로 메서드가 실행된다.
-- 초기화가 필요한 경우, 예를들어 데이터베이스 등에서 데이터를 가져와서 Bean을 초기화 하는 경우
+- 초기화가 필요한 경우, 예를들어 데이터베이스 등에서 데이터를 가져와서 Bean을 초기화 하는 경``우
   - `User`라는 Bean이 있을 경우 데이터베이스에서 User의 정보를 가져와 필드를 초기화
 
 
@@ -176,3 +176,38 @@ class SomeClass {
 ![PreDestroy.png](image/PreDestroy.png)
 - Bean이 삭제될 때 해당 어노테이션이 부여된 메서드가 실행된다.
 - 가령, 데이터베이스의 연결을 끊는 경우나 데이터 저장 등
+
+## 6단계 - Jakarta EE의 발전 - J2EE 및 Java EE와 비교
+
+#### EE(Enterprise Edition)의 역사
+![Evolution-of-EE.png](image/Evolution-of-EE.png)
+
+- 초기 Java 버전에서 엔터프라이즈 기능 대부분은 JDK에 자바 언어로 직접 구축되어 있었다.
+- 시간이 지나면서 기능들이 분리되게 된다.
+  - J2EE : Java 2 플랫폼 엔터프라이즈 에디션
+    - Sun Microsystems(현 Oracle)에 의해 개발
+    - 주요 API와 스펙이 Java 2 Platform, Standard Edition (J2SE) 2.x 버전을 기반
+  - Java EE : Java 플랫폼 엔터프라이즈 에디션
+    - J2EE의 후속 버전
+    - 기존 J2EE의 API와 스펙을 개선, 확장
+    - Java SE 5.0 이상 버전을 기반
+  - Jakarta EE : 2018년부터 변경된 Java EE의 신규 브랜드 명칭
+    - Java EE 8의 기술 스펙과 API를 계승하면서, Eclipse 재단에서 관리
+    - Java SE 8 이상 버전을 기반
+    - Spring 6 & Spring Boot 3 부터 Jakarta EE 스펙을 지원
+
+#### Jakarta EE에 속한 기술
+- JSP ( Jakarta Server Pages | Java Server Pages )
+  - 동적 웹 페이지 생성
+- JSTL ( Jakarta Standard Tag Library | JavaServer Pages Standard Tag Library )
+  - JSP 페이지에서 사용할 수 있는 표준 태그 라이브러리
+- EJB ( Jakarta Enterprise Bean | Enterprise JavaBeans )
+  - 기업용 Java 애플리케이션 개발을 위한 컴포넌트 모델을 제공
+- JAX-RS ( Jakarta RESTful Web Services | Java API for RESTful Web Services )
+  - RESTful 웹 서비스 개발을 위한 Java API 표준
+- Jakarta Bean Validation
+  - 애플리케이션에서 데이터 유효성 검사를 위한 표준 API
+- CID ( Jakarta Contexts and Dependency Injection )
+  - 애플리케이션 구성 요소 간의 의존성 관리를 지원
+- JPA ( Jakarta Persistence | Java Persistence API )
+  - 관계형 데이터베이스와 상호 작용 ORM
