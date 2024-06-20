@@ -1,4 +1,4 @@
-# 📒 [학습 노트] 챕터 2 : Spring Framework를 사용하여 Java 객체를 생성하고 관리하기
+# 📒 [학습 노트] 챕터 3 : Spring Framework 고급 기능 살펴보기
 
 ## 목차
 1. [Spring Framework Beans의 지연 초기화와 즉시 초기화 알아보기](#1단계---spring-framework-beans의-지연-초기화와-즉시-초기화-알아보기)
