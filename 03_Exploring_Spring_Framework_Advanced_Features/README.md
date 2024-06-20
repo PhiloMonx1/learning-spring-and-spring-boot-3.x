@@ -420,3 +420,28 @@ public class XmlConfigurationContextLauncherApplication {
 - @Inject
   - jakarta CDI에서 제공하는 메서드
   - Spring의 @Autowired를 대체 가능함
+
+## 12단계 - 간단한 복습 - 중요한 Spring Framework 개념
+
+#### 의존성 주입
+- Spring 프레임워크가 Bean을 확인하고, 의존성을 확인하고, 의존성을 Bean에 연결하는 과정
+- IoC (제어의 역전)이라고 부르기도 함
+  - 객체와 객체를 연결하는 코드를 프로그래머가 아닌 Srping 프레임워크가 담당하기 때문
+- Spring 의존성 주입의 방식
+  - 생성자 주입 : 클래스의 생성자를 통해 주입
+  - Setter 주입 : 클래스 Setter 메서드를 통해 주입
+  - 필드 주입 : 생성자나 Setter 메서드가 없을 경우 Spring이 리플렉션을 사용해서 주입
+
+#### IoC 컨테이너
+- Spring Bean과 Bean의 수명을 책임지는 Spring의 IoC 컨텍스트
+- Bean의 생성, 전체 수명, 종료를 책임짐
+- IoC 컨테이너의 유형
+  - Bean Factory
+  - Application Context
+
+#### Spring Bean
+- Spring에서 관리하는 인스턴스 객체
+- Spring에서 관리하는 객체는 모두 Spring Bean이라고 부른다
+
+#### 자동 연결 (Auto-wiring)
+- 특정 Spring Bean이 의존성이 필요하다면 Spring이 올바른 의존성을 찾아서 Bean에 연결하는 과정
