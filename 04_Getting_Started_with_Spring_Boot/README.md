@@ -135,3 +135,53 @@ public class CourseController {
   - 모니터링 (Spring Boot Actuator)
     - 메모리가 충분한지 살펴보기
     - 애플리케이션의 측정항목 살펴보기
+
+## 6단계 - Spring Boot의 강력함 이해하기 - Spring Boot Starter Project
+일반적으로 애플리케이션을 빌드할 때는 프레임워크가 많이 필요하다.
+
+#### 일반적으로 애플리케이션을 빌드할 때는 프레임워크가 많이 필요하다.
+- REST API
+  - Spring 프레임워크 
+  - Spring MVC 프레임워크
+  - Tomcat
+  - JSON 변환
+    - `CourseController::retrieveAllCourses()` 에서는 `Course` 객체의 List를 반환하지만 실제 응답은 JSON이다.
+    - Course` 객체의 List 에서 JSON 데이터로 변환하는 과정을 'JSON 변환'이라고 말한다.
+- 단위테스트 작성
+  - JUnit 프레임워크
+  - Mockito 프레임워크
+
+#### Spring Boot Starter (Starter Project) : 편리한 의존성 디스크립터(구조체)
+애플리케이션 빌드에 필요한 프레임워크를 그룹화
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
+```
+- spring-boot-starter-web
+  - REST API 와 웹 애플리케이션 빌드
+  - 내부에 정의된 의존성 (spring-boot-starter-web 안에 의존성이 정의되어 있다.)
+    - spring-boot-starter : Spring 컨텍스트를 실행
+    - spring-boot-starter-json : Bean을 JSON으로 변환
+    - spring-boot-starter-tomcat : Tomcat 서버에서 애플리케이션 실행
+    - spring-web, spring-webmvc : Spring MVC 프레임워크를 사용하여 REST API를 빌드
+- spring-boot-starter-test
+  - 단위테스트 작성
+
+spring-boot-starter-web 하나만 있어도 웹 애플리케이션 개발에 필요한 라이브러리를 모두 관리할 수 있다.
+
+#### Spring Boot가 제공하는 다양한 Starter Project
+- Spring Boot Starter Web : 웹 애플리케이션, REST API 빌드
+- Spring Boot Starter Test : 단위테스트 작성
+- Spring Boot Starter Data JPA : ORM을 사용해서 데이터베이스 통신 
+- Spring Boot Starter JDBC : JDBC를 사용해서 데이터베이스 통신
+- Spring Boot Starter Security : 웹 애플리케이션, REST API 보호
