@@ -334,3 +334,28 @@ public class XmlConfigurationContextLauncherApplication {
 
 #### 권장 사항
 - 둘 중 어느 것을 사용해도 괜찮지만 섞어서 사용하는 것은 지양한다.
+
+## 10단계 - Spring Framework 스테레오타입 어노테이션 - Component 등
+
+#### 스프링 스테레오타입 어노테이션 (Spring Stereotype Annotations)
+특정한 목적을 가진 컴포넌트를 쉽게 식별할 수 있도록 해주는 어노테이션
+
+- @Component : 제너릭(Generic)한 어노테이션으로 모든 클래스에 적용 가능
+  - 모든 Spring 스테레오타입 어노테이션의 베이스
+- @Service : 비즈니스 로직이 포함된 클래스에 적용
+- @Controller : 컨트롤러 클래스에 적용
+  - ex) 웹 컨트롤러
+  - 웹 애플리케이션과 REST API 컨트롤러 정의
+- @Repository : 데이터베이스와 통신하는 클래스에 적용
+
+#### 적용 실습
+`com.in28minutes.learn_spring_framework.examples.c1` 패키지의 클래스를 특화된 구현체 어노테이션으로 명시할 수 있다.
+- 변경
+  - `BusinessCalculationService` : 비즈니스 로직이 정의되어 있으므로 `@Service` 어노테이션 부여가 적절하다.
+  - `MongoDbDataService`, `MySqlDataService` : 데이터 베이스 통신 로직이 정의되어 있으므로 `@Repository`가 적절하다.
+
+#### 무엇을 사용해야 할까?
+- 최대한 구체적인 어노테이션을 사용하는 것이 권장된다.
+  - 프레임워크에 개발자의 의도를 더 자세하게 전달할 수 있다.
+  - AOP(관점 지향 프로그래밍)을 통해 어노테이션을 감지하고 부가 동작을 추가하는 것이 가능하다.
+    - ex) `@Repository` 어노테이션이 부여되어 있으면 Spring이 자동으로 JDBC 예외 변화 기능에 연결을 진행한다.
