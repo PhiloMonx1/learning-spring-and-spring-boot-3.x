@@ -211,3 +211,50 @@ class SomeClass {
   - 애플리케이션 구성 요소 간의 의존성 관리를 지원
 - JPA ( Jakarta Persistence | Java Persistence API )
   - 관계형 데이터베이스와 상호 작용 ORM
+
+## 7단계 - Spring Framework 및 Java를 통해 Jakarta CDI 알아보기
+
+CID ( Jakarta Contexts and Dependency Injection )
+
+#### Spring 프레임워크에서 지원
+- Spring 프레임워크 V1 은 2004년에 공개됨
+- CDI 규격은 2009년 12월에 Java EE 6 플랫폼에 도입됨
+
+#### 규격이자 인터페이스 (구현이 없다)
+- Spring 프레임워크에서 구현
+
+#### API 어노테이션 (중요한 것 일부만 나열)
+- Inject ( Spring의 Autowired와 비슷함 )
+- Named ( Spring의 Component와 비슷함 )
+- Qualifier ( Spring의 동일 이름 어노테이션과 비슷함 )
+- Scope ( Spring의 동일 이름 어노테이션과 비슷함 )
+- Singleton ( Spring의 동일 이름 어노테이션과 비슷함 )
+
+#### CDI 실습
+1. 라이브러리 추가
+```xml
+<dependency>
+    <groupId>jakarta.inject</groupId>
+    <artifactId>jakarta.inject-api</artifactId>
+    <version>2.0.1</version>
+</dependency>
+```
+2. Spring 프레임워크가 제공하는 어노테이션 대신 Jakarta 어노테이션 사용해보기
+```java
+//@Component
+@Named
+class BusinessService {
+	private DataService dataService;
+	public DataService getDataService() {
+		return dataService;
+	}
+	//@Autowired
+    @Inject
+	public void setDataService(DataService dataService) {
+		System.out.println("Setter 주입");
+		this.dataService = dataService;
+	}
+}
+```
+- `@Component` 대신 `@Named` 를 사용할 수 있다.
+- `@Autowired` 대신 `@Inject` 을 사용할 수 있다.
