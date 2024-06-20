@@ -1,6 +1,23 @@
 # 📒 [학습 노트] 챕터 2 : Spring Framework를 사용하여 Java 객체를 생성하고 관리하기
 
+## 목차
+1. [Spring Framework Beans의 지연 초기화와 즉시 초기화 알아보기](#1단계---spring-framework-beans의-지연-초기화와-즉시-초기화-알아보기)
+2. [지연 초기화와 즉시 초기화 비교하기](#2단계---지연-초기화와-즉시-초기화-비교하기)
+3. [Java Spring Framework Bean 스코프 - 프로토타입 및 싱글톤](#3단계---java-spring-framework-bean-스코프---프로토타입-및-싱글톤)
+4. [프로토타입과 싱글톤 비교하기 - Spring Framework Bean 스코프](#4단계---프로토타입과-싱글톤-비교하기---spring-framework-bean-스코프)
+5. [Spring Bean 알아보기 - PostConstruct 및 PreDestroy](#5단계---spring-bean-알아보기---postconstruct-및-predestroy)
+6. [Jakarta EE의 발전 - J2EE 및 Java EE와 비교](#6단계---jakarta-ee의-발전---j2ee-및-java-ee와-비교)
+7. [Spring Framework 및 Java를 통해 Jakarta CDI 알아보기](#7단계---spring-framework-및-java를-통해-jakarta-cdi-알아보기)
+8. [Java Spring XML 설정 알아보기](#8단계---java-spring-xml-설정-알아보기)
+9. [Java 어노테이션과 XML 설정 알아보기 - Java Spring Framework](#9단계---java-어노테이션과-xml-설정-알아보기---java-spring-framework)
+10. [Spring Framework 스테레오타입 어노테이션 - Component 등](#10단계---spring-framework-스테레오타입-어노테이션---component-등)
+11. [간단한 복습 - 중요한 Spring Framework 어노테이션](#11단계---간단한-복습---중요한-spring-framework-어노테이션)
+12. [간단한 복습 - 중요한 Spring Framework 개념](#12단계---간단한-복습---중요한-spring-framework-개념)
+13. [Spring 전체 구조 알아보기 - Framework, 모듈, 프로젝트](#13단계---spring-전체-구조-알아보기---framework-모듈-프로젝트)
+
+
 ## 1단계 - Spring Framework Beans의 지연 초기화와 즉시 초기화 알아보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/53b457cffcdc4ebf54ec0ab4d0b0c95853351807)
 
 #### 즉시 초기화 (Eager Initialization)
 - Spring Bean의 기본 초기화 방식
@@ -53,6 +70,7 @@ class ClassB {
   - 실제 의존성 객체와 동일한 인터페이스를 구현하고 있다.
 
 ## 2단계 - 지연 초기화와 즉시 초기화 비교하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/372420e9e812cd8e2763e276b0e635aac08940e0)
 
 #### 지연 초기화 (Lazy Initialization)
 - 초기화 시점 : Bean이 애플리케이션에서 처음 호출될 때
@@ -73,6 +91,7 @@ class ClassB {
 - 시나리오 : 일반적인 Bean의 경우
 
 ## 3단계 - Java Spring Framework Bean 스코프 - 프로토타입 및 싱글톤
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/29ab4cf794ada89f92a56f148d6882c7326485a6)
 
 #### 프로토타입 스코프 (Prototype)
 ```java
@@ -110,6 +129,7 @@ class NormalClass { }
     - 일반적으로 JVM에 여러 개의 Spring IoC 컨테이너를 사용하지는 않기 때문에 99.99%의 경우 Java 싱글톤과 같다.
 
 ## 4단계 - 프로토타입과 싱글톤 비교하기 - Spring Framework Bean 스코프
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/0f1f79be93b7358091ecf5f9636a1df9f9b100f0)
 
 #### 프로토타입 (Prototype)
 - 인스턴스 갯수 : Spring IoC 컨테이너 당 여러 개
@@ -130,6 +150,7 @@ class NormalClass { }
 - 사용 시나리오 : Stateless beans (상태 정보를 가지고 있지 않은 Bean)
 
 ## 5단계 - Spring Bean 알아보기 - PostConstruct 및 PreDestroy
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/ade0506bd3f2a7259a7b30492328726fbccbb711)
 
 #### PostConstruct : 빈 생성 후 작업
 ```java
@@ -178,6 +199,7 @@ class SomeClass {
 - 가령, 데이터베이스의 연결을 끊는 경우나 데이터 저장 등
 
 ## 6단계 - Jakarta EE의 발전 - J2EE 및 Java EE와 비교
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/d43fc558452d368c05b0cd63be9eb24ea5a9baee)
 
 #### EE(Enterprise Edition)의 역사
 ![Evolution-of-EE.png](image/Evolution-of-EE.png)
@@ -213,6 +235,7 @@ class SomeClass {
   - 관계형 데이터베이스와 상호 작용 ORM
 
 ## 7단계 - Spring Framework 및 Java를 통해 Jakarta CDI 알아보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/d5869bb0b84c2e4b4706d7992fec5d444f2adf70)
 
 CID ( Jakarta Contexts and Dependency Injection )
 
@@ -260,6 +283,8 @@ class BusinessService {
 - `@Autowired` 대신 `@Inject` 을 사용할 수 있다.
 
 ## 8단계 - Java Spring XML 설정 알아보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/ff44f2a35a3babd912afe2b601b8b020962d7c92)
+
 [HelloWorldConfiguration.java](..%2F00_module%2Flearn-spring-framework-01%2Fsrc%2Fmain%2Fjava%2Fcom%2Fin28minutes%2Flearn_spring_framework%2Fhelloworld%2FHelloWorldConfiguration.java)
 `HelloWorldConfiguration`에선 Java 문법으로 설정을 하고, Bean을 정의한다. 
 
@@ -314,6 +339,7 @@ public class XmlConfigurationContextLauncherApplication {
 - 커스텀 클래스에 Bean 등록 및 의존성 주입도 가능하다.
 
 ## 9단계 - Java 어노테이션과 XML 설정 알아보기 - Java Spring Framework
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/f6627ee786c2136efaf2570857bb7ba696ffc248)
 
 #### Java 어노테이션
 - 사용 편이성 : 편리하고 쉬움
@@ -336,6 +362,7 @@ public class XmlConfigurationContextLauncherApplication {
 - 둘 중 어느 것을 사용해도 괜찮지만 섞어서 사용하는 것은 지양한다.
 
 ## 10단계 - Spring Framework 스테레오타입 어노테이션 - Component 등
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/3dbddfd58f426a298bd0cc523b1c4981d9f05ccb)
 
 #### 스프링 스테레오타입 어노테이션 (Spring Stereotype Annotations)
 특정한 목적을 가진 컴포넌트를 쉽게 식별할 수 있도록 해주는 어노테이션
@@ -361,6 +388,7 @@ public class XmlConfigurationContextLauncherApplication {
     - ex) `@Repository` 어노테이션이 부여되어 있으면 Spring이 자동으로 JDBC 예외 변화 기능에 연결을 진행한다.
 
 ## 11단계 - 간단한 복습 - 중요한 Spring Framework 어노테이션
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/2d9b6fcb19370b40f84d71899ac10e7be4e4078c)
 
 #### Spring 프레임워크의 중요한 어노테이션 
 - @Configuration 
@@ -422,6 +450,7 @@ public class XmlConfigurationContextLauncherApplication {
   - Spring의 @Autowired를 대체 가능함
 
 ## 12단계 - 간단한 복습 - 중요한 Spring Framework 개념
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/557727818139ba7f0f1a75a70d4a317b9d93a724)
 
 #### 의존성 주입
 - Spring 프레임워크가 Bean을 확인하고, 의존성을 확인하고, 의존성을 Bean에 연결하는 과정
@@ -447,6 +476,7 @@ public class XmlConfigurationContextLauncherApplication {
 - 특정 Spring Bean이 의존성이 필요하다면 Spring이 올바른 의존성을 찾아서 Bean에 연결하는 과정
 
 ## 13단계 - Spring 전체 구조 알아보기 - Framework, 모듈, 프로젝트
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/12f176a157949632e07553273ff153c5da92874f)
 
 ![Spring-Big-Feature.png](image/Spring-Big-Feature.png)
 
