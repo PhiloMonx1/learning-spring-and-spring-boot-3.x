@@ -325,18 +325,18 @@ Srping Boot의 중요한 기능 알아보기
   - 각 환경에 맞춰 프로필을 생성하면 된다.
 
 #### 프로필 만들어보기
-- `logging.level.org.springframework` 로깅 수준 환경에 따라 분리하기
-  - dev 환경 : trace 수준 로깅
-    1. `application.properties` 파일 복제 후 `application-dev.properties` 만들기
-    2. `logging.level.org.springframework=trace` 설정
-  - prod 환경 : info 수준 로깅
-    1. `application.properties` 파일 복제 후 `application-prod.properties` 만들기
-    2. `logging.level.org.springframework=info` 설정
-3. `application.properties`에서 프로필 선택하기
-```
-spring.profiles.active=prod
-```
-헤당 방식으로 프로필을 선택할 수 있다.
+1. `logging.level.org.springframework` 로깅 수준 환경에 따라 분리하기
+   - dev 환경 : trace 수준 로깅
+     1. `application.properties` 파일 복제 후 `application-dev.properties` 만들기
+     2. `logging.level.org.springframework=trace` 설정
+   - prod 환경 : info 수준 로깅
+     1. `application.properties` 파일 복제 후 `application-prod.properties` 만들기
+     2. `logging.level.org.springframework=info` 설정
+2. `application.properties`에서 프로필 선택하기
+    ```
+    spring.profiles.active=prod
+    ```
+    해당 방식으로 프로필을 선택할 수 있다.
 
 #### logging.level.org.springframework 로깅 범위의 종류
 - OFF : 로그 표시 하지 않음
@@ -345,3 +345,53 @@ spring.profiles.active=prod
 - INFO : 에러 + 경고 + 정보성
 - DEBUG : 디버그 + 에러 + 경고 + 정보성
 - TRACE : 모든 로그 출력 
+
+## 10단계 - Spring Boot로 프로덕션 환경 배포 준비하기 -2- ConfigurationProperties
+애플리케이션에 특수한 설정이 필요한 경우가 있다고 가정하자 Spring은 이 설정을 어떻게 지원할까?
+
+#### ConfigurationProperties
+```java
+//currency-service.url
+//currency-service.username
+//currency-service.key
+public class CurrencyServiceConfiguration { }
+```
+- `CurrencyServiceConfiguration` 클래스에는 주석에 적힌 3개의 설정이 필요하다고 가정하자
+1. `application.properties`에 `currency-service` 설정을 추가한다.
+    ```
+    currency-service.url=http://default.in28minutes.com
+    currency-service.username=defaultusername
+    currency-service.key=defaultkey
+    ```
+2. `@ConfigurationProperties` 어노테이션을 통해 불러올 수 있다.
+    ```java
+    @ConfigurationProperties(prefix = "currency-service")
+    @Component
+    public class CurrencyServiceConfiguration {
+        private String url;
+        private String username;
+        private String key;
+        
+        // Getter & Setter 메서드
+    }
+    ```
+3. 컨트롤러 연결
+    ```java
+    @RestController
+    public class CurrencyConfigurationController {
+    
+        @Autowired
+        private CurrencyServiceConfiguration configuration;
+    
+        @RequestMapping("/currency-configuration")
+        public CurrencyServiceConfiguration retrieveAllCourses() {
+            return configuration;
+        }
+    }
+    ```
+    - `CurrencyConfigurationController` 컨트롤러 선언
+    - `CurrencyServiceConfiguration` 의존성 자동 연결
+    - RequestMapping
+4. 데이터 확인
+![currency-configuration.png](image/currency-configuration.png)
+5. 해당 설정 역시 profile을 사용할 수 있다. profile 설정이 우선적으로 사용된다.
