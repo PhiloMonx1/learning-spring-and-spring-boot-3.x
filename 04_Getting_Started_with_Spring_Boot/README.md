@@ -185,3 +185,96 @@ spring-boot-starter-web 하나만 있어도 웹 애플리케이션 개발에 필
 - Spring Boot Starter Data JPA : ORM을 사용해서 데이터베이스 통신 
 - Spring Boot Starter JDBC : JDBC를 사용해서 데이터베이스 통신
 - Spring Boot Starter Security : 웹 애플리케이션, REST API 보호
+
+## 7단계 - Spring Boot의 강력함 이해하기 - Auto Configuration
+
+#### 애플리케이션을 빌드할 때는 많은 설정이 필요하다.
+- 컴포넌트 스캔 (Component Scan)
+- DispatcherServlet
+- 데이터 소스 (Data Sources)
+- JSON 변환 (JSON Conversion)
+- ...
+
+#### Auto Configuration : Spring Boot 에서 제공하는 설정 자동화
+- 클래스패스 분석 : 클래스 경로에 있는 프레임워크를 따라 생성
+- 기본 설정 제공 : Spring Boot가 제공하는 디폴트 자동 설정 (커스터마이징)
+  - 자체 설정을 통해 오버라이드 가능 
+- 조건부 설정 : 특정 조건이 충족되는 경우에만 설정 적용
+  - ex) 특정 라이브러리가 존재하는 경우에만 관련 구성 요소 설정
+
+#### 인텔리제이에서 Auto Configuration 라이브러리 확인하기
+![spring-boot-autoconfigure.png](image/spring-boot-autoconfigure.png)
+
+- 프로젝트 -> 외부 라이브러리에서 `spring-boot-autoconfigure`를 찾을 수 있다.
+- spring-boot-starter-web -> spring-boot-starter -> spring-boot-autoconfigure
+  - xml.pom에서 경로를 따라가도 확인이 가능하다.
+
+![spring-boot-autoconfigur-wep.png](image/spring-boot-autoconfigur-wep.png)
+
+- `spring-boot-autoconfigure` 내부에서 wep 패키지를 확인 할 수 있다.
+- [Spring 공식 문서](https://docs.spring.io/spring-boot/api/java/org/springframework/boot/autoconfigure/web/package-summary.html)
+
+#### application.properties 에서 로깅
+- 설정을 더 자세히 보고 싶다면 debug 로깅 모드로 설정을 확인 할 수 있다.
+```
+logging.level.org.springframework = debug
+```
+- `application.properties` 파일에서 설정 가능하다.
+  - `application.properties` 에는 예민한 보안 정보가 있는 경우가 많아 Git 추적을 하지 않는다.
+  - 대신 `[application.properties.example](..%2F00_module%2Flearn-spring-boot%2Fsrc%2Fmain%2Fresources%2Fapplication.properties.example)` 파일을 통해 설정의 'Key'를 노출하고 'value'를 예시 값으로 바꾸어 애플리케이션의 설정을 표기할 수 있다.
+```
+============================
+CONDITIONS EVALUATION REPORT
+============================
+
+
+Positive matches:
+-----------------
+...(생략)
+ DispatcherServletAutoConfiguration matched:
+    - @ConditionalOnClass found required class 'org.springframework.web.servlet.DispatcherServlet' (OnClassCondition)
+    - found 'session' scope (OnWebApplicationCondition)
+...(생략)
+
+Negative matches:
+-----------------
+...(생략)
+```
+- 서버를 실행했을 때 이와 같은 로그를 확인 할 수 있다.
+  - Positive matches: 자동 설정된 항목
+  - Negative matches: 자동 설정되지 않은 항목
+- Positive matches 목록을 보면 DispatcherServlet 이나 Tomcat 등이 자동 설정된 것을 알 수 있다.
+
+#### spring-boot-autoconfigure-wep 에서 DispatcherServletAutoConfiguration 확인
+- `org.springframework.boot.autoconfigure.web.servlet.DispatcherServletAutoConfiguration`
+- 인텔리제이 기준으로 Shift를 두번 눌러서 파일 검색을 할 수 있다.
+
+![DispatcherServletAutoConfiguration.png](image/DispatcherServletAutoConfiguration.png)
+
+- @AutoConfigureOrder(Integer.MIN_VALUE)
+  - AutoConfigureOrder : 클래스의 실행 순서
+  - Integer.MIN_VALUE : 가장 낮은 순서
+- @AutoConfiguration(after = {ServletWebServerFactoryAutoConfiguration.class})
+  - AutoConfiguration : 현재 클래스가 다른 클래스에 의존하고 있음을 알려줌
+  - ServletWebServerFactoryAutoConfiguration : 해당 클래스가 먼저 실행된 후에 실행
+- @ConditionalOnWebApplication(type = Type.SERVLET)
+  - 클래스가 Servlet 기반의 웹 애플리케이션에서만 적용되도록 제한
+- @ConditionalOnClass({DispatcherServlet.class})
+  - 클래스가 DispatcherServlet 클래스가 존재하는 경우에만 적용되도록 제한
+
+#### 디폴트 오류 설정 : ErrorMvcAutoConfiguration
+![ErrorMvcAutoConfiguration.png](image/ErrorMvcAutoConfiguration.png)
+
+- 3단계에서 http://localhost:8080/ 주소로 접근시 'Whitelabel Error Page' 나타났던 것은 URL이 매핑되지 않은 페이지였기 때문이다.
+- 'Whitelabel Error Page' 는 Srping의 디폴트 오류 페이지이며 `ErrorMvcAutoConfiguration`클래스에 설정되어 있다.
+
+#### Spring Boot Starter Web
+- xml.pom에서 spring-boot-starter-web -> spring-boot-starter -> spring-boot-autoconfigure 해당 경로로 이동이 가능하다.
+- Spring Boot Starter Web 에서 자동 설정하고 있는 것 (중요한 것만)
+  - Dispatcher Servlet 
+  - Embedded Servlet Container
+  - Tomcat
+  - Default Error Pages
+  - JSON 변환 
+    - Jackson 프레임워크에서 실행됨 (JacksonHttpMessageConvertersConfiguration)
+    - Spring Boot Starter Web에는 Jackson 라이브러리가 기본적으로 포함되어 있다.
