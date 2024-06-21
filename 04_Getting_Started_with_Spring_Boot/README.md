@@ -515,3 +515,20 @@ Spring Boot Embedded Server를 사용하여 배포를 간소화할 수 있다.
   - Actuator : 애플리케이션 모니터링 지원
   - 디폴트 로깅 & 오류 처리
   - ConfigurationProperties : 애플리케이션 설정 간소화
+
+## 14단계 - Spring Boot 시작하기 - 복습
+
+해당 챕터의 목표는 Spring Boot를 대략적으로 살펴보는 것
+
+#### Spring Boot의 중요한 용어
+- Starter Projects
+- Auto Configuration
+- Actuator
+- DevTools
+
+#### Spring Boot의 장점
+- 프로덕션 환경에 사용 가능한 기능을 빠르게 시작 가능
+
+#### @SpringBootApplication
+- @SpringBootConfiguration + @EnableAutoConfiguration + @ComponentScan
+- 위의 세 가지 어노테이션의 결합이다.
