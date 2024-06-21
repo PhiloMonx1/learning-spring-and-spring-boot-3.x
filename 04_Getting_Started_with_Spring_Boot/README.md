@@ -427,3 +427,65 @@ Spring Boot Embedded Server를 사용하여 배포를 간소화할 수 있다.
 - spring-boot-starter-tomcat : 디폴트
 - spring-boot-starter-git
 - spring-boot-starter-undertow
+
+## 12단계 - Spring Boot로 프로덕션 환경 배포 준비하기 -4- Actuator
+
+애플리케이션의 백그라운드에서 어떤 일이 발생하는지 확인하는 일을 모니터링이라고 한다.
+
+#### Spring Boot Actuator
+- 여러 개의 엔드포인트를 제공
+  - beans : 애플리케이션 포함된 모든 Spring beans 확인
+  - health : 애플리케이션의 상태 정보 확인
+  - metrics : 애플리케이션의 매트릭스 확인
+    - 성능 지표
+      - CPU 사용량
+      - 메모리 사용량
+      - 응답 시간
+      - 처리량 (throughput)
+      - 병목 지점 등
+    - 상태 지표
+      - 애플리케이션 상태 (시작, 중지, 준비 등)
+      - 오류 발생 횟수
+      - 장애 발생 시간
+      - 서비스 가용성 등
+    - 사용량 지표
+      - 사용자 수
+      - 요청 수
+      - 데이터 송/수신량
+      - API 호출 횟수 등
+  - mappings : 모든 요청 매핑 관련 세부사항
+  - ...
+
+#### Actuator 사용 실습
+```xml
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+```
+1. `spring-boot-starter-actuator` 라이브러리 추가
+2. 애플리케이션 추가 후 '/actuator' 엔드포인트로 이동
+![actuator-page.png](image/actuator-page.png)
+3. 기본적으로는 '/health' 만 노출된다.
+4. `application.properties` 설정을 통해 더 많은 기능을 사용할 수 있다.
+    ```
+    management.endpoints.web.exposure.include=*
+    ```
+    - 해당 설정으로 Actuator 에서 제공하는 모든 엔드포인트를 노출할 수 있다.
+
+#### 중요한 Actuator 엔드포인트
+- /actuator/beans : 모든 Spring beans 표시
+- /actuator/configprops : application.properties에서 설정할 수 있는 모든 항목 표시
+  - 예민한 값은 '*****'로 가려져서 노출된다.
+- /actuator/env : 환경에 관한 모든 세부 사항 표시
+- /actuator/metrics : 모든 매트릭스 표시
+  - /actuator/metrics/http.server.requests 방식으로 세부 항목을 더 자세히 보는게 가능하다.
+  - ![server-requests-metrics.png](image/server-requests-metrics.png)
+    - COUNT : 서버에 들어온 요청 갯수 (새로고침 시 늘어남)
+
+#### 주의점
+- Actuator의 엔드포인트를 많이 설정하면 그만큼 수집해야 하는 정보가 많아지고 CPU, 메모리 사용량이 증가한다.
+- 명시적 사용이 올바르다
+  ```
+  management.endpoints.web.exposure.include=health,metrics
+  ```

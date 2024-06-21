@@ -4,3 +4,5 @@ logging.level.org.springframework = debug
 currency-service.url=http://default.in28minutes.com
 currency-service.username=defaultusername
 currency-service.key=defaultkey
+
+management.endpoints.web.exposure.include=*
