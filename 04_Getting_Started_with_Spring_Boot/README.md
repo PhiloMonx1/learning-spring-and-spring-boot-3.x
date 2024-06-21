@@ -489,3 +489,29 @@ Spring Boot Embedded Server를 사용하여 배포를 간소화할 수 있다.
   ```
   management.endpoints.web.exposure.include=health,metrics
   ```
+
+## 13단계 - Spring Boot, Spring, Spring MVC 이해하기
+
+#### Spring : 의존성 주입이 가능하지만 강력한 애플리케이션을 만들기 위해서는 다른 프레임워크가 필요함
+- 의존성 주입
+  - @Component
+  - @Service
+  - 컴포넌트 스캔
+- 생태계를 확장하여 다른 프레임워크와 쉽게 확장 가능
+
+#### Spring MVC : Spring 모듈 
+- 웹 애플리케이션과 REST API 빌드 과정을 간소화
+  - Spring MVC 전에 'Struts'가 있었지만 빌드 과정이 복잡했음
+  - 주요 어노테이션
+    - @Controller
+    - @RestController 
+    - @RequestMapping
+
+#### Spring Boot : Spring 프로젝트
+- Starter Projects : 애플리케이션 개발에 필요한 의존성을 그룹으로 관리
+- Auto Configuration : 클래스 경로에 있는 항목에 따라 디폴트 설정 자동 제공
+- NFRs (Non-Functional Requirements) : 비즈니스 로직을 제외한 성능, 보안, 로깅 등의 요소
+  - Embedded Server : 애플리케이션의 배포 과정 간소화 (서버 내장)
+  - Actuator : 애플리케이션 모니터링 지원
+  - 디폴트 로깅 & 오류 처리
+  - ConfigurationProperties : 애플리케이션 설정 간소화
