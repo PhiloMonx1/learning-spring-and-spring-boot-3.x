@@ -312,3 +312,36 @@ public class CourseController {
 
 #### 주의 사항
 -`spring-boot-devtools`는 pom.xml의 수정 사항은 처리할 수 없다.
+
+## 9단계 - Spring Boot로 프로덕션 환경 배포 준비하기 -1- Profile
+Srping Boot의 중요한 기능 알아보기
+
+#### 프로필 (Profiles)
+- 애플리케이션에는 Dev, QA, Stage, Prod 등의 환경이 있다.
+- 동일한 비즈니스 로직으로 다른 환경을 구축해야 한다.
+  - dev 환경에서는 로컬 DB를 사용하는 것
+  - 다른 웹 서비스를 호출하는 것
+- Spring Boot는 프로필을 통해 이 과정을 지원한다.
+  - 각 환경에 맞춰 프로필을 생성하면 된다.
+
+#### 프로필 만들어보기
+- `logging.level.org.springframework` 로깅 수준 환경에 따라 분리하기
+  - dev 환경 : trace 수준 로깅
+    1. `application.properties` 파일 복제 후 `application-dev.properties` 만들기
+    2. `logging.level.org.springframework=trace` 설정
+  - prod 환경 : info 수준 로깅
+    1. `application.properties` 파일 복제 후 `application-prod.properties` 만들기
+    2. `logging.level.org.springframework=info` 설정
+3. `application.properties`에서 프로필 선택하기
+```
+spring.profiles.active=prod
+```
+헤당 방식으로 프로필을 선택할 수 있다.
+
+#### logging.level.org.springframework 로깅 범위의 종류
+- OFF : 로그 표시 하지 않음
+- ERROR : 에러
+- WARN : 에러 + 경고
+- INFO : 에러 + 경고 + 정보성
+- DEBUG : 디버그 + 에러 + 경고 + 정보성
+- TRACE : 모든 로그 출력 
