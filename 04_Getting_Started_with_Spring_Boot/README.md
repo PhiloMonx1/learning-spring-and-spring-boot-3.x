@@ -278,3 +278,37 @@ Negative matches:
   - JSON 변환 
     - Jackson 프레임워크에서 실행됨 (JacksonHttpMessageConvertersConfiguration)
     - Spring Boot Starter Web에는 Jackson 라이브러리가 기본적으로 포함되어 있다.
+
+## 8단계 - Spring Boot DevTools로 빠르게 빌드하기
+코드 수정 이후 자동으로 서버를 다시 시작하고 코드 변경사항을 적용
+
+#### DevTools 사용법
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-devtools</artifactId>
+</dependency>
+```
+- `spring-boot-devtools` 라이브러리를 추가하고 Maven을 통해 라이브러리를 불러온다.
+- 인텔리제이의 경우 IDE 설정을 해주어야 한다.
+  - ![devtools-IDE-setting-1.png](image/devtools-IDE-setting-1.png)
+  - ![devtools-IDE-setting-2.png](image/devtools-IDE-setting-2.png)
+
+```java
+@RestController
+public class CourseController {
+	@RequestMapping("/courses")
+	public List<Course> retrieveAllCourses() {
+		return Arrays.asList(
+				new Course(1, "Learn AWS", "in28minutes"),
+				new Course(2, "Learn DevOps", "in28minutes"),
+				new Course(3, "Learn Azure", "in28minutes"),
+				new Course(4, "Learn GCP", "in28minutes")
+		);
+	}
+}
+```
+`spring-boot-devtools` 라이브러리 추가 후 서버를 실행 후 Course 3, 4번을 추가해서 저장하면 자동으로 서버가 재실행되는 것을 확인할 수 있다.
+
+#### 주의 사항
+-`spring-boot-devtools`는 pom.xml의 수정 사항은 처리할 수 없다.
