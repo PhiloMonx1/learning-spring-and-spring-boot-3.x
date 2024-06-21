@@ -209,9 +209,9 @@ spring-boot-starter-web 하나만 있어도 웹 애플리케이션 개발에 필
 - spring-boot-starter-web -> spring-boot-starter -> spring-boot-autoconfigure
   - xml.pom에서 경로를 따라가도 확인이 가능하다.
 
-![spring-boot-autoconfigur-wep.png](image/spring-boot-autoconfigur-wep.png)
+![spring-boot-autoconfigur-web.png](image/spring-boot-autoconfigur-web.png)
 
-- `spring-boot-autoconfigure` 내부에서 wep 패키지를 확인 할 수 있다.
+- `spring-boot-autoconfigure` 내부에서 web 패키지를 확인 할 수 있다.
 - [Spring 공식 문서](https://docs.spring.io/spring-boot/api/java/org/springframework/boot/autoconfigure/web/package-summary.html)
 
 #### application.properties 에서 로깅
@@ -245,7 +245,7 @@ Negative matches:
   - Negative matches: 자동 설정되지 않은 항목
 - Positive matches 목록을 보면 DispatcherServlet 이나 Tomcat 등이 자동 설정된 것을 알 수 있다.
 
-#### spring-boot-autoconfigure-wep 에서 DispatcherServletAutoConfiguration 확인
+#### spring-boot-autoconfigure-web 에서 DispatcherServletAutoConfiguration 확인
 - `org.springframework.boot.autoconfigure.web.servlet.DispatcherServletAutoConfiguration`
 - 인텔리제이 기준으로 Shift를 두번 눌러서 파일 검색을 할 수 있다.
 
@@ -395,3 +395,35 @@ public class CurrencyServiceConfiguration { }
 4. 데이터 확인
 ![currency-configuration.png](image/currency-configuration.png)
 5. 해당 설정 역시 profile을 사용할 수 있다. profile 설정이 우선적으로 사용된다.
+
+## 11단계 - Spring Boot로 프로덕션 환경 배포 준비하기 -3- Embedded Server
+
+Spring Boot Embedded Server를 사용하여 배포를 간소화할 수 있다.
+![deployment-process.png](image/deployment-process.png)
+
+#### 배포 환경은 다양하다.
+- dev, qa, stage, prod 등 다양한 환경은 모두 배포 대상이다.
+
+#### WAR (Web ARchive) : 이전의 배포 방식
+1. Java 설치
+2. Web/Application 서버 설치 (Tomcat, Weblogic, WebSphere 등)
+3. WAR 방식 애플리케이션 배포
+
+#### Embedded Server : 더 단순한 대안
+1. Java 설치
+2. Jar 파일 run
+   - 이미 Tomcat과 같은 서버가 JAR 파일에 포함되어 있음
+
+#### 실습 (인텔리제이 기준)
+![maven-install.png](image/maven-install.png)
+- 인텔리제이에서 Maven 빌드를 실행할 수 있다.
+![maven-jar.png](image/maven-jar.png)
+- 빌드 성공, jar 파일이 생성되었다.
+![run-jar.png](image/run-jar.png)
+- 터미널을 통해 jar 파일을 실행시켜 애플리케이션을 구동할 수 있다.
+  - 실행을 위해서 올바른 java 버전이 설치되어 있어야 한다. (Spring Boot 3 이상은 Java 17 이상이 설치되어 있어야 함)
+
+#### Spring Boot에서 지원하는 대표적인 Embedded Server
+- spring-boot-starter-tomcat : 디폴트
+- spring-boot-starter-git
+- spring-boot-starter-undertow
