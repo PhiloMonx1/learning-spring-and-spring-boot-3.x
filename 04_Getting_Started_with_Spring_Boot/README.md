@@ -1,6 +1,24 @@
 # 📒 [학습 노트] 챕터 4 : Spring Boot 시작하기
 
+## 목차
+1. [Spring Boot 시작하기 - 목표](#1단계---spring-boot-시작하기---목표)
+2. [Spring Boot 이전 세계 이해 - 대략적으로 알아보기](#2단계---spring-boot-이전-세계-이해---대략적으로-알아보기)
+3. [Spring Initializer로 새 Spring Boot Project 설정하기](#3단계---spring-initializer로-새-spring-boot-project-설정하기)
+4. [Spring Boot를 사용하여 Hello World API 빌드하기](#4단계---spring-boot를-사용하여-hello-world-api-빌드하기)
+5. [Spring Boot의 목표 이해하기](#5단계---spring-boot의-목표-이해하기)
+6. [Spring Boot의 강력함 이해하기 - Spring Boot Starter Project](#6단계---spring-boot의-강력함-이해하기---spring-boot-starter-project)
+7. [Spring Boot의 강력함 이해하기 - Auto Configuration](#7단계---spring-boot의-강력함-이해하기---auto-configuration)
+8. [Spring Boot DevTools로 빠르게 빌드하기](#8단계---spring-boot-devtools로-빠르게-빌드하기)
+9. [Spring Boot로 프로덕션 환경 배포 준비하기 -1- Profile](#9단계---spring-boot로-프로덕션-환경-배포-준비하기--1--profile)
+10. [Spring Boot로 프로덕션 환경 배포 준비하기 -2- ConfigurationProperties](#10단계---spring-boot로-프로덕션-환경-배포-준비하기--2--configurationproperties)
+11. [Spring Boot로 프로덕션 환경 배포 준비하기 -3- Embedded Server](#11단계---spring-boot로-프로덕션-환경-배포-준비하기--3--embedded-server)
+12. [Spring Boot로 프로덕션 환경 배포 준비하기 -4- Actuator](#12단계---spring-boot로-프로덕션-환경-배포-준비하기--4--actuator)
+13. [Spring Boot, Spring, Spring MVC 이해하기](#13단계---spring-boot-spring-spring-mvc-이해하기)
+14. [Spring Boot 시작하기 - 복습](#14단계---spring-boot-시작하기---복습)
+
+
 ## 1단계 - Spring Boot 시작하기 - 목표
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/67117a0fb39124ac7ec6e0e7681cd6cb1c3f33ca)
 
 #### 질문
 - Spring Boot 가 없어도 웹 애플리케이션과 REST API를 빌드할 수 있다. 그렇다면 왜 Spring Boot를 사용할까?
@@ -21,6 +39,7 @@
    - ...
 
 ## 2단계 - Spring Boot 이전 세계 이해 - 대략적으로 알아보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/82822af5451c07c2959867d79a7f9fd27d3d5c39)
 
 Spring Boot 전에 Spring 프로젝트를 설정하는 작업은 쉽지 않았다.
 #### 첫 번째 어려움 : 의존성
@@ -57,6 +76,7 @@ pom.xml에서 프레임워크와 버전을 관리해야 함
 - 유지보수에 어려움을 겪었다.
 
 ## 3단계 - Spring Initializer로 새 Spring Boot Project 설정하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/47028b81c0f71e21c5d08e6ecba27684decbfbd5)
 
 #### Spring Boot 프로젝트 만들기
 [spring initializer](https://start.spring.io/)
@@ -81,6 +101,7 @@ pom.xml에서 프레임워크와 버전을 관리해야 함
   - 포트 번호가 다르다면 해당 포트 번호 주소로 접근해야 한다.
 
 ## 4단계 - Spring Boot를 사용하여 Hello World API 빌드하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/446af4cd28c32b3b72b8347bebfb55ac9821d4ad)
 
 #### 만들고자 하는 API
 ![example-api.png](image/example-api.png)
@@ -113,6 +134,7 @@ public class CourseController {
 `RequestMapping`에 매핑된 '/courses' 경로에서 API를 확인할 수 있다.
 
 ## 5단계 - Spring Boot의 목표 이해하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/f9b2dff05b297cfad523539c3e8b8760b7a03f6a)
 
 #### Spring Boot의 목표 
 프로덕션 환경에서 사용가능한 애플리케이션을 빠르게 빌드할 수 있도록 돕는 것
@@ -137,6 +159,8 @@ public class CourseController {
     - 애플리케이션의 측정항목 살펴보기
 
 ## 6단계 - Spring Boot의 강력함 이해하기 - Spring Boot Starter Project
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/686ad9e737b2d89f64b58b55091214bf1d9fcd2b)
+
 일반적으로 애플리케이션을 빌드할 때는 프레임워크가 많이 필요하다.
 
 #### 일반적으로 애플리케이션을 빌드할 때는 프레임워크가 많이 필요하다.
@@ -187,6 +211,7 @@ spring-boot-starter-web 하나만 있어도 웹 애플리케이션 개발에 필
 - Spring Boot Starter Security : 웹 애플리케이션, REST API 보호
 
 ## 7단계 - Spring Boot의 강력함 이해하기 - Auto Configuration
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/82a21f9c2c72d1e4028dc4c7016d5e2a0f54d080)
 
 #### 애플리케이션을 빌드할 때는 많은 설정이 필요하다.
 - 컴포넌트 스캔 (Component Scan)
@@ -280,6 +305,8 @@ Negative matches:
     - Spring Boot Starter Web에는 Jackson 라이브러리가 기본적으로 포함되어 있다.
 
 ## 8단계 - Spring Boot DevTools로 빠르게 빌드하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/765d7847779c2fb80154d17afdd129a9f5380abf)
+
 코드 수정 이후 자동으로 서버를 다시 시작하고 코드 변경사항을 적용
 
 #### DevTools 사용법
@@ -314,6 +341,8 @@ public class CourseController {
 -`spring-boot-devtools`는 pom.xml의 수정 사항은 처리할 수 없다.
 
 ## 9단계 - Spring Boot로 프로덕션 환경 배포 준비하기 -1- Profile
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/f697b76bd6219e7a6e17a1ab535fc59fb3e8d8a6)
+
 Srping Boot의 중요한 기능 알아보기
 
 #### 프로필 (Profiles)
@@ -347,6 +376,8 @@ Srping Boot의 중요한 기능 알아보기
 - TRACE : 모든 로그 출력 
 
 ## 10단계 - Spring Boot로 프로덕션 환경 배포 준비하기 -2- ConfigurationProperties
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/d66e48f93d1e74f184cc775b66c7ede3b6a960d2)
+
 애플리케이션에 특수한 설정이 필요한 경우가 있다고 가정하자 Spring은 이 설정을 어떻게 지원할까?
 
 #### ConfigurationProperties
@@ -397,6 +428,7 @@ public class CurrencyServiceConfiguration { }
 5. 해당 설정 역시 profile을 사용할 수 있다. profile 설정이 우선적으로 사용된다.
 
 ## 11단계 - Spring Boot로 프로덕션 환경 배포 준비하기 -3- Embedded Server
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/91cb0f3064f4afa82b8dd879f06689f2dfdbe1ce)
 
 Spring Boot Embedded Server를 사용하여 배포를 간소화할 수 있다.
 ![deployment-process.png](image/deployment-process.png)
@@ -429,6 +461,7 @@ Spring Boot Embedded Server를 사용하여 배포를 간소화할 수 있다.
 - spring-boot-starter-undertow
 
 ## 12단계 - Spring Boot로 프로덕션 환경 배포 준비하기 -4- Actuator
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/8e4b0917a4aac513c46f0d68945fe674a56b9916)
 
 애플리케이션의 백그라운드에서 어떤 일이 발생하는지 확인하는 일을 모니터링이라고 한다.
 
@@ -491,6 +524,7 @@ Spring Boot Embedded Server를 사용하여 배포를 간소화할 수 있다.
   ```
 
 ## 13단계 - Spring Boot, Spring, Spring MVC 이해하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/471e1791d30969429a629ae265f16504b0cf142b)
 
 #### Spring : 의존성 주입이 가능하지만 강력한 애플리케이션을 만들기 위해서는 다른 프레임워크가 필요함
 - 의존성 주입
@@ -517,6 +551,7 @@ Spring Boot Embedded Server를 사용하여 배포를 간소화할 수 있다.
   - ConfigurationProperties : 애플리케이션 설정 간소화
 
 ## 14단계 - Spring Boot 시작하기 - 복습
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/875e87b56f6ffcba7febf8ade810b15c13827cda)
 
 해당 챕터의 목표는 Spring Boot를 대략적으로 살펴보는 것
 
