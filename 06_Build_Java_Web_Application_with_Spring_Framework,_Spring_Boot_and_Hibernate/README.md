@@ -108,3 +108,47 @@ public class SayHelloController {
 - 한 줄의 텍스트를 HTML로 노출하기 위해 너무 많은 코드가 필요하다. 
 
 ---
+
+## 5단계 - Spring Boot Controller, @ResponseBody, 뷰를 이용하여 JSP로 리디렉션하기
+
+이전 단계에서 HTML을 직접 하드 코딩하는 것의 문제점을 알아보았다. 이 문제를 해결하기 위해 뷰를 사용할 수 있다.
+
+#### JSP(Java Server Pages) 실습
+1. tomcat-embed-jasper 라이브러리 추가 (JSP 파일을 해석하고 처리할 수 있음)
+    ```
+    <dependency>
+        <groupId>org.apache.tomcat.embed</groupId>
+        <artifactId>tomcat-embed-jasper</artifactId>
+    </dependency>
+    ```
+2. jsp 파일 생성 ([sayHello.jsp](..%2F00_module%2Fmyfirstwebapp%2Fsrc%2Fmain%2Fresources%2FMETA-INF%2Freources%2FWEB-INF%2Fjsp%2FsayHello.jsp))
+   - 일반적으로 모든 jsp는 특정한 폴더 안에서 만들어야 한다.
+     - src/main/resources/META-INF/reources/WEB-INF/jsp
+   - HTML을 입력하는 것과 같은 문법으로 작성할 수 있다.
+   - 이렇게 작성한 jsp 파일을 '뷰'라고 부른다.
+3. [application.properties](..%2F00_module%2Fmyfirstwebapp%2Fsrc%2Fmain%2Fresources%2Fapplication.properties) 설정
+    ```
+    spring.mvc.view.prefix=/WEB-INF/jsp/
+    spring.mvc.view.suffix=.jsp
+    ```
+   - 컨트롤러에서 jsp 파일을 리턴해야 한다.
+   - 경로 : src/main/resources/META-INF/reources/WEB-INF/jsp/sayHello.jsp
+   - 경로에서 `sayHello`를 제외한 부분은 새로운 파일이 추가되어도 변하지 않기에 상수로 선언할 수 있다
+     - 접두사(prefix) : `/src/main/resources/META-INF/resources` 부분은 Spring이 알고 있으니 나머지 부분만 입력
+     - 접미사(suffix) : 파일의 확장자인 `.jsp`을 입력
+4. API 추가
+    ```java
+    @Controller
+    public class SayHelloController {
+        @RequestMapping("say-hello-jsp")
+        public String sayHelloJsp() {
+            return "sayHello";
+        }
+    }
+    ```
+    - `@ResponseBody` 어노테이션을 부여하면 sayHello 문자열이 노출되니 주의해야 한다.
+5. UTF-8 인코딩
+    - jsp 내용을 한글로 작성했기 때문에 실제 페이지에서 깨지는 문제가 발생했다.
+    - jsp 파일 최상단에 `<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>`를 입력해서 해결할 수 있다.
+---
+
