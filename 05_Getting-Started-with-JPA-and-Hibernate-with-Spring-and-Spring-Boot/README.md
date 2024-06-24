@@ -1,7 +1,21 @@
-# 📒 [학습 노트] 챕터 6 : Spring과 Spring Boot로 JPA와 Hibernate 시작하기
+# 📒 [학습 노트] 챕터 5 : Spring과 Spring Boot로 JPA와 Hibernate 시작하기
 
+## 목록
+1. [JPA와 Hibernate 시작하기 - 목표](#1단계---jpa와-hibernate-시작하기---목표)
+2. [JPA와 Hibernate에 맞는 새 Spring Boot 프로젝트 설정하기](#2단계---jpa와-hibernate에-맞는-새-spring-boot-프로젝트-설정하기)
+3. [H2 콘솔 실행하기 및 H2에서 과정 테이블 생성하기](#3단계---h2-콘솔-실행하기-및-h2에서-과정-테이블-생성하기)
+4. [Spring JDBC 시작하기](#4단계---spring-jdbc-시작하기)
+5. [Spring JDBC를 사용하여 하드코드로 작성된 데이터 삽입하기](#5단계---spring-jdbc를-사용하여-하드코드로-작성된-데이터-삽입하기)
+6. [Spring JDBC를 사용하여 데이터 삽입 및 삭제하기](#6단계---spring-jdbc를-사용하여-데이터-삽입-및-삭제하기)
+7. [Spring JDBC를 사용하여 데이터 쿼리하기](#7단계---spring-jdbc를-사용하여-데이터-쿼리하기)
+8. [JPA와 EntityManager 시작하기](#8단계---jpa와-entitymanager-시작하기)
+9. [JPA의 마법 살펴보기](#9단계---jpa의-마법-살펴보기)
+10. [Spring Data JPA 시작하기](#10단계---spring-data-jpa-시작하기)
+11. [Spring Data JPA 특징 살펴보기](#11단계---spring-data-jpa-특징-살펴보기)
+12. [Hibernate와 JPA의 차이 이해하기](#12단계---hibernate와-jpa의-차이-이해하기)
 
 ## 1단계 - JPA와 Hibernate 시작하기 - 목표
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/e1319cb7b506e6be25a92fec685f13cad137ca27)
 
 #### 학습 목표
 1. JPA 이전의 세계 이해하기
@@ -19,6 +33,7 @@
 ---
 
 ## 2단계 - JPA와 Hibernate에 맞는 새 Spring Boot 프로젝트 설정하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/326cf858b8e306690287918ad438e727000e5cb6)
 
 #### 프로젝트 생성
 ![Spring-initializer.png](image/Spring-initializer.png)
@@ -35,6 +50,7 @@
 ---
 
 ## 3단계 - H2 콘솔 실행하기 및 H2에서 과정 테이블 생성하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/ed7b46895b19782cd69d667c001b43ce4e723505)
 
 #### H2 데이터베이스 연결
 1. 서버 실행 로그를 보면 H2 데이터베이스 로그를 찾을 수 있다.
@@ -79,6 +95,7 @@
 ---
 
 ## 4단계 - Spring JDBC 시작하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/49ee4a4f341709798b80d0d0181f652ac57dd899)
 
 #### H2 데이터베이스 테이블에 데이터 조작(생성,조회,삭제) 방법
 - 콘솔창에 SQL 문법을 입력하고 실행할 수 있다.
@@ -123,6 +140,7 @@
 ---
 
 ## 5단계 - Spring JDBC를 사용하여 하드코드로 작성된 데이터 삽입하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/9904ca242437397fd6f29aa0ff376d1271da3d2f)
 
 #### Spring JDBC 사용
 ```sql
@@ -181,6 +199,7 @@ Spring JDBC를 사용해서 해당 쿼리를 실행해보려고 한다.
 ---
 
 ## 6단계 - Spring JDBC를 사용하여 데이터 삽입 및 삭제하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/2bd810601aae0dbe264d2f1607a01901c07e4103)
 
 #### 하드코딩된 CourseJdbcRepository::insert( ) Course 객체 연결 실습
 1. [Course.java](..%2F00_module%2Flearn-jpa-and-hibernate%2Fsrc%2Fmain%2Fjava%2Fcom%2Fin28minutes%2Fspringboot%2Flearn_jpa_and_hibernate%2Fcourse%2FCourse.java) 클래스 선언
@@ -229,6 +248,7 @@ public class CourseJdbcRepository {
 ---
 
 ## 7단계 - Spring JDBC를 사용하여 데이터 쿼리하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/8472ddc84518273289061300c36876eecd7d6d21)
 
 #### 조회 쿼리 작성 실습
 ```java
@@ -276,6 +296,8 @@ public class CourseJdbcRepository {
 ---
 
 ## 8단계 - JPA와 EntityManager 시작하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/244fcd63252630e7a174d7fa267074a3ccadfd3f)
+
 Spring JDBC는 편리하지만 SQL 쿼리를 직접 작성해야 한다는 단점이 있다. 데이터베이스가 거대할 수록 쿼리문은 길고 복잡해진다. 또한 텍스트를 직접 입력하는 방식은 오탈자와 같은 실수가 발생할 여지를 준다.
 
 #### JPA
@@ -362,6 +384,7 @@ public class CourseJpaRepository {
 ---
 
 ## 9단계 - JPA의 마법 살펴보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/03395f51617c2828f74bcbf7dae7ee07f059b8ec)
 
 JPA는 JDBC와 다르게 쿼리는 전혀 작성하지 않고, 엔티티만 테이블로 매핑하는 것으로 사용할 수 있다. 하지만 최종적으로는 여전히 SQL 쿼리가 실행되고 있다.
 
@@ -389,6 +412,7 @@ Course{id=3, name='Learn DevOps Jpa!', author='in28minutes'}
 ---
 
 ## 10단계 - Spring Data JPA 시작하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/2ef761754e5750db7eff475cf3dd13148b4f5a02)
 
 지금까지 JDBC, Spring JDBC, JPA를 배웠다.
 - JDBC : 많은 퀴리문과 많은 자바 코드를 작성해야 한다.
@@ -437,6 +461,7 @@ Course{id=3, name='Learn DevOps Jpa!', author='in28minutes'}
 ---
 
 ## 11단계 - Spring Data JPA 특징 살펴보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/84764aa94c10b2c83f43b5fa2a3d88a35a36559b)
 
 #### Spring Data JPA 메서드 더 알아보기
 - findAll() : SELECT * FROM COURSE
@@ -477,6 +502,7 @@ Course{id=3, name='Learn DevOps Jpa!', author='in28minutes'}
 ---
 
 ## 12단계 - Hibernate와 JPA의 차이 이해하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/a818e46be5dbaa9e58a3777f23212c8d1a534fcb)
 
 #### Hibernate vs JPA
 - [CourseJpaRepository.java](..%2F00_module%2Flearn-jpa-and-hibernate%2Fsrc%2Fmain%2Fjava%2Fcom%2Fin28minutes%2Fspringboot%2Flearn_jpa_and_hibernate%2Fcourse%2Fjpa%2FCourseJpaRepository.java)와 [Course.java](..%2F00_module%2Flearn-jpa-and-hibernate%2Fsrc%2Fmain%2Fjava%2Fcom%2Fin28minutes%2Fspringboot%2Flearn_jpa_and_hibernate%2Fcourse%2FCourse.java)의 임포트 목록을 보자.
