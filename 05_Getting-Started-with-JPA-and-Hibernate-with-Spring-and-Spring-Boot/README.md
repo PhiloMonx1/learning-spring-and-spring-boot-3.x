@@ -387,3 +387,51 @@ Course{id=3, name='Learn DevOps Jpa!', author='in28minutes'}
 ```
     JPA가 자바 코드를 해석해서 SQL 쿼리문을 대신 작성해 주는 것이다.
 ---
+
+## 10단계 - Spring Data JPA 시작하기
+
+지금까지 JDBC, Spring JDBC, JPA를 배웠다.
+- JDBC : 많은 퀴리문과 많은 자바 코드를 작성해야 한다.
+- Spring JDBC : 자바 코드는 줄어들었다! 하지만 여전히 많은 쿼리문을 작성해야 한다.
+- JPA : 드디어! 쿼리문으로부터 해방되었다. 이제 간단한 자바 코드만으로 데이터베이스 조작이 가능하다!
+
+그렇다면 Spring Data JPA는 어떤 문제를 해결해줄까?
+
+#### Spring Data JPA : JPA가 한결 더 간편해진다.
+- EntityManager를 신경 쓸 필요가 없다.
+
+1. Repository 인터페이스 생성
+    ```java
+    @Repository
+    public interface CourseSpringDataJpaRepository extends JpaRepository<Course, Long> {
+    
+    }
+    ```
+    - Spring Data JPA 의 Repository는 클래스가 아닌 인터페이스로 생성한다.
+    - `JpaRepository`를 상속받는다. (<Course, Long>는 관리할 엔티티와 해당 엔티티 ID의 타입이다.)
+
+2. 로직 작성을 건너뛰고 `CourseCommandLineRunner`에서 바로 사용.
+    ```java
+    @Component
+    public class CourseCommandLineRunner implements CommandLineRunner {
+    
+        @Autowired
+        private CourseSpringDataJpaRepository repository;
+    
+        @Override
+        public void run(String... args) throws Exception {
+            repository.save(new Course(1L, "Learn AWS Jpa!", "in28minutes"));
+            repository.save(new Course(2L, "Learn Azure Jpa!", "in28minutes"));
+            repository.save(new Course(3L, "Learn DevOps Jpa!", "in28minutes"));
+    
+            repository.deleteById(1L);
+    
+            System.out.println(repository.findById(2L));
+            System.out.println(repository.findById(3L));
+        }
+    }
+    ```
+    - 별도의 로직 구현 없이 JpaRepository의 기본 CRUD 메서드를 사용할 수 있다.
+    - ![Spring-Data-Jpa-method.png.png](image/Spring-Data-Jpa-method.png)
+      - JpaRepository 가 제공하는 여러 메서드를 선택해서 사용할 수 있다.
+---
