@@ -39,3 +39,14 @@
    - 목표 날짜 설정
 
 ---
+
+## 1단계 - Spring initalizr로 Spring Boot 웹 애플리케이션 만들기
+
+#### 프로젝트 생성
+![Spring-initializer.png](image/Spring-initializer.png)
+- [Spring initializer](https://start.spring.io/) 를 통해 프로젝트를 생성한다.
+- 라이브러리 목록
+  - Spring Web
+  - Spring Boot DevTools
+
+---
