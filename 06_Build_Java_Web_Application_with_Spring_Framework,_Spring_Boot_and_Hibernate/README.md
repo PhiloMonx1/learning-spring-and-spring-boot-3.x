@@ -81,3 +81,30 @@ public class SayHelloController {
   - 반환 값을 JSON, XML, 문자열 등의 형식으로 변환하여 클라이언트에게 전송.
 
 ---
+
+## 4단계 - HTML 응답을 제공하기 위해 Spring MVC 컨트롤러 개선하기
+
+#### 하드코딩 HTML(Hyper Text Markup Language) 리턴하기
+```java
+@Controller
+public class SayHelloController {
+	@RequestMapping("say-hello-html")
+	@ResponseBody
+	public String sayHelloHtml() {
+		StringBuffer html = new StringBuffer();
+		html.append("<html>");
+		html.append("<head>");
+		html.append("<title>나의 첫 번째 HTML 페이지</title>");
+		html.append("</head>");
+		html.append("<body>");
+		html.append("나의 첫 번째 HTML 페이지의 Body");
+		html.append("</body>");
+		html.append("</html>");
+
+		return html.toString();
+	}
+}
+```
+- 한 줄의 텍스트를 HTML로 노출하기 위해 너무 많은 코드가 필요하다. 
+
+---
