@@ -178,3 +178,52 @@ Spring JDBC를 사용해서 해당 쿼리를 실행해보려고 한다.
     ```
     - Bean 이 SpringApplication 안에 포함되어 있을 때 실행할 특정 로직을 작성할 수 있는 인터페이스
     - `CommandLineRunner` 인터페이스를 구현하고 내부의 `run()` 를 구현하면 애플리케이션이 실행될 때 `run()` 메서드가 자동으로 실행된다.
+---
+
+## 6단계 - Spring JDBC를 사용하여 데이터 삽입 및 삭제하기
+
+#### 하드코딩된 CourseJdbcRepository::insert( ) Course 객체 연결 실습
+1. [Course.java](..%2F00_module%2Flearn-jpa-and-hibernate%2Fsrc%2Fmain%2Fjava%2Fcom%2Fin28minutes%2Fspringboot%2Flearn_jpa_and_hibernate%2Fcourse%2FCourse.java) 클래스 선언
+   - 생성자와 getter, setter 메서드도 함께 만든다.
+2. `CourseJdbcRepository`에 연결하기
+    ```java
+    public class CourseJdbcRepository {
+        private static String INSERT_COURSE_SQL =
+                """
+               insert into course (id, name, author)
+               values (?, ?, ?);
+                """;
+   
+   	    public void insert(Course course) {
+		    springJdbcTemplate.update(INSERT_COURSE_SQL, course.getId(), course.getName(), course.getAuthor());
+	    }
+    }
+    ```
+    - `values` 값을 '?'로 줄 수 있다.
+    - 기존 `insert()` 메서드에 course 를 넘겨주어서 사용한다.
+3. `CourseJdbcCommandLineRunner` 에서 의존성 주입
+    ```java
+    @Component
+    public class CourseJdbcCommandLineRunner implements CommandLineRunner {
+        @Override
+        public void run(String... args) throws Exception {
+            repository.insert(new Course(1L, "Learn AWS Now!", "in28minutes"));
+            repository.insert(new Course(2L, "Learn Azure Now!", "in28minutes"));
+            repository.insert(new Course(3L, "Learn DevOps Now!", "in28minutes"));
+        }
+    }
+    ```
+    - 기존에 사용했던 `CourseJdbcCommandLineRunner::run()` 에서 Course 객체의 의존성을 주입해서 메서드를 사용한다.
+
+#### 데이터 삭제 로직 구현하기
+```java
+@Repository
+public class CourseJdbcRepository {
+	//...(생략)
+	public void deleteById(long id) {
+		springJdbcTemplate.update("delete from course where id=?", id);
+	}
+}
+```
+- 텍스트 블록을 상수로 선언하지 않고 바로 사용하는 것도 가능하다.
+---
