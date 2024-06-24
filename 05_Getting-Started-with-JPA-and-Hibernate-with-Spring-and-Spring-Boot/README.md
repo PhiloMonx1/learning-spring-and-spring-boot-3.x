@@ -360,3 +360,30 @@ public class CourseJpaRepository {
     ```
     `application.properties` 파일에 해당 값을 선언하면 JPA를 실행하고 있을 때 콘솔에 SQL문이 출력된다.
 ---
+
+## 9단계 - JPA의 마법 살펴보기
+
+JPA는 JDBC와 다르게 쿼리는 전혀 작성하지 않고, 엔티티만 테이블로 매핑하는 것으로 사용할 수 있다. 하지만 최종적으로는 여전히 SQL 쿼리가 실행되고 있다.
+
+[application.properties](..%2F00_module%2Flearn-jpa-and-hibernate%2Fsrc%2Fmain%2Fresources%2Fapplication.properties) 파일에 `spring.jpa.show-sql=true` 라인을 추가한 후 애플리케이션을 실행한다.
+```
+//CourseJpaRepository::insert()
+Hibernate: select c1_0.id,c1_0.author,c1_0.name from course c1_0 where c1_0.id=?
+Hibernate: insert into course (author,name,id) values (?,?,?)
+Hibernate: select c1_0.id,c1_0.author,c1_0.name from course c1_0 where c1_0.id=?
+Hibernate: insert into course (author,name,id) values (?,?,?)
+Hibernate: select c1_0.id,c1_0.author,c1_0.name from course c1_0 where c1_0.id=?
+Hibernate: insert into course (author,name,id) values (?,?,?)
+
+//CourseJpaRepository::findById()
+Hibernate: select c1_0.id,c1_0.author,c1_0.name from course c1_0 where c1_0.id=?
+Hibernate: delete from course where id=?
+
+//CourseJpaRepository::deleteById()
+Hibernate: select c1_0.id,c1_0.author,c1_0.name from course c1_0 where c1_0.id=?
+Course{id=2, name='Learn Azure Jpa!', author='in28minutes'}
+Hibernate: select c1_0.id,c1_0.author,c1_0.name from course c1_0 where c1_0.id=?
+Course{id=3, name='Learn DevOps Jpa!', author='in28minutes'}
+```
+    JPA가 자바 코드를 해석해서 SQL 쿼리문을 대신 작성해 주는 것이다.
+---
