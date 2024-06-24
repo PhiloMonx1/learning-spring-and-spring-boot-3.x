@@ -21,5 +21,16 @@ public class CourseCommandLineRunner implements CommandLineRunner {
 
 		System.out.println(repository.findById(2L));
 		System.out.println(repository.findById(3L));
+
+		System.out.println("=======================================");
+		System.out.println(repository.findAll());
+
+		System.out.println("=================findByAuthor : in28minutes=================");
+		System.out.println(repository.findByAuthor("in28minutes"));
+		System.out.println("=================findByAuthor : empty==================");
+		System.out.println(repository.findByAuthor(""));
+
+		System.out.println("=================findByName==================");
+		System.out.println(repository.findByName("Learn Azure Jpa!"));
 	}
 }

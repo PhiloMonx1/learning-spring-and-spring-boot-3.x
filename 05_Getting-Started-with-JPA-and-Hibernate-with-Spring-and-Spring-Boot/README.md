@@ -435,3 +435,43 @@ Course{id=3, name='Learn DevOps Jpa!', author='in28minutes'}
     - ![Spring-Data-Jpa-method.png.png](image/Spring-Data-Jpa-method.png)
       - JpaRepository 가 제공하는 여러 메서드를 선택해서 사용할 수 있다.
 ---
+
+## 11단계 - Spring Data JPA 특징 살펴보기
+
+#### Spring Data JPA 메서드 더 알아보기
+- findAll() : SELECT * FROM COURSE
+    코드 :
+    ```java
+    public class CourseCommandLineRunner implements CommandLineRunner {
+        public void run(String... args) throws Exception {
+            System.out.println(repository.findAll());
+        }
+    }
+    ```
+    
+    결과 :
+    ```
+    Hibernate: select c1_0.id,c1_0.author,c1_0.name from course c1_0
+    [Course{id=2, name='Learn Azure Jpa!', author='in28minutes'}, Course{id=3, name='Learn DevOps Jpa!', author='in28minutes'}]
+    ```
+- count() : SELECT COUNT(*) 
+
+#### 커스텀 메서드
+- `author` 컬럼을 기준으로 데이터 검색 커스텀 메서드
+    ```java
+    @Repository
+    public interface CourseSpringDataJpaRepository extends JpaRepository<Course, Long> {
+        List<Course> findByAuthor(String author);
+    }
+    ```
+- 커스텀 메서드 선언 방법
+  - List<Course> : 반환 타입 입력
+  - findBy : By 다음 나타나는 필드 기준으로 찾겠다는 의미
+  - Author : 기준이 되는 필드
+  - (String author) : 파라미터
+- 커스텀 메서트 선언 방법 심화 : 커스텀 메서드 선언 문법에는 규칙이 있다.
+  - 접두어 : findBy, getBy, readBy 등 데이터 검색을 위한 메서드라는 것을 의미.
+  - 속성 이름 : 접두어 뒤에 오는 엔티티의 속성 이름 첫 글자는 대문자로 써야 함.
+  - 연산자 :  And, Or, Between, LessThan, GreaterThan 등 다양한 연산자를 사용해서 구체화 할 수 있음
+    - ex) `List<Course> findByAuthorAndName(String author, String name);` : name과 author가 모두 일치하는 데이터 조회
+---
