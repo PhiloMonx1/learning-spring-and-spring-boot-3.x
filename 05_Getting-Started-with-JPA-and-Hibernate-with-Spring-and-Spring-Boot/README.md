@@ -475,3 +475,52 @@ Course{id=3, name='Learn DevOps Jpa!', author='in28minutes'}
   - 연산자 :  And, Or, Between, LessThan, GreaterThan 등 다양한 연산자를 사용해서 구체화 할 수 있음
     - ex) `List<Course> findByAuthorAndName(String author, String name);` : name과 author가 모두 일치하는 데이터 조회
 ---
+
+## 12단계 - Hibernate와 JPA의 차이 이해하기
+
+#### Hibernate vs JPA
+- [CourseJpaRepository.java](..%2F00_module%2Flearn-jpa-and-hibernate%2Fsrc%2Fmain%2Fjava%2Fcom%2Fin28minutes%2Fspringboot%2Flearn_jpa_and_hibernate%2Fcourse%2Fjpa%2FCourseJpaRepository.java)와 [Course.java](..%2F00_module%2Flearn-jpa-and-hibernate%2Fsrc%2Fmain%2Fjava%2Fcom%2Fin28minutes%2Fspringboot%2Flearn_jpa_and_hibernate%2Fcourse%2FCourse.java)의 임포트 목록을 보자.
+    ```java
+    //CourseJpaRepository (챕터에서 새로 등장한 일부 임포트)
+    import jakarta.persistence.EntityManager;
+    import jakarta.persistence.PersistenceContext;
+    import jakarta.transaction.Transactional;
+    
+    //Course
+    import jakarta.persistence.Entity;
+    import jakarta.persistence.Id;
+    ```
+    - 임포트 목록을 보면 Hibernate가 전혀 등장하지 않았다는 것을 알 수 있다. 
+- Maven 종속성 확인
+  - 목록에서 "jakarta.persistence:jakarta.persistence-api:3.1.0"를 찾아볼 수 있다.
+    - 해당 패키지의 jar 파일이 JPA JAR이다.
+  -  "org.hibernate.orm:hibernate-core:6.5.2.Final" 또한 클래스 경로에 있는 것을 확인할 수 있다.
+- pom.xml 확인
+  - 라이브러리 중 spring-boot-starter-data-jpa 내부에서 jpa와 hibernate를 확인 할 수 있다.
+
+#### 왜 코드에서는 JPA만 사용했을까?
+spring-boot-starter-data-jpa가 jpa와 hibernate를 둘 다 가져오는 것을 확인했다. 그런데 우리는 코드에서 jpa의 어노테이션만 사용하고 있다.
+
+- JPA : 기술 명세를 정의한다. 
+  - 즉, 데이터베이스와 상호작용하기 위한 일련의 규칙, 인터페이스, 클래스 등을 정의하는 일을 한다.
+    - 인터페이스와 비슷하다. JPA 자체는 구현체가 아니다.
+  - 사용 방법 
+    - @Entity : 엔티티를 정의한다.
+    - @Id : 테이블의 기본 키를 정의한다.
+    - @Column : 필드와 컬럼의 매핑을 정의한다.
+    - EntityManager(인터페이스) : 정의된 엔티티를 관리하고 DB와 상호작용 한다. 
+      - JPA는 EntityManager의 활용법 역시 정의하고 있음.
+- Hibernate : JPA의 구현체 
+  - 대표적인 JPA의 구현체로 JPA 명세를 따르면서 추가적인 기능과 최적화를 제공하는 ORM 프레임워크이다. 
+  - @Entity, @Id, @Column 등의 어노테이션을 Hibernate가 구현한 어노테이션으로 대체할 수도 있다. (import 패키지를 변경)
+- Hibernate 외의 JPA 구현체
+  - Toplink
+  - EclipseLink
+  - OpenJPA
+  - DataNucleus
+  - ...
+
+#### 추가 학습 : Spring Data JPA도 구현체인가?
+Spring Data JPA는 구현체가 아닌 JPA를 더 쉽게 사용할 수 있도록 도와주는 상위 레벨의 추상화 라이브러리이다. 
+
+---
