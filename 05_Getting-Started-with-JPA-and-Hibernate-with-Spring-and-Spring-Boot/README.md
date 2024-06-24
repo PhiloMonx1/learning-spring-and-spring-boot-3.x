@@ -77,3 +77,47 @@
 3. 프로젝트 실행 후 테이블 확인
    ![check-creat-table.png](image/check-creat-table.png)
 ---
+
+## 4단계 - Spring JDBC 시작하기
+
+#### H2 데이터베이스 테이블에 데이터 조작(생성,조회,삭제) 방법
+- 콘솔창에 SQL 문법을 입력하고 실행할 수 있다.
+  ![insert-int-ocourse.png](image/insert-into-course.png)
+- 데이터 확인이 가능하다.
+  ![SELECT-FROM-COURSE.png](image/SELECT-FROM-COURSE.png)
+- 삭제
+  ![delete-from-course.png](image/delete-from-course.png)
+
+#### SQL (Structured Query Language)
+- 관계형 데이터베이스 관리 시스템에서 데이터를 관리하고 조작하기 위해 사용하는 언어
+- JDBC 와 Spring JDBC도 SQL을 작성해서 데이터를 관리해야 한다.
+- Spring JDBC는 JDBC에 비해 더 적은 량의 Java code를 작성해도 된다는 장점이 있다.
+  - JDBC 예시 코드
+    ```java
+    class exJDBC {
+        public void deleteTodo(int id) {
+            PreparedStatement st = null;
+            try {
+                st = db.conn.prepareStatement("delete from todo where id=?");
+                st.setInt(1, id);
+                st.execute();
+            } catch (SQLException e) {
+                logger.fatal("쿼리 실패 : ", e);
+            } finally {
+                if (st != null){
+                    try {st.close();}
+                    catch (SQLException e) {}
+                }
+            }
+        }
+    }
+    ```
+  - Spring JDBC 예시 코드
+    ```java
+    class exSpringJDBC {
+        public void deleteTodo(int id){
+            jdbcTemplate.update("delete from todo where id=?", id);
+        }
+    }
+    ```
+---
