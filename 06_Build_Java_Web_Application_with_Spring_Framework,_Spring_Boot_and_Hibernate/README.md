@@ -59,3 +59,25 @@
 3. [pom.xml](..%2F00_module%2Fmyfirstwebapp%2Fpom.xml) : Spring initializer 에서 프로젝트를 생성할 때 선택한 라이브러리(의존성)을 기록, 관리
 
 ---
+
+## 3단계 - 첫 번째 Spring MVC 컨트롤러, @ResponseBody, @Controller
+
+#### sayHello 실습
+```java
+@Controller
+public class SayHelloController {
+	@RequestMapping("say-hello")
+	public String sayHello() {
+		return "안녕하세요 오늘은 어떤 걸 배우고 계신가요?";
+	}
+}
+```
+이렇게 작성했을 때 /say-hello 엔드포인트에 접근하면 오류가 발생한다. Spring MVC 가 기본적으로 String을 리턴할 때 리턴한 문자열을 이름으로 하는 View를 검색하기 때문이다.
+
+메서드에 `@ResponseBody` 어노테이션을 부여해서 해결할 수 있다
+
+#### @ResponseBody
+- 부여된 메서드가 반환하는 값을 HTTP 응답 바디에 직접 작성.
+  - 반환 값을 JSON, XML, 문자열 등의 형식으로 변환하여 클라이언트에게 전송.
+
+---
