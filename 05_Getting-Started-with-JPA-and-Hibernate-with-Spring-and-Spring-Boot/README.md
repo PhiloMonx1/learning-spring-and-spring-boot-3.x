@@ -274,3 +274,89 @@ public class CourseJdbcRepository {
 3. Serializable 인터페이스 구현 (선택 사항) : JavaBeans는 일반적으로 직렬화 가능하도록 Serializable 인터페이스를 구현한다. (네트워크를 통해 전송되거나 파일로 저장될 수 있도록)
 4. <b> 자바Bean과 Spring Bean은 다르다 : [챕터 1 ReadMe](..%2F01_Getting_Started_with_Java_Spring_Framework%2FREADME.md) 13단계 참고</b>
 ---
+
+## 8단계 - JPA와 EntityManager 시작하기
+Spring JDBC는 편리하지만 SQL 쿼리를 직접 작성해야 한다는 단점이 있다. 데이터베이스가 거대할 수록 쿼리문은 길고 복잡해진다. 또한 텍스트를 직접 입력하는 방식은 오탈자와 같은 실수가 발생할 여지를 준다.
+
+#### JPA
+JPA를 사용하면 이 문제를 해결할 수 있다. JPA를 활용해서 Course Bean 객체를 데이터베이스에 존재하는 테이블로 직접 매핑할 수 있다.
+
+1. `@Entity` 생성
+    ```java
+    @Entity
+    public class Course {
+        @Id
+        private Long id;
+        @Column
+        private String name;
+        @Column
+        private String author;
+        //...(생략)}
+    }
+    ```
+    - `@Entity` : 해당 클래스가 DB 테이블과 매핑됨을 명시하는 어노테이션
+      - 해당 어노테이션은 컴포넌트 스캔의 대상이 아니다. 즉 엔티티는 스프링 IoC 컨테이너가 관리하지 않는다.
+    - `@Id` :  테이블의 기본 키
+    - `@Column` : DB 테이블 컴럼에 매핑됨 (클래스의 필드명과 테이블의 컬럼명이 같을 경우 생략할 수 있다.)
+
+2. Repository 생성
+    ```java
+    @Repository
+    @Transactional
+    public class CourseJpaRepository {
+        @PersistenceContext
+        private EntityManager entityManager;
+    }
+    ```
+    - `EntityManager` : 엔티티를 관리하고, 데이터베이스와 상호작용을 담당하는 JPA의 인터페이스
+      - 엔티티는 컴포넌트 스캔의 대상이 아니며, 스프링 IoC 컨테이너의 관리 대상도 아니다. 
+      - 대신 Repository는 스프링 IoC 컨테이너의 관리 대상이다. 즉 Repository 는 스프링 IoC 컨테이너의 하청업체, `EntityManager`는 하청업체가 사용하는 도구, 엔티티는 하청업체가 관리하는 대상으로 비유할 수 있다.
+    - `@PersistenceContext` : EntityManager는 `@Autowired` 가 아닌 `@PersistenceContext`으로 주입한다.
+      - 엔티티는 컴포넌트 스캔의 대상이 아닌 것과 밀접한 관련이 있다.
+      - Spring IoC 컨테이너에 의해 관리되고 Bean으로 주입된다.
+      - JPA의 표준이다.
+      - 역할 : JPA의 영속성 컨텍스트를 관리하기 위해 사용된다.
+        - 트랜잭션 관리가 가능하다.
+      - @Autowired로 주입하는 것이 불가능하지는 않지만 권장되지 않으며 추가 구현이 필요하다.
+    - `@Transactional` : 트랜잭션 관리에 사용 (붙이지 않으면 런타임 예외 발생함)
+      - 트랜잭션 :  데이터베이스의 일관성과 무결성을 보장하기 위해 반드시 지켜야 하는 특성 'ACID 속성'이라고도 부름
+        - Atomicity (원자성): 트랜잭션은 더 이상 나눌 수 없는 최소 로직 단위이다. 트랜잭션 내의 모든 작업이 성공적으로 완료되거나, 하나라도 실패하면 모든 작업이 취소되어야 한다.
+          - ex) 은행 계좌 이체 시, 출금과 입금이 모두 성공하거나 모두 실패해야 함
+        - Consistency (일관성): 트랜잭션이 완료된 후 데이터베이스가 일관된 상태를 유지되어야 한다.
+          - ex) 200만원의 계좌 잔액에서 100만원을 출금하면 언제나 잔액이 100만원으로 줄어들어야 한다. (일관된 규칙과 제약을 유지해야 하기 때문)
+        - Isolation (격리성): 하나의 트랜잭션이 완료될 때까지 다른 트랜잭션이 그 작업 결과를 볼 수 없어야 한다.
+          - ex) A,B 두 명의 사용자 동시에 같은 계좌에서 출금을 할 때, A의 출금이 완료된 후에 B의 출금이 시작되어야 하며, 중복 출금은 발생하지 않아야 한다.
+        - Durability (지속성): 트랜잭션이 성공적으로 완료되면 그 즉시 데이터베이스에 기록되어야 하며, 시스템 오류가 발생해도 저장 데이터는 보존해야 함
+          - ex) 100만원의 출금 트랜잭션이 완료되면 영구적으로 그 사실이 기록되며 은행 시스템이 오류가 일어나도 해당 데이터는 유지되어야 함
+      - 세부 속성 : 다양한 속성을 통해 트랙잭션의 동작을 세부적으로 정의 가능
+        - propagation (전파) : 트랜잭션 경계를 정의하며, 트랜잭션 메서드가 다른 트랜잭션 메서드를 호출할 때 어떻게 동작할지를 지정
+        - isolation (격리 수준) : 트랜잭션 간의 격리 수준 정의
+        - timeout (제한 시간) : 트랜잭션이 완료되기까지의 최대 시간을 초 단위로 지정
+        - readOnly (읽기 전용) : 트랜잭션을 읽기 전용으로 설정하여, 데이터 변경 작업 제한
+        - rollbackFor (롤백 조건) : 특정 예외가 발생했을 때 트랜잭션을 롤백하도록 지정
+        - noRollbackFor (롤백 제외 조건) : 특정 예외가 발생해도 트랜잭션을 롤백하지 않도록 지정
+
+3. 데이터베이스 상호작용 로직 작성
+```java
+public class CourseJpaRepository {
+	// 삽입
+	public void insert(Course course) {
+		entityManager.merge(course);
+	}
+	//조회
+	public Course findById(long id) {
+		return entityManager.find(Course.class, id);
+	}
+	//삭제
+	public void deleteById(long id) {
+		Course course = entityManager.find(Course.class, id);
+		entityManager.remove(course);
+	}
+}
+```
+#### JPA SQL문 확인하기 
+    ```
+    spring.jpa.show-sql=true 
+    ```
+    `application.properties` 파일에 해당 값을 선언하면 JPA를 실행하고 있을 때 콘솔에 SQL문이 출력된다.
+---
