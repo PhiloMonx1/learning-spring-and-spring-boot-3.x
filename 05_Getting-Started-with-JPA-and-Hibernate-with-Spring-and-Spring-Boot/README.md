@@ -121,3 +121,60 @@
     }
     ```
 ---
+
+## 5단계 - Spring JDBC를 사용하여 하드코드로 작성된 데이터 삽입하기
+
+#### Spring JDBC 사용
+```sql
+insert into course (id, name, author)
+values (1, 'Learn AWS', 'in28minutes');
+
+select * from course;
+
+delete form course where id=1;
+```
+Spring JDBC를 사용해서 해당 쿼리를 실행해보려고 한다.
+
+1. `CourseJdbcRepository` 클래스 생성 
+    ```java
+    @Repository
+    public class CourseJdbcRepository {
+        private JdbcTemplate springJdbcTemplate;
+    }
+    ```
+   - @Repository : 데이터베이스에 연결되는 컴포넌트
+   - JdbcTemplate : Spring JDBC 에서 제공하는 데이터베이스 조작 템플릿 클래스
+2. 쿼리문 입력
+    ```java
+    @Repository
+    public class CourseJdbcRepository {
+        private static String INSERT_COURSE_SQL =
+                        """
+                        insert into course (id, name, author)
+                        values (1, 'Learn AWS', 'in28minutes');
+                        """;
+   
+   	    @Autowired
+        private JdbcTemplate springJdbcTemplate;
+    
+        public void insert( ) {
+            springJdbcTemplate.update(INSERT_COURSE_SQL);
+        }
+    }
+    ```
+   - springJdbcTemplate.update() 에 파라미터로 쿼리문을 줄 수 있다.
+3. CommandLineRunner
+    ```java
+    @Component
+    public class CourseJdbcCommandLineRunner implements CommandLineRunner {
+        @Autowired
+        private CourseJdbcRepository repository;
+   
+        @Override
+        public void run(String... args) throws Exception {
+            repository.insert();
+        }
+    }
+    ```
+    - Bean 이 SpringApplication 안에 포함되어 있을 때 실행할 특정 로직을 작성할 수 있는 인터페이스
+    - `CommandLineRunner` 인터페이스를 구현하고 내부의 `run()` 를 구현하면 애플리케이션이 실행될 때 `run()` 메서드가 자동으로 실행된다.
