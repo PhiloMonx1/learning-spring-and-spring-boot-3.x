@@ -227,3 +227,50 @@ public class CourseJdbcRepository {
 ```
 - 텍스트 블록을 상수로 선언하지 않고 바로 사용하는 것도 가능하다.
 ---
+
+## 7단계 - Spring JDBC를 사용하여 데이터 쿼리하기
+
+#### 조회 쿼리 작성 실습
+```java
+@Repository
+public class CourseJdbcRepository {
+    //...(생략)
+	public Course findById(long id) {
+		return springJdbcTemplate.queryForObject(SELECT_COURSE_SQL,
+				new BeanPropertyRowMapper<>(Course.class), id);
+	}
+}
+```
+- DB에서 조회된 데이터를 `Course`의 Bean 객체로 변환 매핑 해야 한다.
+  - `BeanPropertyRowMapper` 사용할 수 있다.
+  - 주의!! `Course` 클래스에 Setter 메서드가 없으면 매핑이 불가능하다.
+- `RowMapper` : JDBC를 통해 데이터베이스에서 쿼리 결과를 객체로 변환을 돕는 인터페이스
+- `BeanPropertyRowMapper` : Bean 객체로 변환 (RowMapper의 구현체)
+- `.class` : 자바 리플렉션(reflection) API 에서 지원하는 클래스의 메타데이터
+  - 자바 코드로 특정한 클래스를 선언하면 자바 런타임 시스템이 해당 클래스의 Class 객체를 만든다.
+  - 클래스 이름, 패키지, 상위 클래스, 상속 관계 등의 정보를 담고 있으며, 자바 리플렉션을 통해 조작하는 것도 가능하다. (백기선님의 인프런 강의 '[더 자바, 코드를 조작하는 다양한 방법](https://inf.run/DH6Y)'에서 배울 수 있다.)
+
+#### 추가 학습 : DataClassRowMapper
+`BeanPropertyRowMapper` 를 사용하기 위해서는 매핑되는 클래스에 Setter 메서드가 존재해야 한다. 그렇지 않으면 null로 나타난다. Setter 메서드 대신 생성자를 사용해서 객체를 매핑할 순 없을까?
+
+방법은 Custom RowMapper를 구현하는 것이다. 하지만 Spring 5.3부터는 생성자를 이용한 매핑을 지원하는 `DataClassRowMapper`가 도입되었다.
+```java
+public class CourseJdbcRepository {
+	public Course findById(long id) {
+		return springJdbcTemplate.queryForObject(SELECT_COURSE_SQL,
+				new DataClassRowMapper<>(Course.class), id);
+	}
+}
+```
+사용법은 `BeanPropertyRowMapper` 대신 `DataClassRowMapper`를 사용하면 된다. 그러나 주의사항이 존재한다.
+1. `Course` 객체의 기본 생성자가 존재할 시 기본 생성자가 우선 선택되어 null로 초기화 된다.
+2. `Course` 객체의 생성자가 여러개 일 시 런타임 에러가 발생할 수 있다. (어떤 생성자를 선택해야 할지 헷갈리기 때문)
+
+#### 추가학습 : 자바 Bean 규약
+사실 `BeanPropertyRowMapper` 를 사용하기 위해 클래스에 Setter 메서드가 존재해야 하는 이유는 `BeanPropertyRowMapper`이 자바 Bean 규약에 따라 동작하기 때문이다. 그렇다면 자바 Bean 규약이란 무엇일까?
+
+1. 기본 생성자 : JavaBean 클래스는 이는 객체를 쉽게 생성할 수 있도록 매개변수가 없는 기본 생성자를 가져야 한다.
+2. Getter & Setter 메서드 : JavaBean 클래스는 속성(필드)에 접근하기 위한 표준 getter 및 setter 메서드를 제공해야 한다.
+3. Serializable 인터페이스 구현 (선택 사항) : JavaBeans는 일반적으로 직렬화 가능하도록 Serializable 인터페이스를 구현한다. (네트워크를 통해 전송되거나 파일로 저장될 수 있도록)
+4. <b> 자바Bean과 Spring Bean은 다르다 : [챕터 1 ReadMe](..%2F01_Getting_Started_with_Java_Spring_Framework%2FREADME.md) 13단계 참고</b>
+---
