@@ -704,6 +704,55 @@ Todo 리스트의 데이터는 `${todos}`를 사용해서 노출하고 있다. `
     - `var="todo"` : 반복문 동안 todos의 각 인덱스
     - `${todo.id}` 방식으로 세부 데이터에 접근이 가능하다.
 4. 확인하기
+
 ![list-todos-jstl.png](image/list-todos-jstl.png)
+
+---
+
+## 18단계 - webjars를 사용하여 Bootstrap CSS 프레임워크를 Spring Boot 프로젝트에 추가하기
+
+#### Bootstrap 
+- CSS 프레임워크
+  - CSS(Cascading Style Sheets) : HTML을 꾸밀 때 사용하는 스타일 시트
+
+#### webjars
+- 클라이언트 측 라이브러리(예: JavaScript, CSS 등)를 관리하고 제공하기 위한 패키지 포맷
+- 부트스트랩을 자동 관리할 수 있다.
+
+#### webjars 사용하기
+1. 라이브러리 추가
+    ```xml
+    <dependencies>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>5.1.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery</artifactId>
+            <version>3.6.0</version>
+        </dependency>
+    </dependencies>
+    ```
+    - webjars를 통해 bootstrap과 jquery를 불러온다.
+     ![bootstrap-and-jquery.png](image/bootstrap-and-jquery.png)
+2. JSP에 추가하기
+    ```html
+    <head>
+        <link href="webjars/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+        <!--...(생략)-->
+    </head>
+    <!--...(생략)-->
+    <body>
+        <!--...(생략)-->
+        <script src="webjars/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+        <script src="webjars/jquery/3.6.0/jquery.min.js"></script>
+    </body>
+    ```
+    - CSS 파일은 head 태그의 맨 앞에 위치한다.
+    - js 파일은 body 태그의 맨 뒤에 위치한다.
+3. 적용 확인
+   ![bootstrap-check.png](image/bootstrap-check.png)
 
 ---
