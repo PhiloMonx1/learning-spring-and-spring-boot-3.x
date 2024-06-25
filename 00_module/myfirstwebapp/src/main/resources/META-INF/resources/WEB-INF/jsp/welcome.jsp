@@ -5,8 +5,10 @@
         <title>웰컴페이지</title>
     </head>
     <body>
-        <div>환영합니다. ${name}님</div>
-        <hr>
-        <div><a href="list-todos">투두리스트</a></div>
+        <div class="container">
+            <h1>환영합니다. ${name}님</h1>
+            <hr>
+            <div><a href="list-todos">투두리스트</a></div>
+        </div>
     </body>
 </html>

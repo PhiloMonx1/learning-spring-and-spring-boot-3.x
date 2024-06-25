@@ -756,3 +756,17 @@ Todo 리스트의 데이터는 `${todos}`를 사용해서 노출하고 있다. `
    ![bootstrap-check.png](image/bootstrap-check.png)
 
 ---
+
+## 19단계 - Bootstrap CSS 프레임워크로 JSP 페이지 포맷 만들기
+
+#### `<div class="container">`
+- Bootstrap에서 레이아웃을 잡기 위해 사용되는 기본적인 클래스 중 하나 
+
+#### class
+- HTML의 구분자를 줘서 CSS에서 이를 활용할 수 있다.
+- Bootstrap은 유용한 CSS를 미리 작성한 후 class에 연결시켜놓았다.
+    - 지정한 class를 입력하는 것으로 Bootstrap이 작성한 CSS를 적용할 수 있다.
+- 적용된 모습 
+  ![listTodos-page-bootstrap.png](image/listTodos-page-bootstrap.png)
+  - table 태그에 class="table"만 추가해도 그럴듯한 CSS의 테이블을 볼 수 있다. 
+---

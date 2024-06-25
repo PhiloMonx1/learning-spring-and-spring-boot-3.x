@@ -7,29 +7,29 @@
         <title>Todo 목록 페이지</title>
     </head>
     <body>
-        <div>환영합니다. ${name}님</div>
-        <hr>
-        <h1>Todo List</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>id</th>
-                    <th>설명</th>
-                    <th>목표 일시</th>
-                    <th>완료 여부</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach items="${todos}" var="todo">
+        <div class="container">
+            <h1>Todo List</h1>
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>${todo.id}</td>
-                        <td>${todo.description}</td>
-                        <td>${todo.targetDate}</td>
-                        <td>${todo.done}</td>
+                        <th>id</th>
+                        <th>설명</th>
+                        <th>목표 일시</th>
+                        <th>완료 여부</th>
                     </tr>
-                </c:forEach>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <c:forEach items="${todos}" var="todo">
+                        <tr>
+                            <td>${todo.id}</td>
+                            <td>${todo.description}</td>
+                            <td>${todo.targetDate}</td>
+                            <td>${todo.done}</td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+        </div>
         <script src="webjars/bootstrap/5.1.3/js/bootstrap.min.js"></script>
         <script src="webjars/jquery/3.6.0/jquery.min.js"></script>
     </body>
