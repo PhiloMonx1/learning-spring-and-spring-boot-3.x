@@ -239,3 +239,57 @@ public class LoginController {
   - ex) ${name}
 
 ---
+
+## 9단계 - 빠른 개요 - Spring Boot를 사용할 때 로깅의 중요성
+
+#### Spring Boot 로깅 설정
+- Spring Boot 에서는 [application.properties](..%2F00_module%2Fmyfirstwebapp%2Fsrc%2Fmain%2Fresources%2Fapplication.properties.example)를 통해 로깅을 설정할 수 있다.
+- [4챕터 ReadME](..%2F04_Getting_Started_with_Spring_Boot%2FREADME.md) 9단계에서 로깅 범위를 확인할 수 있다.
+
+#### Spring Boot 로깅 설정 심화 : 클래스를 선택해서 로깅하기
+```properties
+#application.properties
+
+logging.level.org.springframework=info
+logging.level.com.in28minutes.springboot.myfirstwebapp=debug
+```
+- 이처럼 `logging.level.` 이후에 패키지를 입력해서 특정 패키지의 로깅 범위를 지정할 수 있다.
+
+#### slf4j.Logger를 사용해서 로깅하기.
+지금까지는 `System.out.println()` 메서드를 사용해서 터미널에 직접 문자열을 노출하면서 로깅을 해왔다.
+
+이번에는 Logger를 사용해서 로깅을 해볼 것이다.
+```java
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+@Controller
+public class LoginController {
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	@RequestMapping("login")
+	public String goToLoginPage(@RequestParam("name") String name, ModelMap models) {
+		logger.debug("리퀘스트파람 : {}", name);
+		models.addAttribute("name", name);
+		return "login";
+	}
+}
+```
+- `private static final Logger logger = LoggerFactory.getLogger(현재 클래스명.class);`
+  - Logger의 일반적인 선언 방식이다. 
+- debug()
+  - 로깅 메서드이다.
+  - info, warn 등의 레벨도 선택이 가능하다.
+- ("리퀘스트파람 : {}", name)
+  - {} : 플레이스홀더, 특정 값이나 변수를 삽입하기 위한 자리 표시자의 역할 (name의 값이 자동으로 들어감)
+  - name : 사용할 변수 {} 자리에 자동으로 들어감. 
+  - 변수가 여러개일 경우 플레이스홀더를 추가로 입력해서 로깅할 수 있다.
+    - ex) logger.debug("이름: {}, 나이: {}, 도시: {}", name, age, city);
+
+#### Logger를 권장하는 이유
+- 로그 레벨 관리: `logger.debug()`를 통해 디버그 수준의 로그로 설정했다.
+- 출력 대상의 유연성: 로그를 콘솔, 파일, 데이터베이스, 원격 서버 등 다양한 출력 대상으로 보낼 수 있다.
+- 성능: 비동기 로깅을 지원하여 성능 이점이 있다.
+  - 다른 로직(비즈니스 로직)은 로깅 로직이 완료될 때까지 기다리지 않고 동시에 실행될 수 있다.
+  - 로그 메시지를 즉시 출력하거나 저장하는 대신, 메시지를 큐(queue)에 넣고, 별도의 스레드가 이 큐에서 메시지를 가져와서 처리한다.
+
+---
