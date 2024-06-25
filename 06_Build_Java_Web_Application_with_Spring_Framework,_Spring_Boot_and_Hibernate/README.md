@@ -639,3 +639,71 @@ public class TodoController {
     ```
     - 값 공유를 원하는 모든 컨트롤러에 `@SessionAttributes` 어노테이션을 적용한다.
 ---
+
+## 17단계 - Spring Boot 프로젝트에 JSTL을 추가하고 Todos를 테이블에 표시하기
+
+![list-todos-first.png](image/list-todos-first.png)
+페이지에서 응답하고 있는 데이터 값의 가독성이 좋지 않다. 이를 개선해보자.
+
+#### JSTL 태그
+```html
+<div>Todo List: ${todos}</div>
+```
+Todo 리스트의 데이터는 `${todos}`를 사용해서 노출하고 있다. `${}` 처럼 사용하는 문법을 '표현언어'라고 한다.
+
+하지만 `todos` 데이터는 표현언어로 사용하기에 적절하지 않다. `todos`를 테이블에 나열해서 가독성을 좋게 만들기 위해서 JSTL 태그를 사용할 수 있다.
+
+1. 라이브러리 추가
+    ```xml
+    <dependencies>
+        <dependency>
+            <groupId>jakarta.servlet.jsp.jstl</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>glassfish-jstl</artifactId>
+            <version>11.0.21</version>
+        </dependency>
+    </dependencies>
+    ```
+    - jakarta.servlet.jsp.jstl-api : JSTL API 라이브러리
+    - glassfish-jstl : JSTL 구현체 라이브러리
+      - 버전 명시를 하지 않으면 메이븐에서 라이브러리를 불러오지 못했음.
+2. JSP에서 JSTL 임포트 ([JSTL core](https://docs.oracle.com/javaee/5/jstl/1.1/docs/tlddocs/c/tld-summary.html) 참고)
+    ```html
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    ```    
+    - JSTL core 에서 사용 가능한 태그를 확인 할 수 있다. 
+    - `prefix="c"` : JSTL 태그를 사용하기 위한 이름 ex) `c:forEach`로 사용 가능
+3. JSP에서 JSTL 태그 사용해서 테이블에 TodoList 넣기
+    ```html
+    <table>
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>설명</th>
+                <th>목표 일시</th>
+                <th>완료 여부</th>
+            </tr>
+        </thead>
+        <tbody>
+            <c:forEach items="${todos}" var="todo">
+                <tr>
+                    <td>${todo.id}</td>
+                    <td>${todo.description}</td>
+                    <td>${todo.targetDate}</td>
+                    <td>${todo.done}</td>
+                </tr>
+            </c:forEach>
+        </tbody>
+    </table>
+    ```
+    - `c:forEach` 태그 안에서 `${todos}`의 데이터를 사용할 수 있다.
+    - `items` : 사용할 Model의 이름
+    - `var="todo"` : 반복문 동안 todos의 각 인덱스
+    - `${todo.id}` 방식으로 세부 데이터에 접근이 가능하다.
+4. 확인하기
+![list-todos-jstl.png](image/list-todos-jstl.png)
+
+---
