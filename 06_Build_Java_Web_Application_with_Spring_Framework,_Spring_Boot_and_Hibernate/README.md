@@ -407,3 +407,60 @@ public class LoginController {
    - `form`에 `method`를 `post`로 지정해서 입력 데이터를 숨길 수 있다.
 
 ---
+
+## 12단계 - 모델로 JSP에 로그인 자격증명 표시하기
+
+로그인 페이지에서 자격증명을 입력하면 환영 페이지로 리다이렉션 실습을 할 것이다.
+
+브라우저에서 `/login` 엔드포인트에 처음 접근할 때는 GET 메서드를 사용한다. 자격 증명을 입력한 후 '제출'을 클릭하면 페이지가 새로고침 되는데, 사실 해당 페이지는 POST 응답을 받은 것이다. (개발자 도구 네트워크 탭에서 POST 요청임을 확인 가능함) 
+
+즉, `LoginController::goToLoginPage()`은 GET 과 POST 를 동시에 처리하고 있는 것이다. 
+
+#### Welcome 페이지 작성
+([welcome.jsp](..%2F00_module%2Fmyfirstwebapp%2Fsrc%2Fmain%2Fresources%2FMETA-INF%2Fresources%2FWEB-INF%2Fjsp%2Fwelcome.jsp))
+
+#### `/login` 엔드포인트가 GET 요청만 처리하도록 만들기
+브라우저에서 `/login` 엔드포인트에 처음 접근할 때는 GET 메서드를 사용한다. 자격 증명을 입력한 후 '제출'을 클릭하면 페이지가 새로고침 되는데, 사실 해당 페이지는 POST 응답을 받은 것이다.(개발자 도구 네트워크 탭에서 POST 요청임을 확인 가능함)
+
+즉, `LoginController::goToLoginPage()`은 GET 과 POST 를 동시에 처리하고 있는 것이다.
+
+```java
+public class LoginController {
+ @RequestMapping(value = "login", method = RequestMethod.GET)
+ public String goToLoginPage() {
+     return "login";
+ }
+}
+```
+- `method = RequestMethod.GET` 파라미터를 부여해서 처리 가능하다. (파라미터가 두 개가 되었기 때문에 생략되던 value도 명시 필요.)
+
+#### POST 메서드 추가
+앞선 순서까지 진행하고 `/login` 페이지에서 form 을 제출하면, 405 에러가 발생한다. (POST 처리할 수 있는 메서드가 없기 때문)
+
+```java
+public class LoginController {
+    @RequestMapping(value = "login", method = RequestMethod.POST)
+    public String goToWelcomePage() {
+        return "welcome";
+    }
+}
+```
+
+POST 메서드를 추가하고 만들어 놓은 `welcome` 페이지를 리턴한다.
+
+#### RequestParam : 사용자가 입력한 데이터 받기
+```java
+@Controller
+public class LoginController {
+	@RequestMapping(value = "login", method = RequestMethod.POST)
+	public String goToWelcomePage(@RequestParam String name, @RequestParam String password, ModelMap models) {
+		models.addAttribute("name", name);
+		models.addAttribute("password", password);
+
+		return "welcome";
+	}
+}
+```
+- `@RequestParam` 어노테이션을 파라미터에 부여해서 사용자 입력 데이터를 잡을 수 있다.
+
+---
