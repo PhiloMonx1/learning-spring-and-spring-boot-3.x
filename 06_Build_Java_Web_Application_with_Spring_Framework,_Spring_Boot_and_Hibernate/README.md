@@ -160,3 +160,34 @@ public class SayHelloController {
 2. [LoginController.java](..%2F00_module%2Fmyfirstwebapp%2Fsrc%2Fmain%2Fjava%2Fcom%2Fin28minutes%2Fspringboot%2Fmyfirstwebapp%2Flogin%2FLoginController.java) 작성
 
 ---
+
+## 7단계 - 빠른 개요 - 웹의 작동 방식 - 요청과 응답
+
+#### HTTP 요청 간단하게 살펴보기
+![dev-tool-request.png](image/dev-tool-request.png)
+- 요청 URL: 클라이언트가 서버에 보낸 요청의 URL
+- 요청 메서드: 서버에 요청하는 동작 (GETm POST, PUT, DELETE 등이 있음)
+- 상태 코드: 요청에 대한 서버의 응답 코드 (200은 정상을 의미함.)
+  - 'Whitelabel Error Page'의 경우 응답 코드는 '404'로 존재하지 않는 페이지를 요청했다는 의미로 쓰임
+- 원격 주소 : 클라이언트의 IP 주소 & 포트 번호
+- 리퍼러 정책 : 웹 브라우저가 웹 페이지를 요청할 때 보내는 정보를 제어하는 것
+  - 이 정보에는 사용자가 어디서 왔는지(이전 페이지의 주소)가 포함되어 있다.
+  - ex) 사용자가 구글에서 아마존으로 이동하면 아마존 서버는 사용자가 구글에서 왔다는 것을 알 수 있음
+    - 대표적인 리퍼러 정책 (정책 수준에 따라 어떤 정보까지 전송할지 선택할 수 있음)
+      - no-referrer: 리퍼러 정보를 전달하지 않음. 
+      - no-referrer-when-downgrade: 보안 수준이 낮아지는 경우(HTTPS -> HTTP)에만 리퍼러 정보를 전달하지 않음. 
+      - origin: 프로토콜, 호스트, 포트 정보만 전달. 
+      - origin-when-cross-origin: 같은 출처일 때는 전체 URL을, 다른 출처일 때는 origin 정보만 전달. 
+      - strict-origin: 프로토콜, 호스트, 포트 정보만 전달하며, 보안 수준이 낮아지는 경우 전달하지 않음.
+      - strict-origin-when-cross-origin: 같은 출처일 때는 전체 URL을, 다른 출처일 때는 프로토콜, 호스트, 포트 정보만 전달.
+      - unsafe-url: 전체 URL 정보 전달.
+
+#### 웹은 어떻게 동작하는가
+1. URL을 입력한다.
+2. 브라우저가 해당 URL로 요청을 전송한다. (HTTP요청 HttpRequest)
+3. 서버에서 요청을 받는다.
+4. 서버는 요청 URL을 식별한다.
+5. URL과 연결된 로직으로 요청을 처리한다.
+6. 처리 결과에 따른 응답을 브라우저에 반환한다. (HTTP응답 HttpResponse)
+
+---
