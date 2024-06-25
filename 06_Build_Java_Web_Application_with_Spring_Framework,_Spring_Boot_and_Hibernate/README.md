@@ -545,3 +545,44 @@ public class LoginController {
 - ${errorMessage}로 사용할 수 있으며 해당 값이 없을 경우 무시된다.
 
 ---
+
+## 14단계 - Todo 기능 만들기 시작 - Todo와 TodoService 만들기
+
+!![my-todo-app.png](image/my-todo-app.png)
+
+Todo 관리를 할 수 있는 Todo 애플리케이션을 만들려고 한다.
+
+#### 기능
+- Todo 생성 (설명, 목표 날짜, 완료 여부를 저장)
+- Todo 업데이트
+- Todo 삭제
+
+#### Model 작성 ([Todo.java](..%2F00_module%2Fmyfirstwebapp%2Fsrc%2Fmain%2Fjava%2Fcom%2Fin28minutes%2Fspringboot%2Fmyfirstwebapp%2Ftodo%2FTodo.java))
+- 필요한 필드
+    - id
+    - 작성자 (username)
+    - 설명 (description)
+    - 목표 일자 (targetDate)
+    - 완료 여부 (done)
+
+#### 정적 Todo List 생성 실습
+```java
+@Service
+public class TodoService {
+
+	private static List<Todo> todos;
+
+	static {
+		todos.add(new Todo(1, "EH13", "스프링부트 3 강의 완강하기", LocalDate.now().plusMonths(1), false));
+		todos.add(new Todo(2, "EH13", "도커, 쿠버네티스 강의 완강하기", LocalDate.now().plusMonths(2), false));
+		todos.add(new Todo(3, "EH13", "사이드 프로젝트 완성 하기", LocalDate.now().plusMonths(4), false));
+	}
+
+	public List<Todo> findByUsername(String username) {
+		return todos;
+	}
+}
+```
+- 실습을 위해 정적 Todo를 작성했다.
+
+---
