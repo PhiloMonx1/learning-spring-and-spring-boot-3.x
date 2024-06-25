@@ -400,7 +400,7 @@ public class LoginController {
         </form>
     ```
 2. form 확인
-   ![img.png](img.png)
+   ![get-security-issues.png](image/get-security-issues.png)
    - 입력란을 채운 후 '제출'을 누르면 url의 파라미터에 입력한 정보가 입력된다. (보안이슈)
      - 인터넷엔 수 많은 '라우터'가 있고 라우터는 url을 볼 수 있다.
 3. `<form method="post">`
@@ -584,5 +584,34 @@ public class TodoService {
 }
 ```
 - 실습을 위해 정적 Todo를 작성했다.
+
+---
+
+## 15단계 - Todo 리스트 페이지 처음 만들기
+
+#### Controller 작성
+```java
+@Controller
+public class TodoController {
+	private TodoService todoService;
+
+	public TodoController(TodoService todoService) {
+		this.todoService = todoService;
+	}
+
+	@RequestMapping("list-todos")
+	public String listAllTodos(ModelMap models) {
+		models.put("todos", todoService.findByUsername("EH13"));
+		return "listTodos";
+	}
+}
+```
+- 생성자 주입으로 `TodoService`를 사용할 수 있다.
+- `models.put("todos", todoService.findByUsername("EH13"));` 으로 `TodoService`에서 작성한 정적 Todos를 사용할 수 있다.
+
+#### listTodos.jsp 작성 
+[listTodos.jsp](..%2F00_module%2Fmyfirstwebapp%2Fsrc%2Fmain%2Fresources%2FMETA-INF%2Fresources%2FWEB-INF%2Fjsp%2FlistTodos.jsp)
+
+![list-todos-first.png](image/list-todos-first.png)
 
 ---
