@@ -5,6 +5,11 @@
         <title>로그인</title>
     </head>
     <body>
-        ${name}님, 로그인 페이지에 오신 것을 환영합니다.
+        로그인 페이지에 오신 것을 환영합니다.
+        <form method="post">
+            이름: <input type="text" name="name">
+            비밀번호: <input type="password" name="password">
+            <input type="submit">
+        </form>
     </body>
 </html>

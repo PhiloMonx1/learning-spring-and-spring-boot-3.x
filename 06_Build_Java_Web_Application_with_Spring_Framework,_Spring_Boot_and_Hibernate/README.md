@@ -387,3 +387,23 @@ public class LoginController {
   9. 디스패처 서블릿이 해당 뷰를 사용하여 클라이언트에게 응답을 렌더링한다.
   10. `login.jsp`의 내용을 응답으로 반환한다.
 ---
+
+## 11단계 - 로그인 양식 만들기
+
+#### 실습
+1. JSP에 form 추가
+    ```HTML
+        <form>
+            이름: <input type="text" name="name">
+            비밀번호: <input type="password" name="password">
+            <input type="submit">
+        </form>
+    ```
+2. form 확인
+   ![img.png](img.png)
+   - 입력란을 채운 후 '제출'을 누르면 url의 파라미터에 입력한 정보가 입력된다. (보안이슈)
+     - 인터넷엔 수 많은 '라우터'가 있고 라우터는 url을 볼 수 있다.
+3. `<form method="post">`
+   - `form`에 `method`를 `post`로 지정해서 입력 데이터를 숨길 수 있다.
+
+---
