@@ -293,3 +293,97 @@ public class LoginController {
   - 로그 메시지를 즉시 출력하거나 저장하는 대신, 메시지를 큐(queue)에 넣고, 별도의 스레드가 이 큐에서 메시지를 가져와서 처리한다.
 
 ---
+
+## 10단계 - 디스패처 서블릿, 모델 1, 모델 2, 프론트 컨트롤러 알아보기
+
+#### 웹 애플리케이션 개발 역사
+1. Model 1 아키텍처
+
+    ![model-1-arch.png](image/model-1-arch.png)
+   - 특징 : 모든 코드가 View에 담겨있었다. (JSP안에서 모든 로직 처리)
+     - View 로직 : HTML, CSS, JavaScript 등의 프레젠테이션 로직.
+     - Flow 로직 : 애플리케이션의 흐름을 제어하는 제어문, 조건문, 반복문 등.
+     - 데이터베이스 쿼리 : 데이터베이스와의 상호작용을 위한 SQL 쿼리.
+   - 예시
+        ```Html
+        <%@ page import="java.sql.*" %>
+        <html>
+        <head>
+            <title>예제 페이지</title>
+        </head>
+        <body>
+            <%
+                // 데이터베이스 연결
+                String url = "jdbc:mysql://localhost:3306/mydb";
+                String user = "user";
+                String password = "password";
+                Connection conn = DriverManager.getConnection(url, user, password);
+                
+                // 쿼리 실행
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT * FROM my_table");
+        
+                // 결과 출력
+                while (rs.next()) {
+                    out.println("<p>" + rs.getString("column_name") + "</p>");
+                }
+        
+                // 연결 닫기
+                rs.close();
+                stmt.close();
+                conn.close();
+            %>
+        </body>
+        </html>
+        ```
+   - 문제점
+     - 유지보수성 저하
+     - 재사용성 부족
+     - 테스트 어려움
+     - 보안 문제
+
+
+2. Modle 2 아키텍처
+
+![model-2-arch.png](image/model-2-arch.png)
+- 특징 : 역할이 구분됨
+  - Model : View를 생성하는 데 사용하는 데이터 (DB 등에서 데이터를 받아옴)
+  - View : 사용자에게 보여지는 영역
+  - Controller(or Servlet) : 전체 흐름 제어
+- 장점
+  - 로직이 역할별로 구분되어 있음
+  - 유지보수의 유연성
+- 문제점 : 공통 기능을 모든 컨트롤러에 걸쳐 구현하는 방법은?
+  - 인증과 같이 필수적인 코드가 모든 컨트롤러에서 중복해서 발생함
+
+
+3. Modle 2 아키텍처 - 프론트 컨트롤러(Front Controller) 패턴
+
+![model-2-arch-front-controller.png](image/model-2-arch-front-controller.png)
+- 특징 : 브라우저에서 오는 모든 요청을 단 하나의 프론트 컨트롤러로 처리
+  - ex) 보안 인증이 구현된 프론트 컨트롤러에서 먼저 보안을 검사한 후 적절한 컨트롤러에 요청을 재전달(하청)
+- 역할
+  - 프론트 컨트롤러 (Front Controller): 모든 요청을 수신하고, 요청을 처리하거나 다른 컨트롤러로 분기하는 중앙 집중화된 컨트롤러.
+  - 디스패처 (Dispatcher): 프론트 컨트롤러가 요청을 적절한 핸들러(컨트롤러, 뷰 등)로 전달하는 역할.
+  - 핸들러/컨트롤러 (Handler/Controller): 특정 요청을 처리하는 개별 컨트롤러.
+  - 뷰 (View): 사용자에게 보여지는 영역
+  - 모델 (Model): 데이터와 비즈니스 로직을 처리.
+
+#### Spring MVC 프론트 컨트롤러 - 디스패처 서블릿 (Dispatcher Servlet)
+![dispatcher-servlet.png](image/dispatcher-servlet.png)
+- 디스패처 서블릿 : Spring MVC에서 구현한 Front Controller 구현체 (스프링 부트로 애플리케이션을 실행하면 자동으로 일한다.)
+  - 프론트 컨트롤러의 역할을 수행한다.
+- HTTP 요청 처리 과정
+  1. 모든 요청은 디스패처 서블릿이 가장 먼저 받게된다.
+  2. URL이 무엇인지 식별한다. (예시 URL : localhost:8080/login)
+  3. 요청을 처리할 수 있는 Controller의 메서드를 식별한다. ([LoginController::goToLoginPage()](..%2F00_module%2Fmyfirstwebapp%2Fsrc%2Fmain%2Fjava%2Fcom%2Fin28minutes%2Fspringboot%2Fmyfirstwebapp%2Flogin%2FLoginController.java))
+  4. Controller에 요청을 전달한다.
+  5. Controller의 메서드가 실행된다. (LoginController::goToLoginPage() 기준)
+  6. Model과 View의 이름을 리턴한다.
+  7. 디스패처 서블릿이 View의 이름에 맞는 적절한 View 를 매핑한다 ([login.jsp](..%2F00_module%2Fmyfirstwebapp%2Fsrc%2Fmain%2Fresources%2FMETA-INF%2Fresources%2FWEB-INF%2Fjsp%2Flogin.jsp))
+     - 이 과정에서 디스패처 서블릿은 뷰 리졸버(View Resolver)를 사용하여 뷰 이름을 실제 뷰로 변환한다.
+       - 뷰 리졸버 : 트롤러가 반환한 뷰 이름을 실제 뷰로 변환해주는 컴포넌트
+  8. 뷰 리졸버가 `login.jsp`를 찾아서 뷰를 반환한다.
+  9. 디스패처 서블릿이 해당 뷰를 사용하여 클라이언트에게 응답을 렌더링한다.
+  10. `login.jsp`의 내용을 응답으로 반환한다.
+---
