@@ -615,3 +615,27 @@ public class TodoController {
 ![list-todos-first.png](image/list-todos-first.png)
 
 ---
+
+## 16단계 - 세션, 모델, 요청 이해하기 - @SessionAttributes
+
+#### 요청 (Request)
+![request-payload.png](image/request-payload.png)
+- 요청에서 쓰인 payload 데이터는 해당 요청 안에서만 유효하다 (페이지를 이동하면 해당 페이지에서는 요청이 무효화 된다.)
+
+#### 모델 (Model)
+- 요청에 응답한 모델 역시 해당 요청 안에서만 유효하다. (페이지를 이동하면 사용할 수 없다.)
+  - `login.jsp` 에서 응답한 `name` 모델을 `listTodos.jsp`에서 사용할 수 없다. 
+
+#### 세션 (Session)
+값을 여러 요청에 걸쳐 사용하기 위해선 세션이 필요하다.
+
+- @SessionAttribute
+    ```java
+    @SessionAttributes("name")
+    public class LoginController { }
+    
+    @SessionAttributes("name")
+    public class TodoController { }
+    ```
+    - 값 공유를 원하는 모든 컨트롤러에 `@SessionAttributes` 어노테이션을 적용한다.
+---

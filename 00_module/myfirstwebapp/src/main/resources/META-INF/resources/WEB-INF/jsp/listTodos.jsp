@@ -5,7 +5,7 @@
         <title>Todo 목록 페이지</title>
     </head>
     <body>
-        <div>Todo List에 오신 것을 환영합니다.</div>
+        <div>Todo List에 오신 것을 환영합니다. ${name}님</div>
         <div>Todo List: ${todos}</div>
     </body>
 </html>
