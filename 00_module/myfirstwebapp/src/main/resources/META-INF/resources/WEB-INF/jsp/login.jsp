@@ -5,6 +5,6 @@
         <title>로그인</title>
     </head>
     <body>
-        로그인 페이지
+        ${name}님, 로그인 페이지에 오신 것을 환영합니다.
     </body>
 </html>

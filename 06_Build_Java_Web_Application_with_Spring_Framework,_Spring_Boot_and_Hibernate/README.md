@@ -191,3 +191,51 @@ public class SayHelloController {
 6. 처리 결과에 따른 응답을 브라우저에 반환한다. (HTTP응답 HttpResponse)
 
 ---
+
+## 8단계 - RequestParam으로 쿼리 파라미터 잡기, 모델 소개
+
+#### URL 파라미터
+기존 /login 엔드포인트에 파라미터를 받아서 처리하는 로직을 추가할 것이다.
+
+- /login?name=EH13
+  - URL 엔드포인트에 '?'로 파라미터를 추가 전달할 수 있다.
+  - 'name' 라는 key와 'EH13' 이라는 값으로 전달된다.
+
+#### @RequestParam
+```java
+@Controller
+public class LoginController {
+	@RequestMapping("login")
+	public String goToLoginPage(@RequestParam("name") String name) {
+		System.out.println(name);
+		return "login";
+	}
+}
+```
+- @RequestParam("name")
+  - 파라미터를 지정한다. name이라는 이름으로 받을 수 있다. (명시하지 않을 시 Java 파라미터 이름으로 자동 연결됨)
+- String name
+  - 받은 파라미터를 Java 변수화 시켜 Java 코드 내에서 사용할 수 있도록 한다.
+
+#### 모델(Model)
+파라미터 JSP에 전달하기 위해 모델에 파라미터를 넣어서 사용할 수 있다.
+```java
+@Controller
+public class LoginController {
+	@RequestMapping("login")
+	public String goToLoginPage(@RequestParam("name") String name, ModelMap models) {
+		models.addAttribute("name", name);
+		return "login";
+	}
+}
+```
+- ModelMap : Model 인터페이스의 구현체
+  - 데이터의 키-값 쌍을 저장하고 이를 뷰에서 사용할 수 있도록 해줌.
+  - 내부적으로 'LinkedHashMap'을 통해서 데이터를 관리함.
+  - addAttribute : put()과 동일한 기능으로 데이터를 저장함 (강의에서는 put()을 사용하나 작성자는 Spring MVC의 관례에 맞게 `addAttribute`를 사용하였음.)
+
+#### JSP에서 model 값 사용하기
+- ${} : 중괄호 안에 model의 key를 넣어서 사용할 수 있다.
+  - ex) ${name}
+
+---
