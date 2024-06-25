@@ -133,6 +133,26 @@ public class CourseController {
 ![courses-api-check.png](image/courses-api-check.png)
 `RequestMapping`에 매핑된 '/courses' 경로에서 API를 확인할 수 있다.
 
+5. 이해하기 (추가 메모)
+- `LearnSpringBootApplication` 파일
+  ```java
+  @SpringBootApplication
+  public class LearnSpringBootApplication {
+      public static void main(String[] args) {
+          SpringApplication.run(LearnSpringBootApplication.class, args);
+      }
+  }
+  ```
+  [spring initializer](https://start.spring.io/)으로 프로젝트를 생성할 때 부터 `LearnSpringBootApplication` 클래스 파일이 존재했었다. 
+  해당 파일 덕분에 'ComponentScan'이나 'context'의 선언 없이 애플리케이션 실행이 가능하다.
+- @SpringBootApplication
+  - @SpringBootConfiguration + @EnableAutoConfiguration + @ComponentScan 세 가지 어노테이션의 결합이다.
+  - 'Configuration'과 'ComponentScan'의 설정이 미리 되어 있는 것
+- SpringApplication.run
+  - 기존의 컨텍스트(context)를 선언하던 코드 처럼 컨텍스트를 초기화 하고 실행한다.
+  - Spring Boot의 자동 설정 기능을 사용하여 많은 설정을 자동으로 처리한다.
+
+
 ## 5단계 - Spring Boot의 목표 이해하기
 [커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/f9b2dff05b297cfad523539c3e8b8760b7a03f6a)
 
