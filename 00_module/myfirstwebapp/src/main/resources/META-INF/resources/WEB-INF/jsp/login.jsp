@@ -11,5 +11,6 @@
             비밀번호: <input type="password" name="password">
             <input type="submit">
         </form>
+        <pre>${errorMessage}</pre>
     </body>
 </html>

@@ -464,3 +464,84 @@ public class LoginController {
 - `@RequestParam` 어노테이션을 파라미터에 부여해서 사용자 입력 데이터를 잡을 수 있다.
 
 ---
+
+## 13단계 - 하드코딩된 사용자 ID 및 패스워드 검증 추가하기
+
+간단한 인증을 실습하기 위헤서 아래의 조건으로 이름과 패스워드를 입력한 사용자만 웰컴페이지로 이동 시킬 것이다.
+
+이름 : SpringBootJSP, 
+패스워드 : ILoveSpring
+
+#### AuthenticationService 추가
+[단일 책임 원칙](https://ko.wikipedia.org/wiki/%EB%8B%A8%EC%9D%BC_%EC%B1%85%EC%9E%84_%EC%9B%90%EC%B9%99)에 따라 인증을 담당하는 클래스를 따로 선언한다.
+```java
+@Service
+public class AuthenticationService {
+	public static boolean authenticate(String username, String password) {
+		boolean isValidUserName = username.equals("SpringBootJSP");
+		boolean isValidPassword = password.equalsIgnoreCase("ILoveSpring");
+
+		return isValidUserName && isValidPassword;
+	}
+}
+```
+- 간단하게 정해진 `username` 과 `password`를 검증하는 메서드를 작성했다.
+- 패스워드의 대소문자는 구분하지 않기 위해 `equalsIgnoreCase`를 사용했다.
+- `@Service` 어노테이션을 부여해서 컴포넌트로 등록한다.
+
+#### 컨트롤러에 연결
+```java
+@Controller
+public class LoginController {
+	private AuthenticationService authenticationService;
+
+	public LoginController(AuthenticationService authenticationService) {
+		this.authenticationService = authenticationService;
+	}
+	
+	//...(생략)
+	
+	@RequestMapping(value = "login", method = RequestMethod.POST)
+	public String goToWelcomePage(@RequestParam String name, @RequestParam String password, ModelMap models) {
+		if(authenticationService.authenticate(name, password)) {
+			models.addAttribute("name", name);
+			return "welcome";
+		}
+		return "login";
+	}
+}
+```
+- `AuthenticationService` 를 필드로 선언한다.
+- 생성자 주입을 사용하기 위해 `AuthenticationService`를 초기화하는 생성자를 선언한다.
+- `goToWelcomePage()`에 검증 로직을 작성한다.
+
+#### 오류 메시지 추가
+```java
+public class LoginController {
+	@RequestMapping(value = "login", method = RequestMethod.POST)
+	public String goToWelcomePage(@RequestParam String name, @RequestParam String password, ModelMap models) {
+		if(authenticationService.authenticate(name, password)) {
+			models.addAttribute("name", name);
+			return "welcome";
+		}
+
+		models.put("errorMessage", "유효하지 않은 자격증명 입니다.");
+		return "login";
+	}
+}
+```
+- `ModelMap`에 원하는 커스텀 데이터를 입력하는 것이 가능하다.
+```html
+<body>
+    로그인 페이지에 오신 것을 환영합니다.
+    <form method="post">
+        이름: <input type="text" name="name">
+        비밀번호: <input type="password" name="password">
+        <input type="submit">
+    </form>
+    <pre>${errorMessage}</pre>
+</body>
+```
+- ${errorMessage}로 사용할 수 있으며 해당 값이 없을 경우 무시된다.
+
+---
