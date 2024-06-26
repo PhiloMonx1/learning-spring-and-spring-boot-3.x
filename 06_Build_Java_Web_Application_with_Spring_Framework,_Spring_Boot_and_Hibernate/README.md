@@ -1165,3 +1165,30 @@ public class TodoService {
     - autoclose : 날짜 선택 후 자동으로 Datepicker가 닫힘
     - todayHighlight : 오늘 날짜를 가시적으로 하이라이트
 ---
+
+## 28단계 - 내비게이션 바를 추가하고 JSP 프래그먼트 구현하기
+
+#### 네비게이션 바 추가
+- 코드스니펫
+    ```html
+    <nav class="navbar navbar-expand-md navbar-light bg-light mb-3 p-1">
+        <a class="navbar-brand m-1" href="http://localhost:8080/">새싹 Todo</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/list-todos">Todo 리스트</a></li>
+            </ul>
+        </div>
+        <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link" href="/logout">로그아웃</a></li>
+        </ul>
+    </nav>
+    ```
+
+#### JSP 프래그먼트 (재사용 컴포넌트)
+네비게이션 처럼 많은 페이지에 중복 작성되어야 하는 HTML이 있을 경우 JSP 프래그먼트를 만들어서 처리할 수 있다.
+
+- `src/main/resources/META-INF/resources/WEB-INF/common` 경로에 JSP 프래그먼트 파일을 생성한다. (.jspf)
+- `<%@ include file="common/navigation.jspf" %>` 해당 방식으로 불러올 수 있다. 
+- jspf 파일도 UTF-8 인코딩에 대한 처리를 해주어야 한다.
+---
