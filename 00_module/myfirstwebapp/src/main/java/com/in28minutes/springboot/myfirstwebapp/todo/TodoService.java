@@ -35,4 +35,9 @@ public class TodoService {
 				.findFirst()
 				.get();
 	}
+
+	public void updateTodo(Todo todo) {
+		deleteById(todo.getId());
+		todos.add(todo);
+	}
 }

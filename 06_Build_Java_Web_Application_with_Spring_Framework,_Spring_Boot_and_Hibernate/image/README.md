@@ -1053,3 +1053,59 @@ public class TodoController {
 컨트롤러까지 연결해도 Todo의 수정은 반영되지 않는다.
 
 ---
+
+## 26단계 - Todo 업데이트 구현하기 - 1 - Todo 변경사항 저장
+
+#### 컨트롤러 분리
+```java
+public class TodoController {
+	@RequestMapping(value = "update-todo", method = RequestMethod.GET)
+	public String showUpdateTodoPage(@RequestParam int id, ModelMap models) {
+		Todo todo = todoService.findById(id);
+		models.addAttribute("todo", todo);
+		return "todo";
+	}
+
+	@RequestMapping(value = "update-todo", method = RequestMethod.POST)
+	public String updateTodo(@Valid Todo todo, BindingResult result) {
+		if (result.hasErrors()) {
+			return "todo";
+		}
+		todoService.updateTodo(todo);
+		return "redirect:list-todos";
+	}
+}
+```
+- GET 과 POST로 API를 분리해야 한다.
+
+#### Todo 수정 로직 작성
+```java
+public class TodoService {
+	public void updateTodo(Todo todo) {
+		deleteById(todo.getId());
+		todos.add(todo);
+	}
+}
+```
+
+여기까지 진행하면 Todo 수정이 가능하다. 그러나 2가지 문제점이 나타난다.
+1. 수정된 Todo는 id값이 낮아도 테이블 리스트의 맨 아래로 내려간다. (Todo를 삭제 후 다시 생성하기 때문에 인덱스가 최신화 됨)
+2. `목표 일시`가 사라진다. (목표 일시를 작성하는 form input이 없기 때문에 빈 값으로 초기화 됨)
+
+#### Todo 수정 로직 작성 (개인 코드)
+```java
+public class TodoService {
+	public void updateTodo(Todo todo) {
+		todos.forEach(originalTodo -> {
+			if (originalTodo.getId() == todo.getId()) {
+				originalTodo.setUsername(todo.getUsername());
+				originalTodo.setDescription(todo.getDescription());
+				originalTodo.setTargetDate(todo.getTargetDate());
+				originalTodo.setDone(todo.isDone());
+			}
+		});
+	}
+}
+```
+- Todo 순서는 해결되었으나 여전히 목표 일시는 사라진다. (강의 진행을 위해 커밋은 강의 코드로 진행함)
+  - 값이 존재하지 않을 시 기존 값으로 유지 하도록 예외처리 가능
