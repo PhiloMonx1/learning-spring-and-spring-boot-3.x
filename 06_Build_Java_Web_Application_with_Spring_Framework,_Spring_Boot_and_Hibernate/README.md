@@ -1109,3 +1109,59 @@ public class TodoService {
 ```
 - Todo 순서는 해결되었으나 여전히 목표 일시는 사라진다. (강의 진행을 위해 커밋은 강의 코드로 진행함)
   - 값이 존재하지 않을 시 기존 값으로 유지 하도록 예외처리 가능
+---
+
+## 27단계 - Todo 페이지에 목표 날짜 추가하기
+
+#### 목표 일자 구현
+```html
+<fieldset class="m-3">
+    <form:label path="targetDate">목표 일자</form:label>
+    <form:input type="text" path="targetDate" required="required" />
+    <form:errors path="targetDate" cssClass="text-warning"/>
+</fieldset>
+```
+- `path="targetDate"`을 지정해서 목표일자 input 필드를 추가한다.
+- 필요에 따라 컨트롤러, view 파일을 리팩토링 한다.
+- 날짜 포맷 : `spring.mvc.format.date=yyyy-MM-dd`
+
+#### Bootstrap Datepicker (날짜 선택기 플러그인)
+- 라이브러리 설치
+    ```xml
+    <dependency>
+        <groupId>org.webjars</groupId>
+        <artifactId>bootstrap-datepicker</artifactId>
+        <version>1.9.0</version>
+    </dependency>
+    ```
+- JSP에 CSS, JS 불러오기
+    ```html
+    <link href="webjars/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css" rel="stylesheet">
+    <script src="webjars/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    ```
+- Datepicker 적용 : [bootstrap-datepicker](https://bootstrap-datepicker.readthedocs.io/en/latest/) 공식문서 참고
+    ```html
+    <script type="text/javascript">
+      $('#datepicker').targetDate({
+        format: 'yyyy-mm-dd',
+      });
+    </script>
+    ```
+
+- Datepicker 한글화 (추가 학습)
+    ```html
+    <script src="webjars/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.ko.min.js"></script>
+    <script type="text/javascript">
+      $('#targetDate').datepicker({
+        format: 'yyyy-mm-dd',
+        language: 'ko',
+        weekStart: 0,
+        autoclose: true,
+        todayHighlight: true,
+      });
+    </script>
+    ```
+    - weekStart : 달력 요일 시작 기준 (0은 일요일)
+    - autoclose : 날짜 선택 후 자동으로 Datepicker가 닫힘
+    - todayHighlight : 오늘 날짜를 가시적으로 하이라이트
+---

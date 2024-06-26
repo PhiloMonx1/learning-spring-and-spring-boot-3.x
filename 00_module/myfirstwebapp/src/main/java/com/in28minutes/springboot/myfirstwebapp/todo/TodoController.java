@@ -39,7 +39,7 @@ public class TodoController {
 			return "todo";
 		}
 		String username = (String) models.get("name");
-		todoService.addTodo(username, todo.getDescription(), LocalDate.now().plusDays(1), false);
+		todoService.addTodo(username, todo.getDescription(), todo.getTargetDate(), false);
 		return "redirect:list-todos";
 	}
 	@RequestMapping("delete-todo")

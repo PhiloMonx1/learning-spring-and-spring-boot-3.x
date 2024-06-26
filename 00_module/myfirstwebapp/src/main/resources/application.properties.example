@@ -1,3 +1,4 @@
 spring.application.name=myfirstwebapp
 spring.mvc.view.prefix=/WEB-INF/jsp/
 spring.mvc.view.suffix=.jsp
+spring.mvc.format.date=yyyy-MM-dd
