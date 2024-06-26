@@ -1,11 +1,14 @@
 package com.in28minutes.springboot.myfirstwebapp.todo;
 
+import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
 public class Todo {
 
 	private int id;
 	private String username;
+
+	@Size(min=3, message="목표는 3글자 이상 적어주세요")
 	private String description;
 	private LocalDate targetDate;
 	private boolean done;

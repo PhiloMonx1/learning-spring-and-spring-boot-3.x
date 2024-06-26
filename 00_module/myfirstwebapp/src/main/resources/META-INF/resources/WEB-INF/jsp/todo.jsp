@@ -14,6 +14,7 @@
                 <form:input type="hidden" path="id" required="required" />
                 <form:input type="hidden" path="done" required="required" />
                 목표: <form:input type="text" path="description" required="required" />
+                <form:errors path="description" cssClass="text-warning"/>
                 <input type="submit" class="btn btn-success" />
             </form:form>
         </div>

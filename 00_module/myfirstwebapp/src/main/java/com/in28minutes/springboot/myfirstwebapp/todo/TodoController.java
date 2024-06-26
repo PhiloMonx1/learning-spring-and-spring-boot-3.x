@@ -1,11 +1,12 @@
 package com.in28minutes.springboot.myfirstwebapp.todo;
 
+import jakarta.validation.Valid;
 import java.time.LocalDate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
@@ -32,7 +33,10 @@ public class TodoController {
 	}
 
 	@RequestMapping(value = "add-todo" , method = RequestMethod.POST)
-	public String addNewTodo(ModelMap models, Todo todo) {
+	public String addNewTodo(ModelMap models, @Valid Todo todo, BindingResult result) {
+		if(result.hasErrors()) {
+			return "todo";
+		}
 		String username = (String) models.get("name");
 		todoService.addTodo(username, todo.getDescription(), LocalDate.now().plusDays(1), false);
 		return "redirect:list-todos";

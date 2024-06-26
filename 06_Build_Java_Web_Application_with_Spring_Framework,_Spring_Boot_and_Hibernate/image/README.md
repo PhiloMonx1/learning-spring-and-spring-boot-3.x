@@ -921,3 +921,89 @@ Todo 리스트의 데이터는 `${todos}`를 사용해서 노출하고 있다. `
       - 사용자가 값을 입력하면 초기값을 대체한다. (입력되지 않은 값에 대한 초기화)
     - 해당 메서드에서 `addNewTodo()` 메서드로 객체를 전달하기 때문에 id를 0으로 설정해도 `addNewTodo()` 내부에서 `todoService`가 일을 한다.
 ---
+
+## 23단계 - 커맨드 빈으로 새 Todo 페이지 검증 구현하기
+
+#### 단방향 바인딩 vs 양방향 바인딩
+- 단방향 바인딩 : 데이터가 한 방향으로만 흐르는 경우를 의미. 즉, 데이터 소스에서 뷰로만 데이터가 전달되고, 뷰에서 데이터 소스로는 데이터가 전달되지 않는 경우
+    ```java
+    //...(생략)
+    @SessionAttributes("name")
+    public class TodoController {
+        //...(생략)
+        @RequestMapping(value = "add-todo", method = RequestMethod.GET)
+        public String showNewTodoPage(ModelMap models) {
+            String username = (String) models.get("name");
+            Todo todo = new Todo(0, username, "여기에 디폴트 값을 입력합니다.", LocalDate.now().plusDays(1), false);
+            models.put("todo", todo);
+            return "todo";
+        }
+    }
+    ```
+    - `Todo` 인스턴스의 `description`을 특정한 값으로 지정한 후 애플리케이션을 실행해서 페이지를 살펴보면 초기값이 들어있는 것을 볼 수 있다.
+    - 이것을 단방향 바인딩이라고 부른다. (`addNewTodo()` 에서 바인딩을 하고 있다는 전제가 필요.)
+      - `showNewTodoPage()`의 코드만 봤을 때는 단방향 바인딩 보다는 "모델-뷰 데이터 전달"에 가깝다.
+- 양방향 바인딩 
+  - `todo.jsp`에서 POST 요청을 통해 값을 입력하고 submit을 하면 해당 입력 데이터가  `listTodos.jsp`에 반영된다. 
+  - `todo.jsp` 로 시작해서 `addNewTodo()` 메서드를 거쳐 `listTodos.jsp`에 전달되는 과정을 양방향 바인딩이라고 한다.
+
+#### Bean 검증 추가
+```java
+import jakarta.validation.constraints.Size;
+//...(생략)
+public class Todo {
+	//...(생략)
+	@Size(min = 3, message = "목표는 3글자 이상 적어주세요")
+	private String description;
+}
+```
+- `jakarta.validation.constraints` 에서 밸리데이션 어노테이션을 사용할 수 있다.
+- [공식 문서](https://jakarta.ee/specifications/bean-validation/3.0/apidocs/jakarta/validation/constraints/package-summary)를 통해 사용가능한 기능을 확인할 수 있다.
+
+```java
+import jakarta.validation.Valid;
+//...(생략)
+@SessionAttributes("name")
+public class TodoController {
+	//...(생략)
+	@RequestMapping(value = "add-todo", method = RequestMethod.POST)
+	public String addNewTodo(ModelMap models, @Valid Todo todo) {
+		String username = (String) models.get("name");
+		todoService.addTodo(username, todo.getDescription(), LocalDate.now().plusDays(1), false);
+		return "redirect:list-todos";
+	}
+}
+```
+- 바인딩 된 객체 앞에 `@Valid` 어노테이션을 부여해서 밸리데이션 검증을 활성화 할 수 있다.
+  ![Valid-todo.png](image/Valid-todo.png)
+
+#### 검증 오류 View 노출
+앞선 밸리데이션 검증은 동작은 잘 하지만 Server 에러를 노출한다. 사용자에게 보여주기에는 적절하지 않으니 View 노출을 개선해야 한다.
+```java
+import org.springframework.validation.BindingResult;
+//...(생략)
+@SessionAttributes("name")
+public class TodoController {
+	//...(생략)
+	@RequestMapping(value = "add-todo" , method = RequestMethod.POST)
+	public String addNewTodo(ModelMap models, @Valid Todo todo, BindingResult result) {
+		if(result.hasErrors()) {
+			return "todo";
+		}
+		String username = (String) models.get("name");
+		todoService.addTodo(username, todo.getDescription(), LocalDate.now().plusDays(1), false);
+		return "redirect:list-todos";
+	}
+}
+``` 
+- `BindingResult::hasErrors()` 메서드를 통해서 에러를 캐치할 수 있다. 에러가 발생할 경우 `todo.jsp`에 머물도록 해야 한다.
+```html
+목표: <form:input type="text" path="description" required="required" />
+<form:errors path="description" cssClass="text-warning"/>
+```
+- `form:errors` 태그를 사용해서 `description` 필드의 검증 메시지를 노출할 수 있다.
+  - `form:errors`는 HTML이 아닌 자바 코드이기 때문에 `cssClass`로 css 클래스를 지정해야 한다.
+
+![view-form-errors.png](image/view-form-errors.png)
+
+---
