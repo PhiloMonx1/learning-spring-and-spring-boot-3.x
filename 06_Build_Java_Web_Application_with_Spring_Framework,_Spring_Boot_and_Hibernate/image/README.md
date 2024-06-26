@@ -1007,3 +1007,39 @@ public class TodoController {
 ![view-form-errors.png](image/view-form-errors.png)
 
 ---
+
+## 24단계 - Todo 삭제 기능 구현하기 - 새로운 뷰
+
+#### 삭제 버튼 추가 (View)
+```html
+<td><a href="delete-todo?id=${todo.id}" class="btn btn-warning">삭제</a></td>
+```
+- url 뒤에 `id=${todo.id}` 으로 id 값을 파람으로 넘겨준다.
+#### 삭제 로직 추가 (Service)
+```java
+//...(생략)
+@Service
+public class TodoService {
+    //...(생략)
+	public void deleteById(int id) {
+		todos.removeIf(todo -> todo.getId() == id);
+	}
+}
+```
+#### API 작성 (Controller)
+```java
+//...(생략)
+@Controller
+public class TodoController {
+	private TodoService todoService;
+
+	//...(생략)
+	@RequestMapping("delete-todo")
+	public String deleteTodos(@RequestParam int id) {
+		todoService.deleteById(id);
+		return "redirect:list-todos";
+	}
+}
+```
+
+---

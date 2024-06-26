@@ -24,4 +24,8 @@ public class TodoService {
 	public void addTodo(String username, String description, LocalDate targetDate, boolean done) {
 		todos.add(new Todo(++todoCount, username, description, targetDate, done));
 	}
+
+	public void deleteById(int id) {
+		todos.removeIf(todo -> todo.getId() == id);
+	}
 }
