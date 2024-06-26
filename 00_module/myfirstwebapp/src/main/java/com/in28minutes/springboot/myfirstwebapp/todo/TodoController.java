@@ -24,14 +24,17 @@ public class TodoController {
 	}
 
 	@RequestMapping(value = "add-todo" , method = RequestMethod.GET)
-	public String showNewTodoPage() {
+	public String showNewTodoPage(ModelMap models) {
+		String username = (String) models.get("name");
+		Todo todo = new Todo(0, username, "", LocalDate.now().plusDays(1), false);
+		models.put("todo", todo);
 		return "todo";
 	}
 
 	@RequestMapping(value = "add-todo" , method = RequestMethod.POST)
-	public String addNewTodo(@RequestParam String description, ModelMap models) {
+	public String addNewTodo(ModelMap models, Todo todo) {
 		String username = (String) models.get("name");
-		todoService.addTodo(username, description, LocalDate.now().plusDays(1), false);
+		todoService.addTodo(username, todo.getDescription(), LocalDate.now().plusDays(1), false);
 		return "redirect:list-todos";
 	}
 }

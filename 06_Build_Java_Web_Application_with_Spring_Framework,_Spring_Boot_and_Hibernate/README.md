@@ -771,7 +771,6 @@ Todo 리스트의 데이터는 `${todos}`를 사용해서 노출하고 있다. `
   - table 태그에 class="table"만 추가해도 그럴듯한 CSS의 테이블을 볼 수 있다. 
 ---
 
-
 ## 20단계 - Todo 추가하기 - 새로운 뷰 만들기
 
 #### Todo 추가 기능 구현
@@ -837,4 +836,88 @@ Todo 리스트의 데이터는 `${todos}`를 사용해서 노출하고 있다. `
     ```
     - `@RequestParam` 을 사용해서 `description`을 받는다
     - `@SessionAttributes("name")`이 있기 때문에 `models.get("name")`으로 이름도 받을 수 있다.
+---
+
+## 22단계 - Spring Boot Starter Validation을 이용하여 검증 추가하기
+
+![empty-value.png](image/empty-value.png)
+현재 Todo는 아무런 값을 입력하지 않아도 검증 없이 빈 값으로 만들어진다. 검증을 추가할 필요가 있다.
+
+#### 프론트엔드 검증
+```html
+설명: <input type="text" name="description" required="required">
+```
+- 태그에 required 속성을 부여하는 것으로 빈 값 입력을 방지할 수 있다.
+    ![required.png](image/required.png)
+
+- 주의 : Html이나 JS 검증은 건너뛰기가 비교적 쉽기 때문에 서버측 추가 검증이 필요하다. 
+
+#### Spring Boot를 사용해서 밸리데이션 하기 : 
+1. 검증 라이브러리 추가
+2. 커맨드 빈 (Command Vean) | 양식 보조 객체 (Form Backing Object) 사용하기
+    - 양방향 바인딩 (2-way binding) 구현
+3. `Todo.java` Bean에 검증 추가하기
+4. 검증 오류를 `todo.jsp` View에 표시하기
+
+
+#### 1. 검증 라이브러리 추가
+- spring-boot-starter-validation : Spring Boot가 제공하는 밸리데이션 스타터 라이브러리
+     ```xml
+     <dependency>
+         <groupId>org.springframework.boot</groupId>
+         <artifactId>spring-boot-starter-validation</artifactId>
+     </dependency>
+     ```
+
+#### 2.커맨드 빈 (Command Vean) | 양식 보조 객체 (Form Backing Object)
+`TodoController::addNewTodo()` 에서는 사용자 입력 값을 `@RequestParam` 받고 있다. 그런데 사용자 입력 값이 아주 많아지면 어떻게 해야 할까? 모든 필드를 파라미터로 추가하는 대신에 `Todo` Bean에 직접 바인딩(연결) 하는 것이 가능하다.
+
+1. `addNewTodo()`에서 양식 보조 객체 사용
+    ```java
+    //...(생략)
+    @SessionAttributes("name")
+    public class TodoController {
+        //...(생략)
+        @RequestMapping(value = "add-todo" , method = RequestMethod.POST)
+        public String addNewTodo(ModelMap models, Todo todo) {
+            String username = (String) models.get("name");
+            todoService.addTodo(username, todo.getDescription(), LocalDate.now().plusDays(1), false);
+            return "redirect:list-todos";
+        }
+    }
+    ```
+    - `Todo` 객체를 직접 파라미터로 받는다.
+    - `todo.getDescription()`를 사용해서 `description` 값을 가져올 수 있다.
+2. `todo.jsp`에서 양식 보조 객체 사용 (양방향 바인딩 구현)
+- JSP에 태그 추가
+    [Spring Reference](https://docs.spring.io/spring-framework/docs/3.2.x/spring-framework-reference/html/view.html#view-jsp-formtaglib) 참고
+    ```html
+    <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+    <!-- ...(생략)    -->
+    <form:form method="post" modelAttribute="todo">
+        <form:input type="hidden" path="id" required="required" />
+        <form:input type="hidden" path="done" required="required" />
+        목표: <form:input type="text" path="description" required="required" />
+        <input type="submit" class="btn btn-success" />
+    </form:form>
+    ```
+    - `modelAttribute` 속성을 통해 사용할 Bean 객체를 지정한다.
+    - id, done에 null 값이 들어가지 않도록 input을 추가해준다.
+- showNewTodoPage() 연결
+    ```java
+    //...(생략)
+    public class TodoController {
+	    //...(생략)
+        @RequestMapping(value = "add-todo" , method = RequestMethod.GET)
+        public String showNewTodoPage(ModelMap models) {
+            String username = (String) models.get("name");
+            Todo todo = new Todo(0, username, "", LocalDate.now().plusDays(1), false);
+            models.put("todo", todo);
+            return "todo";
+        }
+    }
+    ```
+    - `new Todo`를 사용해서 초기값을 가진 객체를 생성한다.
+      - 사용자가 값을 입력하면 초기값을 대체한다. (입력되지 않은 값에 대한 초기화)
+    - 해당 메서드에서 `addNewTodo()` 메서드로 객체를 전달하기 때문에 id를 0으로 설정해도 `addNewTodo()` 내부에서 `todoService`가 일을 한다.
 ---
