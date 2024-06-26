@@ -1043,3 +1043,13 @@ public class TodoController {
 ```
 
 ---
+
+## 25단계 - Todo 업데이트 구현하기 - 1 - Todo 업데이트 페이지 표시하기
+
+1. `listTodos.jsp` 수정 버튼 추가
+2. `TodoService` Id가 일치하는 Todo 객체 리턴 메서드 추가
+3. `TodoController` Todo 수정 API 추가
+
+컨트롤러까지 연결해도 Todo의 수정은 반영되지 않는다.
+
+---
