@@ -802,3 +802,39 @@ Todo 리스트의 데이터는 `${todos}`를 사용해서 노출하고 있다. `
     - 리턴 값으로 `redirect:{엔드포인트}`를 줘서 리다이렉트 할 수 있다.
       - JSP로 줄 경우 기존 `listAllTodos()`에서 사용하던 Model을 다시 작성해야 하기 때문에 작성된 엔드포인트로 이동하는 것이 더 유리하다.
 ---
+
+## 21단계 - Todo를 추가하기 위해 TodoService 개선하기
+
+#### Todo 추가 서비스 로직 구현
+1. `TodoService` 개선
+    ```java
+    @Service
+    public class TodoService {
+	    //...(생략)
+        private static int todoCount = 0;
+
+	    //...(생략)
+        public void addTodo(String username, String description, LocalDate targetDate, boolean done) {
+            todos.add(new Todo(++todoCount, username, description, targetDate, done));
+        }
+    }
+    ```
+    - addTodo() 메서드를 사용해서 사용자가 입력한 값을 Todo로 등록시킬 것이다.
+    - todoCount를 0으로 선언 후 `++todoCount` id를 자동으로 증가시키고 있다.
+      - 흥미로운 방법이지만 삭제 로직이 추가되면 중복 id가 발생할 수 있다.
+2. 컨트롤러 연결
+    ```java
+    @SessionAttributes("name")
+    public class TodoController {
+        //...(생략)
+        @RequestMapping(value = "add-todo" , method = RequestMethod.POST)
+        public String addNewTodo(@RequestParam String description, ModelMap models) {
+            String username = (String) models.get("name");
+            todoService.addTodo(username, description, LocalDate.now().plusDays(1), false);
+            return "redirect:list-todos";
+        }
+    }
+    ```
+    - `@RequestParam` 을 사용해서 `description`을 받는다
+    - `@SessionAttributes("name")`이 있기 때문에 `models.get("name")`으로 이름도 받을 수 있다.
+---
