@@ -770,3 +770,35 @@ Todo 리스트의 데이터는 `${todos}`를 사용해서 노출하고 있다. `
   ![listTodos-page-bootstrap.png](image/listTodos-page-bootstrap.png)
   - table 태그에 class="table"만 추가해도 그럴듯한 CSS의 테이블을 볼 수 있다. 
 ---
+
+
+## 20단계 - Todo 추가하기 - 새로운 뷰 만들기
+
+#### Todo 추가 기능 구현
+1. Todo 추가 버튼 구현
+    ```html
+    <a href="add-todo" class="btn btn-success">Todo 추가</a>
+    ```
+    - `/add-todo` 엔드포인트로 이동하는 Todo 추가 버튼을 구현 (a 태그지만 부트스트랩 클래스로 버튼처럼 보이도록 함)
+2. 컨트롤러 연결
+    ```java
+    public class TodoController {
+        @RequestMapping(value = "add-todo" , method = RequestMethod.GET)
+        public String showNewTodoPage() {
+            return "todo";
+        }
+    }
+    ```
+3. `todo.jsp` 작성
+4. POST API 작성
+    ```java
+    public class TodoController {
+        @RequestMapping(value = "add-todo", method = RequestMethod.POST)
+        public String addNewTodo() {
+            return "redirect:list-todos";
+        }
+    }
+    ```
+    - 리턴 값으로 `redirect:{엔드포인트}`를 줘서 리다이렉트 할 수 있다.
+      - JSP로 줄 경우 기존 `listAllTodos()`에서 사용하던 Model을 다시 작성해야 하기 때문에 작성된 엔드포인트로 이동하는 것이 더 유리하다.
+---
