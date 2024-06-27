@@ -1462,3 +1462,43 @@ SecurityContext에서 설정한 인증 객체는 스프링 시큐리티 프레�
   - 이를 통해 애플리케이션의 어느 부분에서도 현재 인증된 사용자의 정보를 쉽게 조회할 수 있다.
 
 ---
+
+## 34단계 - Spring Boot Starter Data JPA를 추가하고 H2 데이터베이스 준비하기
+
+#### 라이브러리 추가
+```xml
+<dependencies>
+  <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-jpa</artifactId>
+  </dependency>
+  <dependency>
+    <groupId>com.h2database</groupId>
+    <artifactId>h2</artifactId>
+    <scope>runtime</scope>
+  </dependency>
+</dependencies>
+```
+- scoep : 종속성이 프로젝트의 빌드 과정에서 어떤 단계에 포함될지 범위를 지정한다.
+  - compile: 모든 단계에서 사용 (기본값)
+  - provided: 컴파일, 테스트 단계 포함, 런타임 포함X
+  - runtime: 런타임, 테스트 단계 포함, 컴파일 포함X
+  - test: 테스트 단계 포함.
+  - ...
+
+#### application.properties 설정
+```properties
+spring.datasource.url=jdbc:h2:mem:testdb
+```
+
+여기까지 진행하고 /h2-console에 접근하면 Forbidden 에러가발생한다.
+```
+This application has no explicit mapping for /error, so you are seeing this as a fallback.
+
+Thu Jun 27 16:39:07 KST 2024
+There was an unexpected error (type=Forbidden, status=403).
+Forbidden
+```
+Forbidden 에러는 권한이 없을 때 나타나는 것으로 Spring Security에 의한 것이다.
+
+---
