@@ -1582,6 +1582,7 @@ Spring Security가 최신화 되면서 강의 코드의 몇몇 메서드가 더 
 3. `id` 필드에 `@GeneratedValue` 어노테이션 부여
    - 기본 키 생성 전략을 지정하는 어노테이션.
    - AUTO, IDENTITY, SEQUENCE, TABLE 등이 있으며 기본 값은 'AUTO'이다.
+4. 기본생성자 추가
 
 #### Todo 테이블 시작 데이터 넣기 
 - `data.sql` 작성
@@ -1598,5 +1599,43 @@ Spring Security가 최신화 되면서 강의 코드의 몇몇 메서드가 더 
     spring.jpa.defer-datasource-initialization=true
     ```
     - 애플리케이션 컨텍스트가 완전히 초기화된 후에 데이터 소스 초기화 실행 (JPA 엔티티 매핑 및 기타 애플리케이션 초기화 작업이 먼저 완료된다.)
+
+---
+
+## 37단계 - TodoRepository를 만들고 H2 데이터베이스와 list-todos 페이지 연결하기
+
+#### TodoRepository
+```java
+@Repository
+public interface TodoRepository extends JpaRepository<Todo, Integer> { }
+```
+1. 인터페이스로 만든다.
+2. `@Repository` 어노테이션 부여
+3. `JpaRepository` 상속
+
+#### 컨트롤러 연결
+1. `private TodoRepository todoRepository;` 필드 추가
+2. TodoRepository를 포함해서 의존성이 필요한 모든 필드를 포함하는 생성자 추가
+
+#### 레포지토리 사용
+- findByUsername() 메서드 추가
+    ```java
+    @Repository
+    public interface TodoRepository extends JpaRepository<Todo, Integer> {
+        List<Todo> findByUsername(String username);
+    }
+    ```
+- findByUsername() 메서드 교체
+    ```java
+    public class TodoControllerJPA {
+        @RequestMapping("list-todos")
+        public String listAllTodos(ModelMap models) {
+            String username = getLoggendInUsername();
+            models.addAttribute("todos", todoRepository.findByUsername(username));
+            return "listTodos";
+        }
+    }
+    ```
+    - 기존 TodoService의 메서드를 TodoRepository 메서드로 교체한다.
 
 ---

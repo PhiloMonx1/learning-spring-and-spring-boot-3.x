@@ -3,6 +3,7 @@ package com.in28minutes.springboot.myfirstwebapp.todo;
 import jakarta.validation.Valid;
 import java.time.LocalDate;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,19 +11,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-//@Controller
+@Controller
 @SessionAttributes("name")
-public class TodoController {
+public class TodoControllerJPA {
 	private TodoService todoService;
+	private TodoRepository todoRepository;
 
-	public TodoController(TodoService todoService) {
+	public TodoControllerJPA(TodoService todoService, TodoRepository todoRepository) {
 		this.todoService = todoService;
+		this.todoRepository = todoRepository;
 	}
 
 	@RequestMapping("list-todos")
 	public String listAllTodos(ModelMap models) {
 		String username = getLoggendInUsername();
-		models.addAttribute("todos", todoService.findByUsername(username));
+		models.addAttribute("todos", todoRepository.findByUsername(username));
 		return "listTodos";
 	}
 
