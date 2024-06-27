@@ -1639,3 +1639,22 @@ public interface TodoRepository extends JpaRepository<Todo, Integer> { }
     - 기존 TodoService의 메서드를 TodoRepository 메서드로 교체한다.
 
 ---
+
+## 38단계 - 01 - 모든 Todo 앱 기능을 H2 데이터베이스와 연결하기
+
+[TodoControllerJPA.java](..%2F00_module%2Fmyfirstwebapp%2Fsrc%2Fmain%2Fjava%2Fcom%2Fin28minutes%2Fspringboot%2Fmyfirstwebapp%2Ftodo%2FTodoControllerJPA.java)
+#### 생성
+```java
+String username = getLoggendInUsername();
+todo.setUsername(username);
+todoRepository.save(todo);
+```
+- username을 설정해줘야 한다.
+
+#### 삭제
+동일 이름 메서드가 서비스에 있었기 때문에 레포지토리로 바꿔서 바로 사용 할 수 있다.
+
+#### 수정
+save와 동일하다.
+
+---

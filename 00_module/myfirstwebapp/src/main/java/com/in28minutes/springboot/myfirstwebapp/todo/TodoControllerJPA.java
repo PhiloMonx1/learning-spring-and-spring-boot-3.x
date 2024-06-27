@@ -14,11 +14,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @Controller
 @SessionAttributes("name")
 public class TodoControllerJPA {
-	private TodoService todoService;
 	private TodoRepository todoRepository;
 
-	public TodoControllerJPA(TodoService todoService, TodoRepository todoRepository) {
-		this.todoService = todoService;
+	public TodoControllerJPA(TodoRepository todoRepository) {
 		this.todoRepository = todoRepository;
 	}
 
@@ -38,23 +36,26 @@ public class TodoControllerJPA {
 	}
 
 	@RequestMapping(value = "add-todo" , method = RequestMethod.POST)
-	public String addNewTodo(ModelMap models, @Valid Todo todo, BindingResult result) {
+	public String addNewTodo(@Valid Todo todo, BindingResult result) {
 		if(result.hasErrors()) {
 			return "todo";
 		}
+
 		String username = getLoggendInUsername();
-		todoService.addTodo(username, todo.getDescription(), todo.getTargetDate(), false);
+		todo.setUsername(username);
+		todoRepository.save(todo);
+
 		return "redirect:list-todos";
 	}
 	@RequestMapping("delete-todo")
 	public String deleteTodo(@RequestParam int id) {
-		todoService.deleteById(id);
+		todoRepository.deleteById(id);
 		return "redirect:list-todos";
 	}
 
 	@RequestMapping(value = "update-todo", method = RequestMethod.GET)
 	public String showUpdateTodoPage(@RequestParam int id, ModelMap models) {
-		Todo todo = todoService.findById(id);
+		Todo todo = todoRepository.findById(id).get();
 		models.addAttribute("todo", todo);
 		return "todo";
 	}
@@ -64,7 +65,11 @@ public class TodoControllerJPA {
 		if(result.hasErrors()) {
 			return "todo";
 		}
-		todoService.updateTodo(todo);
+
+		String username = getLoggendInUsername();
+		todo.setUsername(username);
+		todoRepository.save(todo);
+
 		return "redirect:list-todos";
 	}
 
