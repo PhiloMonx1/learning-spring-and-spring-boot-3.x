@@ -1199,3 +1199,22 @@ public class TodoService {
 Spring Security 를 사용하기 위해서 기존의 로그인 관련 코드를 삭제했다. 
 
 ---
+
+## 30단계 - Spring Boot Starter Security로 Spring Security 설정하기
+
+#### 라이브러리 추가
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+```
+
+#### 애플리케이션 실행 후 Spring Security 로그 확인
+![spring-security-log.png](image/spring-security-log.png)
+- 개발용으로만 사용 가능한 보안 패스워드 생성에 대한 안내를 로그에서 확인 할 수 있다.
+
+![spring-security-login-page.png](image/spring-security-login-page.png)
+- 애플리케이션을 실행하면 모든 엔드포인트 접근을 막고, 자동으로 '/login' 으로 리다이렉트 된다. 
+- ID에 'user' PW에 로그에 나타난 패스워드를 입력해서 인증이 가능하다. (애플리케이션 재시작 시 패스워드가 바뀐다.)
+---
