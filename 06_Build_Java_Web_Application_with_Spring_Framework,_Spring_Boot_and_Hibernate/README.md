@@ -150,6 +150,7 @@ public class SayHelloController {
 5. UTF-8 인코딩
     - jsp 내용을 한글로 작성했기 때문에 실제 페이지에서 깨지는 문제가 발생했다.
     - jsp 파일 최상단에 `<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>`를 입력해서 해결할 수 있다.
+
 ---
 
 ## 6단계 - 예제 - LoginController와 login 뷰 만들기
@@ -385,7 +386,8 @@ public class LoginController {
        - 뷰 리졸버 : 트롤러가 반환한 뷰 이름을 실제 뷰로 변환해주는 컴포넌트
   8. 뷰 리졸버가 `login.jsp`를 찾아서 뷰를 반환한다.
   9. 디스패처 서블릿이 해당 뷰를 사용하여 클라이언트에게 응답을 렌더링한다.
-  10. `login.jsp`의 내용을 응답으로 반환한다.
+  10. `login.jsp`
+
 ---
 
 ## 11단계 - 로그인 양식 만들기
@@ -638,6 +640,7 @@ public class TodoController {
     public class TodoController { }
     ```
     - 값 공유를 원하는 모든 컨트롤러에 `@SessionAttributes` 어노테이션을 적용한다.
+
 ---
 
 ## 17단계 - Spring Boot 프로젝트에 JSTL을 추가하고 Todos를 테이블에 표시하기
@@ -769,6 +772,7 @@ Todo 리스트의 데이터는 `${todos}`를 사용해서 노출하고 있다. `
 - 적용된 모습 
   ![listTodos-page-bootstrap.png](image/listTodos-page-bootstrap.png)
   - table 태그에 class="table"만 추가해도 그럴듯한 CSS의 테이블을 볼 수 있다. 
+
 ---
 
 ## 20단계 - Todo 추가하기 - 새로운 뷰 만들기
@@ -800,6 +804,7 @@ Todo 리스트의 데이터는 `${todos}`를 사용해서 노출하고 있다. `
     ```
     - 리턴 값으로 `redirect:{엔드포인트}`를 줘서 리다이렉트 할 수 있다.
       - JSP로 줄 경우 기존 `listAllTodos()`에서 사용하던 Model을 다시 작성해야 하기 때문에 작성된 엔드포인트로 이동하는 것이 더 유리하다.
+
 ---
 
 ## 21단계 - Todo를 추가하기 위해 TodoService 개선하기
@@ -836,6 +841,7 @@ Todo 리스트의 데이터는 `${todos}`를 사용해서 노출하고 있다. `
     ```
     - `@RequestParam` 을 사용해서 `description`을 받는다
     - `@SessionAttributes("name")`이 있기 때문에 `models.get("name")`으로 이름도 받을 수 있다.
+
 ---
 
 ## 22단계 - Spring Boot Starter Validation을 이용하여 검증 추가하기
@@ -920,6 +926,7 @@ Todo 리스트의 데이터는 `${todos}`를 사용해서 노출하고 있다. `
     - `new Todo`를 사용해서 초기값을 가진 객체를 생성한다.
       - 사용자가 값을 입력하면 초기값을 대체한다. (입력되지 않은 값에 대한 초기화)
     - 해당 메서드에서 `addNewTodo()` 메서드로 객체를 전달하기 때문에 id를 0으로 설정해도 `addNewTodo()` 내부에서 `todoService`가 일을 한다.
+
 ---
 
 ## 23단계 - 커맨드 빈으로 새 Todo 페이지 검증 구현하기
@@ -1086,6 +1093,7 @@ public class TodoService {
 		todos.add(todo);
 	}
 }
+
 ```
 
 여기까지 진행하면 Todo 수정이 가능하다. 그러나 2가지 문제점이 나타난다.
@@ -1164,6 +1172,7 @@ public class TodoService {
     - weekStart : 달력 요일 시작 기준 (0은 일요일)
     - autoclose : 날짜 선택 후 자동으로 Datepicker가 닫힘
     - todayHighlight : 오늘 날짜를 가시적으로 하이라이트
+
 ---
 
 ## 28단계 - 내비게이션 바를 추가하고 JSP 프래그먼트 구현하기
@@ -1191,6 +1200,7 @@ public class TodoService {
 - `src/main/resources/META-INF/resources/WEB-INF/common` 경로에 JSP 프래그먼트 파일을 생성한다. (.jspf)
 - `<%@ include file="common/navigation.jspf" %>` 해당 방식으로 불러올 수 있다. 
 - jspf 파일도 UTF-8 인코딩에 대한 처리를 해주어야 한다.
+
 ---
 
 ## 29단계 - Spring Security 사용할 준비하기
@@ -1217,6 +1227,7 @@ Spring Security 를 사용하기 위해서 기존의 로그인 관련 코드를 
 ![spring-security-login-page.png](image/spring-security-login-page.png)
 - 애플리케이션을 실행하면 모든 엔드포인트 접근을 막고, 자동으로 '/login' 으로 리다이렉트 된다. 
 - ID에 'user' PW에 로그에 나타난 패스워드를 입력해서 인증이 가능하다. (애플리케이션 재시작 시 패스워드가 바뀐다.)
+
 ---
 
 ## 31단계 - 사용자 지정 유저와 패스워드 인코더를 이용하여 Spring Security 설정하기
@@ -1301,6 +1312,7 @@ public class SpringSecurityConfiguration {
       - 동일한 코드이며, 코드 작성 스타일의 차이임 (내가 작성한 코드는 메서드 참조 방식이다.)
     - 진행에 영향을 주지 않을 것 같아서 강의 코드로 변경하진 않았다.
       - 강의 코드가 메서드 참조형 코드 보다 명시적이라는 장점이 있다.
+
 ---
 
 ## 32단계 - 하드코딩된 사용자 ID 삭제하고 리팩터링하기
@@ -1365,4 +1377,88 @@ Authentication authentication = SecurityContextHolder.getContext().getAuthentica
     ```
     - `TodoController` 에서도 `getLoggendInUsername()`를 선언하여 해결 할 수 있다.
     - 중복된 코드는 강의가 진행됨에 따라 인증 객체를 관리하는 클래스를 만들어 개선할 것으로 예상된다.
+
+---
+
+## 33단계 - Todo 애플리케이션에 새로운 사용자 설정하기
+
+#### 새로운 사용자 설정
+```java
+@Configuration
+public class SpringSecurityConfiguration {
+
+	@Bean
+	public InMemoryUserDetailsManager createUserDetailsManager() {
+		UserDetails userDetails1 = createNewUser("SpringBootJSP", "ILoveSpring");
+		UserDetails userDetails2 = createNewUser("EH13", "backend");
+
+		return new InMemoryUserDetailsManager(userDetails1, userDetails2);
+	}
+	//...생략
+	public UserDetails createNewUser(String username, String password) {
+		return User.builder()
+				.passwordEncoder(passwordEncoder()::encode)
+				.username(username)
+				.password(password)
+				.roles("USER", "ADMIN")
+				.build();
+	}
+}
+```
+- `InMemoryUserDetailsManager`에 `UserDetails`을 인자로 여러 개 줄 수 있다.
+    ```java
+    package org.springframework.security.provisioning;
+    public class InMemoryUserDetailsManager implements UserDetailsManager, UserDetailsPasswordService {
+        public InMemoryUserDetailsManager(UserDetails... users) {
+            for (UserDetails user : users) {
+                createUser(user);
+            }
+        }
+    }
+    ```
+    - `InMemoryUserDetailsManager` 생성자는 파라미터로 `UserDetails`의 '가변인자'를 받는다. 
+      - 가변인자 : `타입... 변수명` 형태로 선언 : 여러 개의 인자를 쉼표로 구분해서 받을 수 있음 (내부적으로 배열 처리)
+        - 가변 인자는 메서드에서 하나만 사용 가능하며, 반드시 마지막 위치에 있어야 한다.
+
+#### InMemoryUserDetailsManager 에 대한 이해 (추가 학습)
+- 사용자 정보를 메모리에 저장하는 객체
+- 나중에 데이터 베이스로 이를 교체하게 된다.
+- `UserDetails` 객체는 데이터 베이스의 유저 인증 관련 테이블이 될 것이다.
+
+#### Spring Security 에 대한 이해 (추가 학습)
+다음의 시나리오가 있다.
+1. 100만 명의 User가 있는 DB와 연결된 애플리케이션이 있다.
+2. 애플리케이션이 실행된다.
+3. 유저가 로그인 한다.
+4. 로그인을 했을 때 데이터 베이스에서 로그인 정보를 검증한다.
+5. 검증이 성공하면, 인증 정보 (Authentication 객체)가 생성되고, 이를 SecurityContext에 설정한다.
+6. 인증 정보를 유저에게 발행한다. (세션, jwt 등)
+7. User는 API 요청 마다 인증 정보를 함께 제출해야 하며, 이를 Spring Security Context가 검증한 후 요청을 처리한다.
+8. 이 때 100만명의 유저가 있다고 하더라도 Spring Security Context가 일하는 상황은 '로그인을 한 유저'에 제한된다.
+
+#### SecurityContext 와 Authentication는 Bean이 아니다. (추가 학습)
+- 범위(scope)
+  - 주로 요청(Request) 또는 세션(Session) 범위에서만 유효함. 
+  - 즉, 특정 사용자의 특정 세션이나 요청에 대해서만 유효한 정보를 담고 있다.
+- 생성과 관리:
+  - 사용자가 로그인할 때 생성되며, 현재 쓰레드의 SecurityContextHolder에 의해 관리된다. 
+  - 특정 사용자와 관련된 정보이므로 전역적인 Bean으로 정의되지 않음.
+- 스프링 컨텍스트와 구분되며, 스프링 시큐리티에서 별도로 구현한 것이다.
+- SecurityContext는 스프링 시큐리티가 자체적으로 관리하므로 별도로 빈으로 관리할 필요가 없다.
+  - 생성 및 초기화: 사용자가 로그인하면 스프링 시큐리티가 SecurityContext를 생성하고, Authentication 객체를 설정한다.
+  - 전파: SecurityContext는 요청이 들어오는 동안 지속된다. 
+    - HTTP 요청의 경우, 요청이 시작될 때 생성되고, 요청이 끝날 때 정리됨.
+  - 저장 및 전파 전략: 기본적으로 ThreadLocal을 사용하여 현재 스레드에 SecurityContext를 저장한다. 
+    - 필요에 따라 다른 저장 전략을 사용할 수도 있음. (예시 : InheritableThreadLocal -  자식 스레드가 부모 스레드의 SecurityContext를 상속)
+  - 세션 관리: 웹 애플리케이션에서는 SecurityContext가 HTTP 세션에 저장되어 여러 요청 간에 지속될 수 있습니다.
+    - 필요에 따라 다른 관리 전략을 사용할 수도 있음. (예시 : JWT)
+
+#### SecurityContextHolder 이해 (추가 학습)
+SecurityContext에서 설정한 인증 객체는 스프링 시큐리티 프레임워크를 통해 관리되며, 이를 통해 스프링 애플리케이션에서도 접근할 수 있다. 
+
+이 과정에서 SecurityContextHolder가 중요한 역할을 한다.
+- SecurityContextHolder는 SecurityContext를 저장하고 접근하는 데 사용되는 클래스이다.
+- SecurityContext는 현재 스레드의 ThreadLocal에 저장된다. 
+  - 이를 통해 애플리케이션의 어느 부분에서도 현재 인증된 사용자의 정보를 쉽게 조회할 수 있다.
+
 ---
