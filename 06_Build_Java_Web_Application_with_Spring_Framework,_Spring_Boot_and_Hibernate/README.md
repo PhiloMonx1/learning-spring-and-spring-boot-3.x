@@ -1658,3 +1658,23 @@ todoRepository.save(todo);
 save와 동일하다.
 
 ---
+
+## 38단계 - 02 - Spring Boot Starter JPA와 JpaRepository의 세부 작동방식 이해하기
+
+![magic-data-jpa.png](image/magic-data-jpa.png)
+
+#### Spring Boot 자동 설정이 하는 일
+Spring Data JPA를 사용하기 위해 우리가 해야 할은 Spring Data JPA와 H2 라이브러리를 추가한 것이다. 그것만 해도 Spring Boot는 아래 나열한 작업을 자동으로 진행한다.
+- JPA, Spring Data JPA 프레임워크 초기화 
+- H2 데이터베이스 시작 (인메모리)
+- 데이터베이스 연결 풀 설정
+- 스크립트 자동 실행 (data.sql)
+
+#### 백그라운드에서 동작하는 SQL 쿼리
+`application.properties` 설정으로 Spring Data JPA에 의해 백그라운드에서 실행되는 SQL쿼리문을 콘솔에 출력할 수 있다.
+```properties
+spring.jpa.show-sql=true
+```
+해당 설정을 한 후 Todo 조회, 생성, 삭제, 수정을 하면서 어떤 쿼리가 실행되는지 확인 해볼 수 있다.
+
+---
