@@ -1502,3 +1502,74 @@ Forbidden
 Forbidden 에러는 권한이 없을 때 나타나는 것으로 Spring Security에 의한 것이다.
 
 ---
+
+## 35단계 - H2 콘솔을 사용하기 위해 Spring Security 설정하기
+
+#### Spring Security의 디폴트 설정
+1. 모든 URL이 보호된다.
+2. 승인되지 않은 요청에 대해 로그인 양식('/login')이 표시된다.
+3. CSRF 보호가 기본적으로 활성화되어 있다.
+4. X-Frame-Options 헤더를 통해 프레임 내 로딩이 기본적으로 비허용된다 (`DENY`).
+5. 비밀번호는 Bcrypt를 사용하여 인코딩된다.
+6. 기본적으로 폼 기반 인증이 사용된다.
+7. 디폴트 사용자 이름은 'user'이며, 애플리케이션 시작 시 콘솔에 생성된 비밀번호가 출력된다.
+8. 비밀번호는 Bcrypt를 사용하여 인코딩된다.
+9. 로그아웃 URL은 '/logout'으로 설정되어 있으며, 로그아웃 성공 시 기본적으로 로그인 페이지로 리다이렉트된다.
+10. ...
+
+
+#### H2 콘솔에 접속하기 위해서
+1. CSRF 비활성화
+2. Frames 허용
+
+#### `SecurityFilterChain` 설정
+```java
+@Configuration
+public class SpringSecurityConfiguration {
+	//...(생략)
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		return http
+				.authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+				.formLogin(Customizer.withDefaults())
+				.csrf(csrf -> csrf.disable())
+				.headers(headers -> headers.frameOptions(frame -> frame.disable()))
+				.build();
+	}
+	//...(생략)
+}
+```
+Spring Security가 최신화 되면서 강의 코드의 몇몇 메서드가 더 이상 사용되지 않아. 최신 대체 메서드를 사용했다.
+
+- SecurityFilterChain : Spring Security의 핵심 설정을 담고 있음
+  - Spring Security는 디폴트 `SecurityFilterChain`를 정의하고 있으며 해당 코드에서는 그것을 오버라이딩 한 것이다.
+- HttpSecurity : HTTP 요청에 대한 보안 구성 정의
+  - 인증, 권한 부여, 폼 로그인, CSRF 보호, HTTP 헤더 설정 등을 구성 가능
+- authorizeHttpRequests() : HTTP 요청에 대해 접근 권한 설정
+  - auth.anyRequest() : 모든 HTTP 요청을 대상으로 설정
+  - authenticated() : 인증된 사용자만 접근 가능 
+- formLogin : 폼 기반 로그인을 설정
+  - Customizer.withDefaults() : Spring Security가 제공하는 기본 설정 적용
+- csrf : CSRF(Cross-Site Request Forgery) 보호 설정 구성
+- headers : HTTP 응답 헤더 설정
+  - frameOptions : X-Frame-Options 헤더를 설정 (페이지가 `<iframe>` 내에서 로드될 수 있는지 여부 제어)
+
+#### 왜 H2 콘솔에 접근 못했는가? 
+- CSRF(Cross-Site Request Forgery)
+  - 사용자가 의도하지 않은 요청이 악의적 웹사이트를 통해 전송되는 공격
+    - ex) 사용자가 은행 웹사이트에 로그인한 상태에서 악의적인 웹사이트를 방문하면, 해당 웹사이트가 사용자의 권한으로 은행 웹사이트에 요청을 보낼 수 있다.
+  - 이를 방지하기 위해 CSRF 토큰을 사용 (서버에서 CSRF 토큰을 생성하고 클라이언트가 요청에 포함시켜 검증하는 방식이다.)
+  - H2 : 간단하게 말해서 h2 콘솔이 CSRF 토큰을 제공하지 않거나, 토큰 검증이 실패하는 것.
+- X-Frame-Options
+  - 웹 페이지가 다른 웹 페이지의 `<iframe>` 내에서 렌더링되는 것을 제어하는 HTTP 응답 헤더 클릭재킹(Clickjacking) 공격을 방지한다.
+    - 클릭재킹 : 사용자가 인식하지 못한 상태에서 악의적인 웹 페이지가 사용자의 클릭을 가로채는 공격
+    - `<iframe>`은 클릭재킹에 취약하다.
+  - X-Frame-Options에는 세 가지 옵션이 있다.
+    - DENY: 완전 차단
+    - SAMEORIGIN: 동일 출처에서만 허용
+    - ALLOW-FROM uri: 지정 출처에서만 허용
+  - H2 : 콘솔이 `<iframe>`으로 열리기 때문임.
+
+원래는 H2 콘솔에 대한 엔드포인트에만 보안 설정을 열어주는 것이 안전하다. (혹은 prod 환경과 dev 환경의 보안 설정을 분리한다.)
+
+---
