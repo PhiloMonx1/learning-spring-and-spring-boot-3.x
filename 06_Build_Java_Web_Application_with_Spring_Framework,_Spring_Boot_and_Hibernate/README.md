@@ -1302,3 +1302,67 @@ public class SpringSecurityConfiguration {
     - 진행에 영향을 주지 않을 것 같아서 강의 코드로 변경하진 않았다.
       - 강의 코드가 메서드 참조형 코드 보다 명시적이라는 장점이 있다.
 ---
+
+## 32단계 - 하드코딩된 사용자 ID 삭제하고 리팩터링하기
+
+#### Authentication 사용하기
+스프링 시큐리티(Spring Security)에서 제공하는 인증 정보를 나타내는 인터페이스
+
+```java
+Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+```
+- SecurityContext : 보안 컨텍스트
+- SecurityContextHolder : 현재 스레드에 관련된 보안 컨텍스트
+
+#### 하드코딩된 username 개선하기
+1. `WelcomeController::goToWelcomePage()` 개선
+    ```java
+    @SessionAttributes("name")
+    public class WelcomeController {
+    
+        @RequestMapping(value = "/", method = RequestMethod.GET)
+        public String goToWelcomePage(ModelMap models) {
+            models.addAttribute("name", getLoggedinUserName());
+            return "welcome";
+        }
+    
+        private String getLoggedinUserName() {
+            return SecurityContextHolder.getContext().getAuthentication().getName();
+        }
+    }
+    ```
+    - `SecurityContextHolder` 를 사용해 인증 객체의 name을 사용할 수 있다.
+
+2. `TodoController`, `TodoService` 개선
+    ```java
+    @SessionAttributes("name")
+    public class TodoController { }
+    
+    @Service
+    public class TodoService {
+        public List<Todo> findByUsername(String username) {
+            return todos.stream()
+                    .filter(todo -> todo.getUsername().equals(username))
+                    .toList();
+        }
+    }
+    ```
+    - `@SessionAttributes("name")` 어노테이션으로 name 모델을 공유할 수 있다.
+    - `TodoService::findByUsername()`을 개선한다. 
+
+3. 문제점 및 해결
+
+    애플리케이션을 실행해서 확인해보면 문제가 하나 있다. 웰컴 페이지('/')에서 '/todo-list' 페이지로 이동할 때는 name Model을 공유받으나, '/todo-list' 바로 접근하면 인증 객체로부터 name을 받을 수 없다.
+    
+    ```java
+    public class TodoController {
+        String username = getLoggendInUsername();
+        
+        private static String getLoggendInUsername() {
+            return SecurityContextHolder.getContext().getAuthentication().getName();
+        }
+    }
+    ```
+    - `TodoController` 에서도 `getLoggendInUsername()`를 선언하여 해결 할 수 있다.
+    - 중복된 코드는 강의가 진행됨에 따라 인증 객체를 관리하는 클래스를 만들어 개선할 것으로 예상된다.
+---

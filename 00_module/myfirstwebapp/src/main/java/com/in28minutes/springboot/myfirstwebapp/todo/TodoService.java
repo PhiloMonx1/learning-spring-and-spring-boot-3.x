@@ -12,13 +12,15 @@ public class TodoService {
 	private static int todoCount = 0;
 
 	static {
-		todos.add(new Todo(++todoCount, "EH13", "스프링부트 3 강의 완강하기", LocalDate.now().plusMonths(1), false));
-		todos.add(new Todo(++todoCount, "EH13", "도커, 쿠버네티스 강의 완강하기", LocalDate.now().plusMonths(2), false));
-		todos.add(new Todo(++todoCount, "EH13", "사이드 프로젝트 완성 하기", LocalDate.now().plusMonths(4), false));
+		todos.add(new Todo(++todoCount, "SpringBootJSP", "스프링부트 3 강의 완강하기", LocalDate.now().plusMonths(1), false));
+		todos.add(new Todo(++todoCount, "SpringBootJSP", "도커, 쿠버네티스 강의 완강하기", LocalDate.now().plusMonths(2), false));
+		todos.add(new Todo(++todoCount, "SpringBootJSP", "사이드 프로젝트 완성 하기", LocalDate.now().plusMonths(4), false));
 	}
 
 	public List<Todo> findByUsername(String username) {
-		return todos;
+		return todos.stream()
+				.filter(todo -> todo.getUsername().equals(username))
+				.toList();
 	}
 
 	public void addTodo(String username, String description, LocalDate targetDate, boolean done) {
