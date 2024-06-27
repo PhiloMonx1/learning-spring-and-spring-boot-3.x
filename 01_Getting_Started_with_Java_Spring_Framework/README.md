@@ -427,20 +427,25 @@ public class HelloWorldConfiguration {
 [커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/7df3003f9b8efd2bad7f4aaf56fd49d7c3a21f64)
 
 #### Spring 컨테이너란? 
-    - Spring 컨테이너 == Spring 컨텍스트 ?? (강의에서는 같다고 함)
+    - Spring 컨테이너 == Spring 컨텍스트 ?? (강의에서는 같다고 함, 현대에 와서는 같은 의미로 쓰임)
     - Spring 컨테이너는 Spring Bean과 생명 주기를 관리
 ![spring-bean-ex-prac.png](image/spring-bean-ex-prac.png)
 해당 이미지를 기준으로
-- 초록색 Spring 영역이 Spring 컨텍스트이다. 
+- 초록색 Spring 영역이 Spring 컨테이너이다. 
 - name, age 등의 '텍스트'가 Spring Bean 이다.
-- '텍스트'를 감싸는 '도형'이 Spring 컨테이너이다.
 
-#### Spring 컨텍스트는 Spring 컨테이너의 상위 개념이다.
-- 컨텍스트는 애플리케이션 전체의 설정 정보를 관리하고, 컨테이너를 포함한다.
-- 컨텍스트는 애플리케이션의 실행 환경을 나타내며, 여러 개의 컨테이너를 포함한다.
+#### Spring Container와 Spring Context의 차이
+- Spring Container : 스프링 애플리케이션을 구성하는 객체(Bean)들을 생성하고 관리, 의존성 주입 역할 담당
+- Spring Context : Spring Container를 포함하는 더 큰 개념으로, 애플리케이션의 전반적인 설정 및 구성을 관리 (Spring Container의 기능 외에도 추가적인 기능을 제공)
+  - Spring Container를 포함하면서 추가적으로 국제화, 이벤트 프로세싱, 리소스 로딩 등의 더 많은 기능을 제공
+- Spring Context는 Spring Container의 확장판이라고 할 수 있다.
+  - 예전에는 Spring Container 만 존재했었는데, 기술 발전에 따라 추가 기능이 포함된 Spring Context가 등장한 것
+    - Spring Container = BeanFactory
+    - Spring Context = ApplicationContext
+- 현대에 와서는 Spring Context를 Spring Container와 굳이 구분하지 않는다.
+  - 대부분의 개발자들은 Spring Container라고 할 때 보통 `ApplicationContext`를 의미하는 것으로 이해한다.
+  - [Spring Core](https://docs.spring.io/spring-framework/reference/) 에서도 많은 예시가 `ApplicationContext`를 기준으로 작성되어 있음을 볼 수 있다.
 
-Spring 컨테이너는 Bean의 생성, 관리. 의존성 주입 등 Bean과 관련된 직접적인 작업을 담당하고, <br>
-컨텍스트는 컨테이너와 그 외의 환경, 보안 설정 등 설정 정보를 통합적으로 관리한다.
 
 #### IoC 컨테이너
 - IoC는 '제어의 역전'으로 해석된다.
