@@ -1192,3 +1192,10 @@ public class TodoService {
 - `<%@ include file="common/navigation.jspf" %>` 해당 방식으로 불러올 수 있다. 
 - jspf 파일도 UTF-8 인코딩에 대한 처리를 해주어야 한다.
 ---
+
+## 29단계 - Spring Security 사용할 준비하기
+
+#### 로그인 코드 변경
+Spring Security 를 사용하기 위해서 기존의 로그인 관련 코드를 삭제했다. 
+
+---
