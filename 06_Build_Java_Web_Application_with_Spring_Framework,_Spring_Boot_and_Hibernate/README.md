@@ -1573,3 +1573,30 @@ Spring Security가 최신화 되면서 강의 코드의 몇몇 메서드가 더 
 원래는 H2 콘솔에 대한 엔드포인트에만 보안 설정을 열어주는 것이 안전하다. (혹은 prod 환경과 dev 환경의 보안 설정을 분리한다.)
 
 ---
+
+## 36단계 - Todo 엔터티를 만들고 Todo 데이터를 H2에 채워넣기
+
+#### `Todo` 클래스 엔티티 등록
+1. `@Entity` 클래스 어노테이션 부여
+2. `id` 필드에 `@Id` 어노테이션 부여
+3. `id` 필드에 `@GeneratedValue` 어노테이션 부여
+   - 기본 키 생성 전략을 지정하는 어노테이션.
+   - AUTO, IDENTITY, SEQUENCE, TABLE 등이 있으며 기본 값은 'AUTO'이다.
+
+#### Todo 테이블 시작 데이터 넣기 
+- `data.sql` 작성
+    ```sql
+    insert into todo ( ID, USERNAME, DESCRIPTION, TARGET_DATE, DONE )
+    values ( 10001, 'EH13', 'Spring Boot 웹 서비스를 만들기', CURRENT_DATE(), false );
+    ```
+    - 작성 후 애플리케이션을 실행하면 오류 메시지가 노출된다.
+    - sql문이 테이블 생성 보다 먼저 실행되기 때문에 존재하지 않는 테이블에 데이터를 넣으려고 시도한 것으로 인식하는 문제이다.
+      -  Spring Boot는 애플리케이션 컨텍스트 초기화 중에 데이터 소스를 초기화하고, 그 과정에서 schema.sql과 data.sql 파일을 실행하여 데이터베이스 스키마를 생성하거나 업데이트하고 초기 데이터를 삽입한다.
+    
+- `application.properties` 설정
+    ```properties
+    spring.jpa.defer-datasource-initialization=true
+    ```
+    - 애플리케이션 컨텍스트가 완전히 초기화된 후에 데이터 소스 초기화 실행 (JPA 엔티티 매핑 및 기타 애플리케이션 초기화 작업이 먼저 완료된다.)
+
+---
