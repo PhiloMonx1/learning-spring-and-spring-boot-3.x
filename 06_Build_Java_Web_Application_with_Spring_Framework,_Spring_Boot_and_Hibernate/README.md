@@ -1218,3 +1218,87 @@ Spring Security 를 사용하기 위해서 기존의 로그인 관련 코드를 
 - 애플리케이션을 실행하면 모든 엔드포인트 접근을 막고, 자동으로 '/login' 으로 리다이렉트 된다. 
 - ID에 'user' PW에 로그에 나타난 패스워드를 입력해서 인증이 가능하다. (애플리케이션 재시작 시 패스워드가 바뀐다.)
 ---
+
+## 31단계 - 사용자 지정 유저와 패스워드 인코더를 이용하여 Spring Security 설정하기
+
+#### InMemoryUserDetailsManager
+데이터베이스 연결 없이 인메모리로 인증 구현을 할 수 있는 클래스
+
+```java
+@Configuration
+public class SpringSecurityConfiguration {
+
+	@Bean
+	public InMemoryUserDetailsManager createUserDetailsManager() {
+		return new InMemoryUserDetailsManager(
+				User.withDefaultPasswordEncoder()
+						.username("SpringBootJSP")
+						.password("ILoveSpring")
+						.roles("USER", "ADMIN")
+						.build()
+		);
+	}
+}
+```
+- 주의 : 해당 예제에서 사용한 `withDefaultPasswordEncoder()`는 도태된 기술이다.
+- 이제 설정한 계정 정보로 인증이 가능하다.
+- Spring Security에서는 로그인 뿐만 아니라 로그아웃('/logout')도 기본 제공한다.
+
+#### PasswordEncoder 설정 (패스워드 암호화)
+```java
+@Configuration
+public class SpringSecurityConfiguration {
+	//...(생략)
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+}
+```
+- `PasswordEncoder`를 선언한 후 애플리케이션에서 인증을 진행하면 자격증명에 실패한다.
+- `PasswordEncoder`에 의해 패스워드가 암호화가 되었기 때문에 `InMemoryUserDetailsManager`에서 리턴하는 유저도 암호화된 패스워드를 사용해야 한다.
+
+#### 패스워드 인코딩
+```java
+@Configuration
+public class SpringSecurityConfiguration {
+	@Bean
+	public InMemoryUserDetailsManager createUserDetailsManager() {
+		return new InMemoryUserDetailsManager(
+				User.builder()
+						.passwordEncoder(passwordEncoder()::encode)
+						.username("SpringBootJSP")
+						.password("ILoveSpring")
+						.roles("USER", "ADMIN")
+						.build());
+	}
+	//...(생략)
+}
+```
+- `withDefaultPasswordEncoder()`를 `builder()`로 대체했다.
+- `passwordEncoder(passwordEncoder()::encode)` 를 사용해서 패스워드 인코딩을 진행한다.
+  - `passwordEncoder()::encode` : 생략된 부분에 `passwordEncoder()`는 본질적으로 `BCryptPasswordEncoder`의 인스턴스를 리턴한다. 해당 인스터스의 `encode()` 함수를 사용한 것.
+- 강의 코드
+    ```java
+    @Configuration
+    public class SpringSecurityConfiguration {
+        public InMemoryUserDetailsManager createUserDetailsManager(){
+            Function<String, String> passwordEncoder
+                    = input -> passwordEncoder().encode(input);
+    
+            return new InMemoryUserDetailsManager(
+                    User.builder()
+                            .passwordEncoder(passwordEncoder)
+                            .username("SpringBootJSP")
+                            .password("ILoveSpring")
+                            .roles("USER", "ADMIN")
+                            .build());
+    
+        }
+    }
+    ```
+    - Function<String, String> 인터페이스를 이용하여 람다 표현식을 정의했다.
+      - 동일한 코드이며, 코드 작성 스타일의 차이임 (내가 작성한 코드는 메서드 참조 방식이다.)
+    - 진행에 영향을 주지 않을 것 같아서 강의 코드로 변경하진 않았다.
+      - 강의 코드가 메서드 참조형 코드 보다 명시적이라는 장점이 있다.
+---
