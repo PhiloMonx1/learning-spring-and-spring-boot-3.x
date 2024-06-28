@@ -3,6 +3,7 @@
 ## 목록
 0. [Spring Boot로 REST API 생성하기 - 개요](#0단계---spring-boot로-rest-api-생성하기---개요)
 1. [Spring Boot로 REST API 프로젝트 초기화하기](#1단계---spring-boot로-rest-api-프로젝트-초기화하기)
+2. [Spring Boot로 Hello World REST API 생성하기](#2단계---spring-boot로-hello-world-rest-api-생성하기)
 
 ---
 
@@ -62,5 +63,25 @@
 - 라이브러리 목록
    - Spring Web
    - Spring Boot DevTools
+
+---
+
+## 2단계 - Spring Boot로 Hello World REST API 생성하기
+
+#### Hello Wolrd GET API 작성
+```java
+@RestController
+public class HelloWorldController {
+
+	@RequestMapping(method = RequestMethod.GET, path = "/hello-world")
+	public String helloWorld() {
+		return "Hello World";
+	}
+}
+```
+- @RestController : `@Controller` + `@ResponseBody `
+  - `@Controller` 는 보통 View를 리턴하는 데 사용한다. (데이터를 리턴하기 위해서는 `@ResponseBody`와 함께 사용해야 한다.)
+  - `@RestController` 는 데이터를 리턴하는 데 사용한다. (내부에 `@Controller`와 `@ResponseBody`를 함께 가지고 있다.)
+- @GetMapping : `@RequestMapping(method = RequestMethod.GET, path = "/hello-world")` 와 동일한 기능이다.
 
 ---
