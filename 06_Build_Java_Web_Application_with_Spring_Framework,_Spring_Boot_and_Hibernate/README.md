@@ -1,6 +1,54 @@
 # 📒 [학습 노트] 챕터 6 : Spring Framework, Spring Boot, Hibernate로 Java 웹 애플리케이션 만들기
 
+## 목록
+0. [Spring Boot를 이용한 웹 앱 제작 개요](#0단계---spring-boot를-이용한-웹-앱-제작-개요)
+1. [Spring initalizr로 Spring Boot 웹 애플리케이션 만들기](#1단계---spring-initalizr로-spring-boot-웹-애플리케이션-만들기)
+2. [Spring Boot 프로젝트 간단히 살펴보기](#2단계---spring-boot-프로젝트-간단히-살펴보기)
+3. [첫 번째 Spring MVC 컨트롤러, @ResponseBody, @Controller](#3단계---첫-번째-spring-mvc-컨트롤러-responsebody-controller)
+4. [HTML 응답을 제공하기 위해 Spring MVC 컨트롤러 개선하기](#4단계---html-응답을-제공하기-위해-spring-mvc-컨트롤러-개선하기)
+5. [Spring Boot Controller, @ResponseBody, 뷰를 이용하여 JSP로 리디렉션하기](#5단계---spring-boot-controller-responsebody-뷰를-이용하여-jsp로-리디렉션하기)
+6. [예제 - LoginController와 login 뷰 만들기](#6단계---예제---logincontroller와-login-뷰-만들기)
+7. [빠른 개요 - 웹의 작동 방식 - 요청과 응답](#7단계---빠른-개요---웹의-작동-방식---요청과-응답)
+8. [RequestParam으로 쿼리 파라미터 잡기, 모델 소개](#8단계---requestparam으로-쿼리-파라미터-잡기-모델-소개)
+9. [빠른 개요 - Spring Boot를 사용할 때 로깅의 중요성](#9단계---빠른-개요---spring-boot를-사용할-때-로깅의-중요성)
+10. [디스패처 서블릿, 모델 1, 모델 2, 프론트 컨트롤러 알아보기](#10단계---디스패처-서블릿-모델-1-모델-2-프론트-컨트롤러-알아보기)
+11. [로그인 양식 만들기](#11단계---로그인-양식-만들기)
+12. [모델로 JSP에 로그인 자격증명 표시하기](#12단계---모델로-jsp에-로그인-자격증명-표시하기)
+13. [하드코딩된 사용자 ID 및 패스워드 검증 추가하기](#13단계---하드코딩된-사용자-id-및-패스워드-검증-추가하기)
+14. [Todo 기능 만들기 시작 - Todo와 TodoService 만들기](#14단계---todo-기능-만들기-시작---todo와-todoservice-만들기)
+15. [Todo 리스트 페이지 처음 만들기](#15단계---todo-리스트-페이지-처음-만들기)
+16. [세션, 모델, 요청 이해하기 - @SessionAttributes](#16단계---세션-모델-요청-이해하기---sessionattributes)
+17. [Spring Boot 프로젝트에 JSTL을 추가하고 Todos를 테이블에 표시하기](#17단계---spring-boot-프로젝트에-jstl을-추가하고-todos를-테이블에-표시하기)
+18. [webjars를 사용하여 Bootstrap CSS 프레임워크를 Spring Boot 프로젝트에 추가하기](#18단계---webjars를-사용하여-bootstrap-css-프레임워크를-spring-boot-프로젝트에-추가하기)
+19. [Bootstrap CSS 프레임워크로 JSP 페이지 포맷 만들기](#19단계---bootstrap-css-프레임워크로-jsp-페이지-포맷-만들기)
+20. [Todo 추가하기 - 새로운 뷰 만들기](#20단계---todo-추가하기---새로운-뷰-만들기)
+21. [Todo를 추가하기 위해 TodoService 개선하기](#21단계---todo를-추가하기-위해-todoservice-개선하기)
+22. [Spring Boot Starter Validation을 이용하여 검증 추가하기](#22단계---spring-boot-starter-validation을-이용하여-검증-추가하기)
+23. [커맨드 빈으로 새 Todo 페이지 검증 구현하기](#23단계---커맨드-빈으로-새-todo-페이지-검증-구현하기)
+24. [Todo 삭제 기능 구현하기 - 새로운 뷰](#24단계---todo-삭제-기능-구현하기---새로운-뷰)
+25. [Todo 업데이트 구현하기 - 1 - Todo 업데이트 페이지 표시하기](#25단계---todo-업데이트-구현하기---1---todo-업데이트-페이지-표시하기)
+26. [Todo 업데이트 구현하기 - 1 - Todo 변경사항 저장](#26단계---todo-업데이트-구현하기---1---todo-변경사항-저장)
+27. [Todo 페이지에 목표 날짜 추가하기](#27단계---todo-페이지에-목표-날짜-추가하기)
+28. [내비게이션 바를 추가하고 JSP 프래그먼트 구현하기](#28단계---내비게이션-바를-추가하고-jsp-프래그먼트-구현하기)
+29. [Spring Security 사용할 준비하기](#29단계---spring-security-사용할-준비하기)
+30. [Spring Boot Starter Security로 Spring Security 설정하기](#30단계---spring-boot-starter-security로-spring-security-설정하기)
+31. [사용자 지정 유저와 패스워드 인코더를 이용하여 Spring Security 설정하기](#31단계---사용자-지정-유저와-패스워드-인코더를-이용하여-spring-security-설정하기)
+32. [하드코딩된 사용자 ID 삭제하고 리팩터링하기](#32단계---하드코딩된-사용자-id-삭제하고-리팩터링하기)
+33. [Todo 애플리케이션에 새로운 사용자 설정하기](#33단계---todo-애플리케이션에-새로운-사용자-설정하기)
+34. [Spring Boot Starter Data JPA를 추가하고 H2 데이터베이스 준비하기](#34단계---spring-boot-starter-data-jpa를-추가하고-h2-데이터베이스-준비하기)
+35. [H2 콘솔을 사용하기 위해 Spring Security 설정하기](#35단계---h2-콘솔을-사용하기-위해-spring-security-설정하기)
+36. [Todo 엔터티를 만들고 Todo 데이터를 H2에 채워넣기](#36단계---todo-엔터티를-만들고-todo-데이터를-h2에-채워넣기)
+37. [TodoRepository를 만들고 H2 데이터베이스와 list-todos 페이지 연결하기](#37단계---todorepository를-만들고-h2-데이터베이스와-list-todos-페이지-연결하기)
+38. [(1/2) 모든 Todo 앱 기능을 H2 데이터베이스와 연결하기](#38단계---01---모든-todo-앱-기능을-h2-데이터베이스와-연결하기)
+38. [(2/2) Spring Boot Starter JPA와 JpaRepository의 세부 작동방식 이해하기](#38단계---02---spring-boot-starter-jpa와-jparepository의-세부-작동방식-이해하기)
+39. [Todo 앱을 MySQL 데이터베이스에 연결하기(개요)](#39단계---todo-앱을-mysql-데이터베이스에-연결하기개요)
+40. [Docker 설치하기](#40단계---docker-설치하기)
+41. [Todo 앱을 MySQL 데이터베이스에 연결하기](#41단계---todo-앱을-mysql-데이터베이스에-연결하기)
+
+---
+
 ## 0단계 - Spring Boot를 이용한 웹 앱 제작 개요
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/11b0dff8223992b527bf52cbc7f1a40f20ee2047)
 
 #### 알아야 하는 키워드
 - 브라우저 동작 원리
@@ -41,6 +89,7 @@
 ---
 
 ## 1단계 - Spring initalizr로 Spring Boot 웹 애플리케이션 만들기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/0f5b7967a354a3466d6982bfec464ca4f1358444)
 
 #### 프로젝트 생성
 ![Spring-initializer.png](image/Spring-initializer.png)
@@ -52,6 +101,7 @@
 ---
 
 ## 2단계 - Spring Boot 프로젝트 간단히 살펴보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/ebde2a84efc7a3febd025369d68881592678c0b1)
 
 #### 중요한 파일
 1. [MyfirstwebappApplication.java](..%2F00_module%2Fmyfirstwebapp%2Fsrc%2Fmain%2Fjava%2Fcom%2Fin28minutes%2Fspringboot%2Fmyfirstwebapp%2FMyfirstwebappApplication.java) : 내부의 main() 메서드를 통해 애플리케이션 실행.
@@ -61,6 +111,7 @@
 ---
 
 ## 3단계 - 첫 번째 Spring MVC 컨트롤러, @ResponseBody, @Controller
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/16e920dcba09846d0911423d5d4fbc373f3e75a2)
 
 #### sayHello 실습
 ```java
@@ -83,6 +134,7 @@ public class SayHelloController {
 ---
 
 ## 4단계 - HTML 응답을 제공하기 위해 Spring MVC 컨트롤러 개선하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/1835b4d208fb73c19f56365adf0c2e50f49e0a68)
 
 #### 하드코딩 HTML(Hyper Text Markup Language) 리턴하기
 ```java
@@ -110,6 +162,7 @@ public class SayHelloController {
 ---
 
 ## 5단계 - Spring Boot Controller, @ResponseBody, 뷰를 이용하여 JSP로 리디렉션하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/98dc13e130462dcf14899c81c813fd90d50573c1)
 
 이전 단계에서 HTML을 직접 하드 코딩하는 것의 문제점을 알아보았다. 이 문제를 해결하기 위해 뷰를 사용할 수 있다.
 
@@ -154,6 +207,7 @@ public class SayHelloController {
 ---
 
 ## 6단계 - 예제 - LoginController와 login 뷰 만들기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/041b4fbc01e24e3505308bd3a2aee94bd57a6acf)
 
 #### 로그인 jsp 실습
 사용자가 "/login" 엔드포인트에 접근하면, login.jsp 를 통해 로그인 페이지를 보여주려고 한다.
@@ -163,6 +217,7 @@ public class SayHelloController {
 ---
 
 ## 7단계 - 빠른 개요 - 웹의 작동 방식 - 요청과 응답
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/aeaff008d1af92b1eb51c1699ec0072f5a47b3e0)
 
 #### HTTP 요청 간단하게 살펴보기
 ![dev-tool-request.png](image/dev-tool-request.png)
@@ -194,6 +249,7 @@ public class SayHelloController {
 ---
 
 ## 8단계 - RequestParam으로 쿼리 파라미터 잡기, 모델 소개
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/106fe9bb32aed1f7d8e0b4af34e7b7e2402f99be)
 
 #### URL 파라미터
 기존 /login 엔드포인트에 파라미터를 받아서 처리하는 로직을 추가할 것이다.
@@ -242,6 +298,7 @@ public class LoginController {
 ---
 
 ## 9단계 - 빠른 개요 - Spring Boot를 사용할 때 로깅의 중요성
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/f22cfd89aa6e8973fc0f4d5a709d0247416a8f77)
 
 #### Spring Boot 로깅 설정
 - Spring Boot 에서는 [application.properties](..%2F00_module%2Fmyfirstwebapp%2Fsrc%2Fmain%2Fresources%2Fapplication.properties.example)를 통해 로깅을 설정할 수 있다.
@@ -296,6 +353,7 @@ public class LoginController {
 ---
 
 ## 10단계 - 디스패처 서블릿, 모델 1, 모델 2, 프론트 컨트롤러 알아보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/445dba9b8391a47a042ee4d46c8698481f22b776)
 
 #### 웹 애플리케이션 개발 역사
 1. Model 1 아키텍처
@@ -391,6 +449,7 @@ public class LoginController {
 ---
 
 ## 11단계 - 로그인 양식 만들기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/b3e9da1190624d074a50a108819c7935b38dfca2)
 
 #### 실습
 1. JSP에 form 추가
@@ -411,6 +470,7 @@ public class LoginController {
 ---
 
 ## 12단계 - 모델로 JSP에 로그인 자격증명 표시하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/d35da43177717918c0199caf5f0312e8ebdd18cb)
 
 로그인 페이지에서 자격증명을 입력하면 환영 페이지로 리다이렉션 실습을 할 것이다.
 
@@ -468,6 +528,7 @@ public class LoginController {
 ---
 
 ## 13단계 - 하드코딩된 사용자 ID 및 패스워드 검증 추가하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/41251b274d154c1449dc13f60ddcd3cf122e3db2)
 
 간단한 인증을 실습하기 위헤서 아래의 조건으로 이름과 패스워드를 입력한 사용자만 웰컴페이지로 이동 시킬 것이다.
 
@@ -549,6 +610,7 @@ public class LoginController {
 ---
 
 ## 14단계 - Todo 기능 만들기 시작 - Todo와 TodoService 만들기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/70b3ae49bed5bfb5a09c1073d9178cd687208a90)
 
 !![my-todo-app.png](image/my-todo-app.png)
 
@@ -590,6 +652,7 @@ public class TodoService {
 ---
 
 ## 15단계 - Todo 리스트 페이지 처음 만들기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/e5654024ce2ef8fdbf3bd0db77c009f04787e818)
 
 #### Controller 작성
 ```java
@@ -619,6 +682,7 @@ public class TodoController {
 ---
 
 ## 16단계 - 세션, 모델, 요청 이해하기 - @SessionAttributes
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/bd9464e1f45704cdc93da772e3166249715cf723)
 
 #### 요청 (Request)
 ![request-payload.png](image/request-payload.png)
@@ -644,6 +708,7 @@ public class TodoController {
 ---
 
 ## 17단계 - Spring Boot 프로젝트에 JSTL을 추가하고 Todos를 테이블에 표시하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/12d82f3223d5e699b0f788c66d9f0254e5f0c3e2)
 
 ![list-todos-first.png](image/list-todos-first.png)
 페이지에서 응답하고 있는 데이터 값의 가독성이 좋지 않다. 이를 개선해보자.
@@ -713,6 +778,7 @@ Todo 리스트의 데이터는 `${todos}`를 사용해서 노출하고 있다. `
 ---
 
 ## 18단계 - webjars를 사용하여 Bootstrap CSS 프레임워크를 Spring Boot 프로젝트에 추가하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/5a38e2abae080d09ab9e243278f825552553f0ad)
 
 #### Bootstrap 
 - CSS 프레임워크
@@ -739,6 +805,7 @@ Todo 리스트의 데이터는 `${todos}`를 사용해서 노출하고 있다. `
     </dependencies>
     ```
     - webjars를 통해 bootstrap과 jquery를 불러온다.
+   
      ![bootstrap-and-jquery.png](image/bootstrap-and-jquery.png)
 2. JSP에 추가하기
     ```html
@@ -761,6 +828,7 @@ Todo 리스트의 데이터는 `${todos}`를 사용해서 노출하고 있다. `
 ---
 
 ## 19단계 - Bootstrap CSS 프레임워크로 JSP 페이지 포맷 만들기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/e9a92e82b0abbfdcd39637df3e3550a29578686c)
 
 #### `<div class="container">`
 - Bootstrap에서 레이아웃을 잡기 위해 사용되는 기본적인 클래스 중 하나 
@@ -776,6 +844,7 @@ Todo 리스트의 데이터는 `${todos}`를 사용해서 노출하고 있다. `
 ---
 
 ## 20단계 - Todo 추가하기 - 새로운 뷰 만들기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/4dd63871beabc5ae5127dd8a68f1f618474667e5)
 
 #### Todo 추가 기능 구현
 1. Todo 추가 버튼 구현
@@ -808,6 +877,7 @@ Todo 리스트의 데이터는 `${todos}`를 사용해서 노출하고 있다. `
 ---
 
 ## 21단계 - Todo를 추가하기 위해 TodoService 개선하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/d56a96b16a8f07b996a17f490f69e868fa429e00)
 
 #### Todo 추가 서비스 로직 구현
 1. `TodoService` 개선
@@ -845,6 +915,7 @@ Todo 리스트의 데이터는 `${todos}`를 사용해서 노출하고 있다. `
 ---
 
 ## 22단계 - Spring Boot Starter Validation을 이용하여 검증 추가하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/ffac152bd9b9976921721961d7a636cc62aaf592)
 
 ![empty-value.png](image/empty-value.png)
 현재 Todo는 아무런 값을 입력하지 않아도 검증 없이 빈 값으로 만들어진다. 검증을 추가할 필요가 있다.
@@ -854,6 +925,7 @@ Todo 리스트의 데이터는 `${todos}`를 사용해서 노출하고 있다. `
 설명: <input type="text" name="description" required="required">
 ```
 - 태그에 required 속성을 부여하는 것으로 빈 값 입력을 방지할 수 있다.
+    
     ![required.png](image/required.png)
 
 - 주의 : Html이나 JS 검증은 건너뛰기가 비교적 쉽기 때문에 서버측 추가 검증이 필요하다. 
@@ -930,6 +1002,7 @@ Todo 리스트의 데이터는 `${todos}`를 사용해서 노출하고 있다. `
 ---
 
 ## 23단계 - 커맨드 빈으로 새 Todo 페이지 검증 구현하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/6de9b40ea2e8c1d5bf3d2b5d9dce123523d6f3f1)
 
 #### 단방향 바인딩 vs 양방향 바인딩
 - 단방향 바인딩 : 데이터가 한 방향으로만 흐르는 경우를 의미. 즉, 데이터 소스에서 뷰로만 데이터가 전달되고, 뷰에서 데이터 소스로는 데이터가 전달되지 않는 경우
@@ -1016,6 +1089,7 @@ public class TodoController {
 ---
 
 ## 24단계 - Todo 삭제 기능 구현하기 - 새로운 뷰
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/8c0823c64bf518681eb7734db9493406241f1f92)
 
 #### 삭제 버튼 추가 (View)
 ```html
@@ -1052,6 +1126,7 @@ public class TodoController {
 ---
 
 ## 25단계 - Todo 업데이트 구현하기 - 1 - Todo 업데이트 페이지 표시하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/30f414f57d5a7d3f391eda998b966a20655459bb)
 
 1. `listTodos.jsp` 수정 버튼 추가
 2. `TodoService` Id가 일치하는 Todo 객체 리턴 메서드 추가
@@ -1062,6 +1137,7 @@ public class TodoController {
 ---
 
 ## 26단계 - Todo 업데이트 구현하기 - 1 - Todo 변경사항 저장
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/1884cac7897ca84400b5f47c505c548829a90ee1)
 
 #### 컨트롤러 분리
 ```java
@@ -1120,6 +1196,7 @@ public class TodoService {
 ---
 
 ## 27단계 - Todo 페이지에 목표 날짜 추가하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/567a74e53841b19f13a391105828b8ed327337b3)
 
 #### 목표 일자 구현
 ```html
@@ -1176,6 +1253,7 @@ public class TodoService {
 ---
 
 ## 28단계 - 내비게이션 바를 추가하고 JSP 프래그먼트 구현하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/7b156dc83eedfe4ca1ab33d9f23ec1a7bc9e37e9)
 
 #### 네비게이션 바 추가
 - 코드스니펫
@@ -1204,6 +1282,7 @@ public class TodoService {
 ---
 
 ## 29단계 - Spring Security 사용할 준비하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/3ef5948d1da46f365d183d2c2a4758aba4f1f25d)
 
 #### 로그인 코드 변경
 Spring Security 를 사용하기 위해서 기존의 로그인 관련 코드를 삭제했다. 
@@ -1211,6 +1290,7 @@ Spring Security 를 사용하기 위해서 기존의 로그인 관련 코드를 
 ---
 
 ## 30단계 - Spring Boot Starter Security로 Spring Security 설정하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/6ae058351bd6db8b22ba0fa19d00681ad271db0c)
 
 #### 라이브러리 추가
 ```xml
@@ -1231,6 +1311,7 @@ Spring Security 를 사용하기 위해서 기존의 로그인 관련 코드를 
 ---
 
 ## 31단계 - 사용자 지정 유저와 패스워드 인코더를 이용하여 Spring Security 설정하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/d53782ebb80a3ed5a207fa95cdde55d4149ddec6)
 
 #### InMemoryUserDetailsManager
 데이터베이스 연결 없이 인메모리로 인증 구현을 할 수 있는 클래스
@@ -1316,6 +1397,7 @@ public class SpringSecurityConfiguration {
 ---
 
 ## 32단계 - 하드코딩된 사용자 ID 삭제하고 리팩터링하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/f937ba19b8625bc6c8e8bd61e0cbe2fd8c3378b9)
 
 #### Authentication 사용하기
 스프링 시큐리티(Spring Security)에서 제공하는 인증 정보를 나타내는 인터페이스
@@ -1379,8 +1461,10 @@ Authentication authentication = SecurityContextHolder.getContext().getAuthentica
     - 중복된 코드는 강의가 진행됨에 따라 인증 객체를 관리하는 클래스를 만들어 개선할 것으로 예상된다.
 
 ---
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/eebd0ccec73f352f568fc7b2dbee149b798f0492)
 
 ## 33단계 - Todo 애플리케이션에 새로운 사용자 설정하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/eebd0ccec73f352f568fc7b2dbee149b798f0492)
 
 #### 새로운 사용자 설정
 ```java
@@ -1464,6 +1548,7 @@ SecurityContext에서 설정한 인증 객체는 스프링 시큐리티 프레�
 ---
 
 ## 34단계 - Spring Boot Starter Data JPA를 추가하고 H2 데이터베이스 준비하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/1ebf3e24416b93bd3b6a076fece9fde5d1d7411f)
 
 #### 라이브러리 추가
 ```xml
@@ -1504,6 +1589,7 @@ Forbidden 에러는 권한이 없을 때 나타나는 것으로 Spring Security�
 ---
 
 ## 35단계 - H2 콘솔을 사용하기 위해 Spring Security 설정하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/75105f53a03acf9bd20a3eb9159e8f8b20c9290b)
 
 #### Spring Security의 디폴트 설정
 1. 모든 URL이 보호된다.
@@ -1575,6 +1661,7 @@ Spring Security가 최신화 되면서 강의 코드의 몇몇 메서드가 더 
 ---
 
 ## 36단계 - Todo 엔터티를 만들고 Todo 데이터를 H2에 채워넣기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/576e141ea5d7384c636989658ea611df929d7224)
 
 #### `Todo` 클래스 엔티티 등록
 1. `@Entity` 클래스 어노테이션 부여
@@ -1603,6 +1690,7 @@ Spring Security가 최신화 되면서 강의 코드의 몇몇 메서드가 더 
 ---
 
 ## 37단계 - TodoRepository를 만들고 H2 데이터베이스와 list-todos 페이지 연결하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/a3edc9897931d3a5d021145614f0e29b0d02301d)
 
 #### TodoRepository
 ```java
@@ -1641,6 +1729,7 @@ public interface TodoRepository extends JpaRepository<Todo, Integer> { }
 ---
 
 ## 38단계 - 01 - 모든 Todo 앱 기능을 H2 데이터베이스와 연결하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/fa10c2f4d34ad28ed31ad09cfcf893381c5d246f)
 
 [TodoControllerJPA.java](..%2F00_module%2Fmyfirstwebapp%2Fsrc%2Fmain%2Fjava%2Fcom%2Fin28minutes%2Fspringboot%2Fmyfirstwebapp%2Ftodo%2FTodoControllerJPA.java)
 #### 생성
@@ -1660,6 +1749,7 @@ save와 동일하다.
 ---
 
 ## 38단계 - 02 - Spring Boot Starter JPA와 JpaRepository의 세부 작동방식 이해하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/38b7ecce12ce8b67f84dc52ed585af3e41cce860)
 
 ![magic-data-jpa.png](image/magic-data-jpa.png)
 
@@ -1680,6 +1770,7 @@ spring.jpa.show-sql=true
 ---
 
 ## 39단계 - Todo 앱을 MySQL 데이터베이스에 연결하기(개요)
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/640a1d72f033b57e00be2647be58c18778935b3b)
 
 JPA와 Spring Data JPA를 이용하면 데이터 베이스 연결이 쉽고 간단하다.
 H2 데이터베이스가 아닌 MySQL 데이터베이스 연결 실습을 통해 알아 볼 것이다.
@@ -1692,6 +1783,7 @@ H2 데이터베이스가 아닌 MySQL 데이터베이스 연결 실습을 통해
 ---
 
 ## 40단계 - Docker 설치하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/9a79ae7f25340aff6e1bf007c699c9ef34f484e0)
 
 [Docker 공식 문서](https://docs.docker.com/engine/install/)에서 설치 및 설치에 대한 안내를 확인할 수 있다.
 
@@ -1714,6 +1806,7 @@ H2 데이터베이스가 아닌 MySQL 데이터베이스 연결 실습을 통해
 ---
 
 ## 41단계 - Todo 앱을 MySQL 데이터베이스에 연결하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/e8d9dac7b73ff99ce6df6a6174c3c6ee359bf4f5)
 
 설치 완려
 
