@@ -1712,3 +1712,87 @@ H2 데이터베이스가 아닌 MySQL 데이터베이스 연결 실습을 통해
   - 특수한 상황이 아니라면 체크된 상태(WSL 2 사용)을 유지하고 설치한다.
 
 ---
+
+## 41단계 - Todo 앱을 MySQL 데이터베이스에 연결하기
+
+설치 완려
+
+#### 설치확인
+- 터미널에 'docker version' 을 입력하면 설치된 도커 정보를 확인할 수 있다.
+
+#### Docker를 이용해서 MySQL 실행하기
+```
+docker run --detach --env MYSQL_ROOT_PASSWORD=dummypassword --env MYSQL_USER=todos-user --env MYSQL_PASSWORD=dummytodos --env MYSQL_DATABASE=todos --name mysql --publish 3306:3306 mysql:8-oracle
+```
+1. 터미널에 해당 명령어를 입력한다.
+   - `docker run` : 도커 컨테이너 실행
+   - `--detach` : 컨테이너를 백그라운드에서 실행하도록 설정
+   - `-env` : 환경 변수 설정
+     - `MYSQL_ROOT_PASSWORD=` : MySQL 루트 사용자 패스워드 설정 (dummypassword)
+     - `MYSQL_USER=` : MySQL 데이터베이스 사용자 계정 생성 (todos-user)
+     - `MYSQL_PASSWORD` : MySQL 데이터베이스 사용자 계정 패스워드 설정 (dummytodos)
+     - `MYSQL_DATABASE` : 데이터 베이스 생성 (todos)
+   - `--name` : 컨테이너 이름 지정 (mysql)
+   - `--publish 3306 : 3306` : 호스트 포트와 컨테이너의 포트 매핑 (MySQL 기본 포트인 3306으로 매핑)
+   - `mysql:8-oracle:` mysql:8-oracle 이미지를 사용해서 컨테이너 생성 옵션
+
+2. 이미지 설치를 기다린다.
+    ```
+    Unable to find image 'mysql:8-oracle' locally
+    ...(생략)
+    Status: Downloaded newer image for mysql:8-oracle
+    ```
+    - mysql:8-oracle 이미지가 로컬에 없다면 자동으로 설치를 시작한다.
+    - 설치가 완료되면 Status 피드백을 받을 수 있다.
+
+3. 실행 중인 컨테이너 확인
+    ```
+    docker container ls
+    ```
+    - 해당 명령어를 입력해서 실행 중인 컨테이너 목록을 확인할 수 있다.
+
+#### Docker로 실행한 mysql에 애플리케이션 연결
+1. mysql 라이브러리 추가
+    ```xml
+<!--    <dependency>-->
+<!--        <groupId>com.h2database</groupId>-->
+<!--        <artifactId>h2</artifactId>-->
+<!--        <scope>runtime</scope>-->
+<!--    </dependency>-->
+    <dependency>
+        <groupId>com.mysql</groupId>
+        <artifactId>mysql-connector-j</artifactId>
+    </dependency>
+    ```
+    - 기존 H2 데이터베이스 라이브러리를 삭제하고, mysql을 추가한다.
+
+2. application.properties 수정
+    ```properties
+    #spring.datasource.url=jdbc:h2:mem:testdb
+    spring.datasource.url=jdbc:mysql://localhost:3306/todos
+    spring.datasource.username=todos-user
+    spring.datasource.password=dummytodos
+    spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+   
+    spring.jpa.hibernate.ddl-auto=update
+    ```
+    - 기존 H2 연결을 MySQL 소스로 변경한다.
+    - 데이터베이스 사용자, 패스워드를 입력한다. (도커 이미지 생성 때 설정했음.)
+    - dialect 를 연결한다. (파일 전체 검색에서 'MySQL8' 입력 시 클래스를 찾을 수 있다.)
+      - Hibernate가 데이터베이스의 특성을 이해하고 최적화된 SQL을 생성하도록 하는 설정이다.
+    - hibernate.ddl-auto : Hibernate의 스키마 생성 전략 설정
+      - update : 애플리케이션이 시작할 때 엔티티 클래스와 데이터베이스 스키마를 비교해서 변경 사항만 반영
+      - create : 애플리케이션이 시작할 때마다 새로운 스키마 생성 (기존 데이터 삭제)
+      - create-drop : 애플리케이션 시작 시 스키마 생성, 종료 시 삭제
+      - validate : 엔티티와 테이블의 매핑이 올바른지 검증만 수행
+      - none : 스키마 자동 생성 비활성
+
+#### 인텔리제이 데이터베이스 툴에 MySQL 연결 
+![Intellij-Database-Tool-mysql.png](image/Intellij-Database-Tool-mysql.png)
+
+비밀번호는 가려졌으나, `application.properties`에 설정한 값을 참고해서 진행하면 된다.
+
+#### mysqlsh (MySQL Shell) 설치 
+인텔리제이 데이터베이스 툴에 연결한 것으로 대체한다.
+
+---
