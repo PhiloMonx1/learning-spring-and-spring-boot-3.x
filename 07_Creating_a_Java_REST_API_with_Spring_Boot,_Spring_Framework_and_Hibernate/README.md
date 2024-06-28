@@ -4,6 +4,7 @@
 0. [Spring Boot로 REST API 생성하기 - 개요](#0단계---spring-boot로-rest-api-생성하기---개요)
 1. [Spring Boot로 REST API 프로젝트 초기화하기](#1단계---spring-boot로-rest-api-프로젝트-초기화하기)
 2. [Spring Boot로 Hello World REST API 생성하기](#2단계---spring-boot로-hello-world-rest-api-생성하기)
+3. [Hello World REST API를 업그레이드하여 Bean 반환하기](#3단계---hello-world-rest-api를-업그레이드하여-bean-반환하기)
 
 ---
 
@@ -83,5 +84,32 @@ public class HelloWorldController {
   - `@Controller` 는 보통 View를 리턴하는 데 사용한다. (데이터를 리턴하기 위해서는 `@ResponseBody`와 함께 사용해야 한다.)
   - `@RestController` 는 데이터를 리턴하는 데 사용한다. (내부에 `@Controller`와 `@ResponseBody`를 함께 가지고 있다.)
 - @GetMapping : `@RequestMapping(method = RequestMethod.GET, path = "/hello-world")` 와 동일한 기능이다.
+
+---
+
+## 3단계 - Hello World REST API를 업그레이드하여 Bean 반환하기
+
+```java
+@RestController
+public class HelloWorldController {
+	//...(생략)
+	@GetMapping("/hello-world-bean")
+	public HelloWorldBean helloWorldBean() {
+		return new HelloWorldBean("Hello World");
+	}
+}
+
+public class HelloWorldBean {
+   private String message;
+   
+   //Getter, Setter 생략
+}
+```
+- 엔드포인트로 들어가면 아래의 데이터를 받을 수 있다.
+   ```json
+   {
+     "message": "Hello World"
+   }
+   ```
 
 ---
