@@ -6,6 +6,7 @@
 2. [Spring Boot로 Hello World REST API 생성하기](#2단계---spring-boot로-hello-world-rest-api-생성하기)
 3. [Hello World REST API를 업그레이드하여 Bean 반환하기](#3단계---hello-world-rest-api를-업그레이드하여-bean-반환하기)
 4. [백엔드에서는 어떤 일이 벌어지고 있을까? Spring Boot 스타터와 자동 설정](#4단계---백엔드에서는-어떤-일이-벌어지고-있을까-spring-boot-스타터와-자동-설정)
+5. [패스 변수로 Hello World REST API 업그레이드하기](#5단계---패스-변수로-hello-world-rest-api-업그레이드하기)
 
 ---
 
@@ -167,5 +168,24 @@ DEBUG 13972 --- [restful-web-services] [nio-8080-exec-2] o.s.web.servlet.Dispatc
   - pom.xml 에서 확인 할 수 있는 라이브러리이다.
   - 해당 라이브리 내부에서 상기한 'Spring MVC', 'Jackson', 'Tomcat' 등의 라이브러리가 포함되어 있다.
 - Spring Boot Starter 프로젝트는 개발에 필수적인 라이브러리를 함께 제공하는 '모음집'으로 비유할 수 있다.
+
+---
+
+## 5단계 - 패스 변수로 Hello World REST API 업그레이드하기
+
+#### @PathVariable
+```java
+@RestController
+public class HelloWorldController {
+	@GetMapping("/hello-world/path-variable/{name}")
+	public HelloWorldBean helloWorldPathVariable(@PathVariable String name) {
+		return new HelloWorldBean(String.format("Hello World, %s", name));
+	}
+}
+```
+- url 엔드포인트에서 파라미터가 아닌 패스 변수를 받는 것이 가능하다.
+- 엔드포인트에서는 `{}` 중괄호에 변수명을 작성한다.
+- 메서드 파라미터에 `@PathVariable`와 함께 변수명을 매핑시켜서 변수를 받을 수 있다.
+- 브라우저에서 '/hello-world/path-variable/패스변수'로 접근시 '패스변수' 문자열이 `name` 변수로 매핑된다.
 
 ---
