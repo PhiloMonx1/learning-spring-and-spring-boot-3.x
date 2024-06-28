@@ -2,6 +2,7 @@
 
 ## 목록
 0. [Spring Boot로 REST API 생성하기 - 개요](#0단계---spring-boot로-rest-api-생성하기---개요)
+1. [Spring Boot로 REST API 프로젝트 초기화하기](#1단계---spring-boot로-rest-api-프로젝트-초기화하기)
 
 ---
 
@@ -50,5 +51,16 @@
    - MySQL로 교체
 
 챕터의 목표는 'Spring Boot로 훌륭한 REST API를 빌드'하고 해당 문서에 작성된 '중요한 용어' 들을 이해하는 것이다.
+
+---
+
+## 1단계 - Spring Boot로 REST API 프로젝트 초기화하기
+
+#### 프로젝트 생성
+![Spring-initializer.png](image/Spring-initializer.png)
+- [Spring initializer](https://start.spring.io/) 를 통해 프로젝트를 생성한다.
+- 라이브러리 목록
+   - Spring Web
+   - Spring Boot DevTools
 
 ---
