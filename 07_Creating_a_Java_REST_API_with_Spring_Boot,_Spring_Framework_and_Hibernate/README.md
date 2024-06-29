@@ -11,6 +11,7 @@
 7. [사용자 Bean과 UserDaoService 생성하기](#7단계---사용자-bean과-userdaoservice-생성하기)
 8. [User Resource에서 GET 메서드 구현하기](#8단계---user-resource에서-get-메서드-구현하기)
 9. [User Resource에서 POST 메서드 구현하기](#9단계---user-resource에서-post-메서드-구현하기)
+10. [POST 메소드를 개선해 올바른 HTTP 상태 코드와 locat](#10단계---post-메소드를-개선해-올바른-http-상태-코드와-location)
 
 ---
 
@@ -369,5 +370,72 @@ GET 메서드와 달리 웹 브라우저에서 바로 POST 요청을 보낼 수 
 5. 결과
 
 현 시점에서 알아야 할 사용법은 이미지로 대체한다.
+
+---
+
+## 10단계 - POST 메소드를 개선해 올바른 HTTP 상태 코드와 Location
+
+#### REST API의 다양한 응답 형태
+REST API를 구현할 때는, 정확한 응답 상태를 반환하는 것이 중요하다.
+- 중요한 응답 코드
+- 200(OK) : 성공
+- 201(Created) : 성공, POST 요청으로 새 리소스를 생성한 경우
+- 204(No Content) : 성공, 응답으로 반환할 본문이 없음
+  - PUT이나 DELETE 후 정상적으로 데이터베이스 반영이 되었음을 알리는 용도로 사용한다.
+- 400(Bad Request) : 요청 시 전달 받은 정보의 검증이 실패한 경우
+- 401(Unauthorized) : 인증, 인가 실패 경우
+- 403(Forbidden) : 인증은 성공했으나 권한이 없는 경우 
+  - USER 권한을 가진 사용자가 ADMIN 권한이 필요한 요청을 했을 경우 사용한다.
+- 404(Not Found) : 요청한 리소스를 찾지 못했을 경우
+- 405(Method Not Allowed) : 허용되지 않은 HTTP 메서드로 요청했을 경우
+  - ex) 현재 '/users/{id}' 엔드포인트에는 GET으로 작성된 API만 있고, PUT이나 DELETE로 작성된 API가 없다. PUT이나 DELETE로 '/users/{id}' 엔드포인트에 요청을 보낼 시 발생할 수 있다.
+- 409(Conflict): 리소스의 현재 상태와 요청이 충돌한 경우 (리소스의 무결성 조건 위반의 경우)
+  - 이미 존재하는 리소스를 생성하려는 경우
+  - 여러 클라이언트가 하나의 리소스를 동시에 수정하려는 경우
+- 429(Too Many Requests): 사용자가 일정 시간 동안 너무 많은 요청을 보냈을 경우
+- 500(Internal Server Error) : 서버에서 예외가 발생한 경우
+  - 이 경우에는 클라이언트가 대응하지 않고 서버가 대응해야 해야 한다.
+
+#### User POST API에 201 HTTP 코드 반환 실습
+```java
+@RestController
+public class UserResource {
+	//...(생략)
+	@PostMapping("/users")
+	public ResponseEntity<User> createUser(@RequestBody User user) {
+		service.save(user);
+		return ResponseEntity.created(null).build();
+	}
+}
+```
+- `ResponseEntity.created()`의 `created()` 메서드는 201(Created)를 의미한다.
+  - 때문에 `ResponseEntity.noContent()` 등도 있다.
+
+#### Location
+```java
+@RestController
+public class UserResource {
+	//...(생략)
+	@PostMapping("/users")
+	public ResponseEntity<User> createUser(@RequestBody User user) {
+		User savedUser = service.save(user);
+
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().
+				path("/{id}").
+				buildAndExpand(savedUser.getId())
+				.toUri();
+
+		return ResponseEntity.created(location).build();
+	}
+}
+```
+- 기존 null로 입력했던 `created()` 메서드의 파라미터를 `location` 으로 채워넣었다.
+- location 코드 설명
+  - URI(Uniform Resource Identifier) : URL의 상위 개념으로 본래 의미는 "리소스를 식별하는 문자열 형식의 식별자"이나, 여기서는 URL과 동일하다고 이해해도 된다.
+  - `ServletUriComponentsBuilder.fromCurrentRequest()` : HTTP 요청 정보를 기반으로 URI 빌더를 생성
+  - `path("/{id}")` : 생성된 리소스의 URI 경로에 {id} 부분을 추가
+- 응답 헤더의 location에 API 요청으로 인해 생성된 `User`의 id가 포함된 url이 리턴된다.
+  - ex) 'http://localhost:8080/users/4' 
+  - 해당 로케이션 url을 GET 메서드로 요청해 생성된 `User`을 확인할 수 있다.
 
 ---
