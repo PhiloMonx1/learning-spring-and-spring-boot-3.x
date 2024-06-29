@@ -8,6 +8,7 @@
 4. [백엔드에서는 어떤 일이 벌어지고 있을까? Spring Boot 스타터와 자동 설정](#4단계---백엔드에서는-어떤-일이-벌어지고-있을까-spring-boot-스타터와-자동-설정)
 5. [패스 변수로 Hello World REST API 업그레이드하기](#5단계---패스-변수로-hello-world-rest-api-업그레이드하기)
 6. [SNS 애플리케이션용 REST API 설계하기](#6단계---sns-애플리케이션용-rest-api-설계하기)
+7. [사용자 Bean과 UserDaoService 생성하기](#7단계---사용자-bean과-userdaoservice-생성하기)
 
 ---
 
@@ -229,5 +230,36 @@ public class HelloWorldController {
   - GET '/users/{id}/posts/{id}'
   - ex) '/users/30/posts/24' : id 값이 30인 사용자의 id 값이 24인 게시물 검색
   - ps : 개인적으로 '/posts/{id}'로 충분하다고 생각한다. 게시물의 id가 중복되지는 않기 때문이다. 그러나 카테고리 등의 중복될 수 있는 패스변수의 경우 '특정 사용자의 특정 카테고리의 게시물'은 합리적인 설계이다.
+
+---
+
+## 7단계 - 사용자 Bean과 UserDaoService 생성하기
+
+#### User 클래스 선언
+[User.java](..%2F00_module%2Frestful-web-services%2Fsrc%2Fmain%2Fjava%2Fcom%2Fin28minutes%2Frest%2Fwebservices%2Frestful_web_services%2Fuser%2FUser.java)
+
+#### UserDaoService 선언
+JPA와 Hibernate를 사용하기 전 정적 ArrayList를 사용하여 간단한 인-메모리 데이터 저장소를 구현하고자 한다.
+```java
+@Component
+public class UserDaoService {
+
+	private static List<User> users = new ArrayList<>();
+
+	static {
+		users.add(new User(1, "Adam", LocalDate.now().minusYears(30)));
+		users.add(new User(2, "Eve", LocalDate.now().minusYears(25)));
+		users.add(new User(3, "Jim", LocalDate.now().minusYears(20)));
+	}
+
+}
+```
+
+#### DAO(Data Access Object)
+- 데이터베이스에 직접 접근하여 데이터를 조작하는 객체 
+- 레포지토리와 유사한 목적을 가지고 있다.
+- 레포지토리 보다 더 낮은 추상화 수준에서 작동하는 패턴이다. (데이터베이스와 더 직접적으로 상호작용)
+  - 특정 데이터베이스에 특화된 기술을 사용하기 유용하다. ex) MySQL 만의 기술 등
+  - 레포지토리 패턴에 비해 비즈니스 로직과 데이터 접근 로직을 명확히 분리되지 않는다.
 
 ---
