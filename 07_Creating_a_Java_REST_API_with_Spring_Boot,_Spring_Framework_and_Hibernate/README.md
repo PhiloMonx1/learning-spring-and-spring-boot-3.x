@@ -12,6 +12,7 @@
 8. [User Resource에서 GET 메서드 구현하기](#8단계---user-resource에서-get-메서드-구현하기)
 9. [User Resource에서 POST 메서드 구현하기](#9단계---user-resource에서-post-메서드-구현하기)
 10. [POST 메소드를 개선해 올바른 HTTP 상태 코드와 locat](#10단계---post-메소드를-개선해-올바른-http-상태-코드와-location)
+11. [예외 처리 구현하기 - 404 Resource Not found](#11단계---예외-처리-구현하기---404-resource-not-found)
 
 ---
 
@@ -437,5 +438,91 @@ public class UserResource {
 - 응답 헤더의 location에 API 요청으로 인해 생성된 `User`의 id가 포함된 url이 리턴된다.
   - ex) 'http://localhost:8080/users/4' 
   - 해당 로케이션 url을 GET 메서드로 요청해 생성된 `User`을 확인할 수 있다.
+
+---
+
+## 11단계 - 예외 처리 구현하기 - 404 Resource Not found
+
+GET 'users/{id}' 엔드포인트에 존재하지 않는 id를 입력시 500(서버)에러가 발생한다. 존재하지 않은 User을 조회하려는 시도이기 때문에 404(Not Found)로 변경이 필요하다.
+
+#### 500에러가 발생하는 이유
+```
+This application has no explicit mapping for /error, so you are seeing this as a fallback.
+
+There was an unexpected error (type=Internal Server Error, status=500).
+No value present`
+java.util.NoSuchElementException: No value present
+	at java.base/java.util.Optional.get(Optional.java:143)
+    at com.in28minutes.rest.webservices.restful_web_services.user.UserDaoService.findOne(UserDaoService.java:25)
+...(생략)
+```
+- `spring-boot-devtools` 라이브러리가 있을 경우 에러가 발생했을 때 자바 디버그 에러를 확인할 수 있다. (응답 Body의 'trace'로 리턴 됨)
+- 에러를 해석하면 'UserDaoService.findOne(UserDaoService.java:25)' 에러가 발생한 메서드를 알려주고 있다.
+
+#### `UserDaoService::findOne()` 메서드 수정
+```java
+@RestController
+public class UserResource {
+    //...(생략)
+	public User findOne(int id) {
+		return users.stream().filter(user -> user.getId() == id).findFirst().orElse(null);
+	}
+	//...(생략)
+}
+```
+- 반환 값을 `get()`에서 `orElse(null)`로 변경해 id가 일치하는 User 객체를 찾지 못했을 경우 null을 리턴하도록 변경한다.
+- 해당 사항을 적용한 후 존재하지 않는 User를 조회하면 에러페이지가 나타나지 않고 응답도 '200(OK)'로 반환된다.
+
+#### 예외처리 ([UserNotFoundException.java](..%2F00_module%2Frestful-web-services%2Fsrc%2Fmain%2Fjava%2Fcom%2Fin28minutes%2Frest%2Fwebservices%2Frestful_web_services%2Fuser%2FUserNotFoundException.java))
+```java
+@ResponseStatus(code = HttpStatus.NOT_FOUND)
+public class UserNotFoundException extends RuntimeException {
+
+	public UserNotFoundException(String message) {
+		super(message);
+	}
+}
+```
+- 커스텀 예외 클래스를 생성한다.
+- `@ResponseStatus` 어노테이션을 통해 HTTP 코드를 정할 수 있다.
+- 생성자를 통해 예외 메시지를 외부에서 주입할 수 있다. 
+  - 입력한 메시지는 응답 바디의 "message"로 리턴된다. (`RuntimeException`를 상속했기에 가능함)
+
+#### `UserResource::retrieveUser()` '/users/{id}' API 예외처리
+```java
+@RestController
+public class UserResource {
+    //...(생략)
+	@GetMapping("/users/{id}")
+	public User retrieveUser(@PathVariable int id) {
+		User user = service.findOne(id);
+		if (user == null) {
+			throw new UserNotFoundException("id:" + id);
+		}
+		return user;
+	}
+	//...(생략)
+}
+```
+- `service::findOne()`의 결과가 null로 리턴되었을 때 예외처리
+
+#### spring-boot-devtools 의 예외 처리
+```
+This application has no explicit mapping for /error, so you are seeing this as a fallback.
+
+There was an unexpected error (type=Internal Server Error, status=500).
+No value present`
+java.util.NoSuchElementException: No value present
+	at java.base/java.util.Optional.get(Optional.java:143)
+    at com.in28minutes.rest.webservices.restful_web_services.user.UserDaoService.findOne(UserDaoService.java:25)
+...(생략)
+```
+에러가 발생한 페이지에는 이와 같은 구체적인 JAVA 디버그 에러를 확인 할 수 있다. 응답 바디에서는 "trace"로 리턴된다. `spring-boot-devtools` 라이브러리의 기본 예외처리 방식에 의한 것이다. 개발 환경에서는 유용하지만 프로덕션 환경에서는 경우에 따라 예민한 정보가 노출될 위험이 있다.
+
+- 해결법 : `application.properties` 설정으로 비활성화 할 수 있다.
+    ```properties
+    server.error.include-stacktrace=never
+    ```
+- 프로덕션 환경 : 빌드된 jar 파일로 애플리케이션을 실행할 때 `spring-boot-devtools` 라이브러리는 자동으로 비활성화 된다.
 
 ---
