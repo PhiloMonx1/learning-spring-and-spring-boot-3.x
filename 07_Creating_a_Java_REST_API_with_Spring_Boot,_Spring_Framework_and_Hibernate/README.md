@@ -9,6 +9,7 @@
 5. [패스 변수로 Hello World REST API 업그레이드하기](#5단계---패스-변수로-hello-world-rest-api-업그레이드하기)
 6. [SNS 애플리케이션용 REST API 설계하기](#6단계---sns-애플리케이션용-rest-api-설계하기)
 7. [사용자 Bean과 UserDaoService 생성하기](#7단계---사용자-bean과-userdaoservice-생성하기)
+8. [User Resource에서 GET 메서드 구현하기](#8-단계---user-resource에서-get-메서드-구현하기)
 
 ---
 
@@ -261,5 +262,64 @@ public class UserDaoService {
 - 레포지토리 보다 더 낮은 추상화 수준에서 작동하는 패턴이다. (데이터베이스와 더 직접적으로 상호작용)
   - 특정 데이터베이스에 특화된 기술을 사용하기 유용하다. ex) MySQL 만의 기술 등
   - 레포지토리 패턴에 비해 비즈니스 로직과 데이터 접근 로직을 명확히 분리되지 않는다.
+
+---
+
+## 8 단계 - User Resource에서 GET 메서드 구현하기
+
+#### 모든 Users 검색
+```java
+@RestController
+public class UserResource {
+
+	private UserDaoService service;
+
+	public UserResource(UserDaoService service) {
+		this.service = service;
+	}
+
+	@GetMapping("/users")
+	public List<User> retrieveAllUsers() {
+		return service.findAll();
+	}
+}
+
+@Component
+public class UserDaoService {
+
+	private static List<User> users = new ArrayList<>();
+
+	static {
+		users.add(new User(1, "Adam", LocalDate.now().minusYears(30)));
+		users.add(new User(2, "Eve", LocalDate.now().minusYears(25)));
+		users.add(new User(3, "Jim", LocalDate.now().minusYears(20)));
+	}
+
+	public List findAll() {
+		return users;
+	}
+}
+```
+
+#### 단일 User 검색
+```java
+@RestController
+public class UserResource {
+	//...(생략)
+	@GetMapping("/users/{id}")
+	public User retrieveUser(@PathVariable int id) {
+		return service.findOne(id);
+	}
+
+}
+
+@Component
+public class UserDaoService {
+    //...(생략)
+	public User findOne(int id) {
+		return users.stream().filter(user -> user.getId() == id).findFirst().get();
+	}
+}
+```
 
 ---

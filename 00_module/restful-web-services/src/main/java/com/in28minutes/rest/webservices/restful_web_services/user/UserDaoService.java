@@ -16,4 +16,11 @@ public class UserDaoService {
 		users.add(new User(3, "Jim", LocalDate.now().minusYears(20)));
 	}
 
+	public List findAll() {
+		return users;
+	}
+
+	public User findOne(int id) {
+		return users.stream().filter(user -> user.getId() == id).findFirst().get();
+	}
 }
