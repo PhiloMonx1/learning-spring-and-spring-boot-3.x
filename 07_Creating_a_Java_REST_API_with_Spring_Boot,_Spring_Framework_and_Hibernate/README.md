@@ -9,7 +9,8 @@
 5. [패스 변수로 Hello World REST API 업그레이드하기](#5단계---패스-변수로-hello-world-rest-api-업그레이드하기)
 6. [SNS 애플리케이션용 REST API 설계하기](#6단계---sns-애플리케이션용-rest-api-설계하기)
 7. [사용자 Bean과 UserDaoService 생성하기](#7단계---사용자-bean과-userdaoservice-생성하기)
-8. [User Resource에서 GET 메서드 구현하기](#8-단계---user-resource에서-get-메서드-구현하기)
+8. [User Resource에서 GET 메서드 구현하기](#8단계---user-resource에서-get-메서드-구현하기)
+9. [User Resource에서 POST 메서드 구현하기](#9단계---user-resource에서-post-메서드-구현하기)
 
 ---
 
@@ -265,7 +266,7 @@ public class UserDaoService {
 
 ---
 
-## 8 단계 - User Resource에서 GET 메서드 구현하기
+## 8단계 - User Resource에서 GET 메서드 구현하기
 
 #### 모든 Users 검색
 ```java
@@ -321,5 +322,52 @@ public class UserDaoService {
 	}
 }
 ```
+
+---
+
+##  9단계 - User Resource에서 POST 메서드 구현하기
+
+#### User POST API 추가
+```java
+@RestController
+public class UserResource {
+	//...(생략)
+	@PostMapping("/users")
+	public void createUser(@RequestBody User user) {
+		service.save(user);
+	}
+}
+
+@Component
+public class UserDaoService {
+	private static List<User> users = new ArrayList<>();
+	private static int usersCount = 0;
+
+	static {
+		users.add(new User(++usersCount, "Adam", LocalDate.now().minusYears(30)));
+		users.add(new User(++usersCount, "Eve", LocalDate.now().minusYears(25)));
+		users.add(new User(++usersCount, "Jim", LocalDate.now().minusYears(20)));
+	}
+    //...(생략)
+	public User save(User user) {
+		user.setId(++usersCount);
+		users.add(user);
+		return user;
+	}
+}
+```
+
+#### [Talend API Tester](https://chromewebstore.google.com/detail/talend-api-tester-free-ed/aejoelaoggembcahagimdiliamlcdmfm) 사용해서 API 테스트
+GET 메서드와 달리 웹 브라우저에서 바로 POST 요청을 보낼 수 있는 방법은 없다. 때문에 'REST API 클라이언트' 라는 것을 사용해야 한다. 'Postman', '인텔리제이의 `.http` 확장자' 등 여러 가지가 있으나 강의에서는 구글 크롬 확장 프로그램인 'Talend API Tester'를 사용했다.
+
+![Talend-API-Tester.png](image/Talend-API-Tester.png)
+1. API 메서드 
+2. API URL 
+3. 요청 헤더
+    - Content-Type : 요청 데이터의 유형
+4. 요청 바디
+5. 결과
+
+현 시점에서 알아야 할 사용법은 이미지로 대체한다.
 
 ---
