@@ -1,5 +1,6 @@
 package com.in28minutes.rest.webservices.restful_web_services.user;
 
+import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class UserResource {
 	}
 
 	@PostMapping("/users")
-	public ResponseEntity<User> createUser(@RequestBody User user) {
+	public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
 		User savedUser = service.save(user);
 
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().

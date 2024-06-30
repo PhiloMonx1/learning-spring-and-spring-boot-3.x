@@ -13,8 +13,9 @@
 9. [User Resource에서 POST 메서드 구현하기](#9단계---user-resource에서-post-메서드-구현하기)
 10. [POST 메소드를 개선해 올바른 HTTP 상태 코드와 locat](#10단계---post-메소드를-개선해-올바른-http-상태-코드와-location)
 11. [예외 처리 구현하기 - 404 Resource Not found](#11단계---예외-처리-구현하기---404-resource-not-found)
-12. [모든 리소스를 대상으로 예외 처리 구현하기](#12-단계---모든-리소스를-대상으로-예외-처리-구현하기)
+12. [모든 리소스를 대상으로 예외 처리 구현하기](#12단계---모든-리소스를-대상으로-예외-처리-구현하기)
 13. [DELETE 메소드로 사용자 리소스 삭제하기](#13단계---delete-메소드로-사용자-리소스-삭제하기)
+14. [REST API에서 유효성 검증하기](#14단계---rest-api에서-유효성-검증하기)
 
 ---
 
@@ -529,7 +530,7 @@ java.util.NoSuchElementException: No value present
 
 ---
 
-## 12 단계 - 모든 리소스를 대상으로 예외 처리 구현하기
+## 12단계 - 모든 리소스를 대상으로 예외 처리 구현하기
 
 #### [ErrorDetails.java](..%2F00_module%2Frestful-web-services%2Fsrc%2Fmain%2Fjava%2Fcom%2Fin28minutes%2Frest%2Fwebservices%2Frestful_web_services%2Fexception%2FErrorDetails.java) 커스텀 예외 구조 생성
 ```java
@@ -641,5 +642,62 @@ public class UserResource {
 - 요청이 성공했을 경우 200이 아닌 204 코드 반환
 
 강의 진행을 위해 코드는 롤백시킨 후 커밋함.
+
+---
+
+## 14단계 - REST API에서 유효성 검증하기
+
+POST 신규 User 생성 API에는 몇 가지 문제가 있다. 1:필드가 빈 값이거나, 2:출생일이 현시점 미래 날짜여도 생성이 가능하다. 유효성 검증을 추가해서 문제점을 해결할 것이다.
+
+#### POST 신규 User 생성 API 유효성 검증 추가
+- 문제점
+  1. 필드가 빈 값이어도 생성이 가능하다.
+  2. 출생일이 현시점 미래 날짜여도 생성이 가능하다.
+
+#### `spring-boot-starter-validation` 라이브러리 추가
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-validation</artifactId>
+</dependency>
+```
+
+#### `@Valid` : 검증이 필요한 파라미터에 부여
+```java
+	@PostMapping("/users")
+	public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
+		//...(생략)
+	}
+```
+
+#### User 클래스 필드 밸리데이션 추가
+```java
+public class User {
+
+	private Integer id;
+	@Size(min = 2, message = "'name' 필드는 2글자 이상이어야 합니다.")
+	private String name;
+
+	@Past(message = "'birthDate' 필드는 미래 날짜일 수 없습니다.")
+	private LocalDate birthDate;
+	//...(생략)
+}
+```
+
+#### 400 에러에 대한 예외 처리 추가 
+```java
+@Override
+protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+	ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(),
+			"전체 오류: " + ex.getErrorCount() + " 대표 오류: " + ex.getFieldError().getDefaultMessage(), 
+            request.getDescription(false));
+	return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+}
+```
+- 400에러에 대한 `@ExceptionHandler`를 쓰는 대신 `ResponseEntityExceptionHandler::handleMethodArgumentNotValid()` 메서드를 오버라이드 했다.
+- `ex.getMessage()`가 너무 많은 내용을 담고 있어 커스텀 메시지를 리턴했다.
+  - `ex.getErrorCount()` : 발생한 오류 갯수
+  - `ex.getFieldError().getDefaultMessage()` : 첫 번째 오류 메시지
+  - 해당 방법이 아닌 for 문을 돌면서 모든 메시지를 문자열에 연결해서 담아내는 방법을 사용할 수도 있다.
 
 ---
