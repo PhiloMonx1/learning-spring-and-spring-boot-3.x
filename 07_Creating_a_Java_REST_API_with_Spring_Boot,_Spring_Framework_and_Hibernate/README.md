@@ -13,6 +13,7 @@
 9. [User Resource에서 POST 메서드 구현하기](#9단계---user-resource에서-post-메서드-구현하기)
 10. [POST 메소드를 개선해 올바른 HTTP 상태 코드와 locat](#10단계---post-메소드를-개선해-올바른-http-상태-코드와-location)
 11. [예외 처리 구현하기 - 404 Resource Not found](#11단계---예외-처리-구현하기---404-resource-not-found)
+12. [모든 리소스를 대상으로 예외 처리 구현하기](#12-단계---모든-리소스를-대상으로-예외-처리-구현하기)
 
 ---
 
@@ -524,5 +525,74 @@ java.util.NoSuchElementException: No value present
     server.error.include-stacktrace=never
     ```
 - 프로덕션 환경 : 빌드된 jar 파일로 애플리케이션을 실행할 때 `spring-boot-devtools` 라이브러리는 자동으로 비활성화 된다.
+
+---
+
+## 12 단계 - 모든 리소스를 대상으로 예외 처리 구현하기
+
+#### [ErrorDetails.java](..%2F00_module%2Frestful-web-services%2Fsrc%2Fmain%2Fjava%2Fcom%2Fin28minutes%2Frest%2Fwebservices%2Frestful_web_services%2Fexception%2FErrorDetails.java) 커스텀 예외 구조 생성
+```java
+public class ErrorDetails {
+	private LocalDateTime timestamp;
+	private String message;
+	private String details;
+	//생성자 및 Getter, Setter
+}
+```
+- timestamp : 오류 발생 시점
+- message : 오류 메시지
+- details : 오류에 대한 추가 상세 정보
+
+#### ResponseEntityExceptionHandler
+```json
+{
+"timestamp": "2024-06-30T10:39:01.153+00:00",
+"status": 404,
+"error": "Not Found",
+"message": "id:4",
+"path": "/users/4"
+}
+```
+API 요청 중 예외가 발생할 경우 기본 예외 형식이다.
+- [ResponseEntityExceptionHandler](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/mvc/method/annotation/ResponseEntityExceptionHandler.html)::handleException() 메서드에서 정의하고 있다.
+  - `ResponseEntityExceptionHandler` 클래스를 상속 받는 클래스를 선언하여 형식을 커스텀할 수 잇다.
+
+#### `ResponseEntityExceptionHandler` 를 상속하는 커스텀 예외 핸들러 생성
+```java
+@ControllerAdvice
+public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+	@ExceptionHandler(Exception.class)
+	public final ResponseEntity<ErrorDetails>handleAllException(Exception ex, WebRequest request){
+		ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), ex.getMessage(), request.getDescription(false));
+		return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+}
+```
+![custom-all-exception.png](image/custom-all-exception.png)
+
+#### 특정 예외 클래스에 대한 커스텀 예외 처리
+현재 예외 처리는 모든 예외에 대한 전역 처리를 하고 있어 일치하는 유저를 찾지 못한 상황에서 404가 아닌 500 에러코드를 노출한다. 특정 예외 클래스에 대한 예외처리를 별도 지정하는 것으로 해결할 수 있다.
+```java
+@ControllerAdvice
+public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+	//handleAllException() 메서드 생략
+	@ExceptionHandler(UserNotFoundException.class)
+	public final ResponseEntity<ErrorDetails>handleUserNotFoundException(Exception ex, WebRequest request){
+		ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), ex.getMessage(), request.getDescription(false));
+		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+	}
+}
+```
+![custom-user-not-found-exception.png](image/custom-user-not-found-exception.png)
+
+#### 어떻게 가능한 걸까?
+- @ControllerAdvice : 애플리케이션 전체에서 발생하는 예외를 처리하는 클래스에게 부여하는 어노테이션.
+  - 일반적으로 ResponseEntityExceptionHandler 클래스를 확장하여 사용하나 필수는 아니다.
+  - 여러 클래스에 적용할 수 있으나 `@Order`를 통해 순서를 정해주지 않으면 예상치 못한 에러가 발생할 수 있다. 
+- @ExceptionHandler : 특정 예외를 처리하는 메서드를 지정하는 어노테이션
+  - 어노테이션의 파라미터로 처리할 예외 클래스를 지정한다. ex) `@ExceptionHandler(UserNotFoundException.class)`
+  - 지정된 클래스 및 지정된 클래스를 상속 받는 클래스 예외가 발생했을 때 부여된 메서드가 실행된다.
+
+즉, `@ControllerAdvice`와 `@ExceptionHandler`의 조합으로 인해 전역 예외 처리가 가능하며 `ResponseEntityExceptionHandler` 클래스를 굳이 상속할 필요는 없다.
 
 ---
