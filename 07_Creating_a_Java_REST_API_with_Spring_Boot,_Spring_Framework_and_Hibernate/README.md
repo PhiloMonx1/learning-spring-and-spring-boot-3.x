@@ -14,6 +14,7 @@
 10. [POST 메소드를 개선해 올바른 HTTP 상태 코드와 locat](#10단계---post-메소드를-개선해-올바른-http-상태-코드와-location)
 11. [예외 처리 구현하기 - 404 Resource Not found](#11단계---예외-처리-구현하기---404-resource-not-found)
 12. [모든 리소스를 대상으로 예외 처리 구현하기](#12-단계---모든-리소스를-대상으로-예외-처리-구현하기)
+13. [DELETE 메소드로 사용자 리소스 삭제하기](#13단계---delete-메소드로-사용자-리소스-삭제하기)
 
 ---
 
@@ -594,5 +595,51 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
   - 지정된 클래스 및 지정된 클래스를 상속 받는 클래스 예외가 발생했을 때 부여된 메서드가 실행된다.
 
 즉, `@ControllerAdvice`와 `@ExceptionHandler`의 조합으로 인해 전역 예외 처리가 가능하며 `ResponseEntityExceptionHandler` 클래스를 굳이 상속할 필요는 없다.
+
+---
+
+## 13단계 - DELETE 메소드로 사용자 리소스 삭제하기
+
+#### User 삭제 메서드 추가
+```java
+@Component
+public class UserDaoService {
+    //...(생략)
+	public void deleteById(int id) {
+		users.removeIf(user -> user.getId() == id);
+	}
+}
+```
+
+#### User 삭제 API 추가
+```java
+@RestController
+public class UserResource {
+    //...(생략)
+	@DeleteMapping("/users/{id}")
+	public void deleteUser(@PathVariable int id) {
+		service.deleteById(id);
+	}
+}
+```
+
+#### API 리팩토링
+강의에서는 위의 과정까지 진행하지만 개인적으로 리팩토링을 하고 싶으면 아래 코드를 참고할 수 있다.
+```java
+	@DeleteMapping("/users/{id}")
+	public ResponseEntity<User> deleteUser(@PathVariable int id) {
+		User user = service.findOne(id);
+		if(user == null) {
+			throw new UserNotFoundException("id:" + id);
+		}
+		service.deleteById(id);
+
+		return ResponseEntity.noContent().build();
+	}
+```
+- 삭제하려는 User가 존재하지 않을 경우 예외처리 추가
+- 요청이 성공했을 경우 200이 아닌 204 코드 반환
+
+강의 진행을 위해 코드는 롤백시킨 후 커밋함.
 
 ---
