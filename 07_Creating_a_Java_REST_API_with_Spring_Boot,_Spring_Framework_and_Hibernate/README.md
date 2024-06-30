@@ -16,6 +16,7 @@
 12. [모든 리소스를 대상으로 예외 처리 구현하기](#12단계---모든-리소스를-대상으로-예외-처리-구현하기)
 13. [DELETE 메소드로 사용자 리소스 삭제하기](#13단계---delete-메소드로-사용자-리소스-삭제하기)
 14. [REST API에서 유효성 검증하기](#14단계---rest-api에서-유효성-검증하기)
+15. [고급 REST API 기능의 개요](#15단계---고급-rest-api-기능의-개요)
 
 ---
 
@@ -699,5 +700,20 @@ protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotV
   - `ex.getErrorCount()` : 발생한 오류 갯수
   - `ex.getFieldError().getDefaultMessage()` : 첫 번째 오류 메시지
   - 해당 방법이 아닌 for 문을 돌면서 모든 메시지를 문자열에 연결해서 담아내는 방법을 사용할 수도 있다.
+
+---
+
+## 15단계 - 고급 REST API 기능의 개요
+
+#### 학습 키워드
+1. Documentation : REST API에 대한 문서
+2. Content Negotiation : 콘텐츠 협상
+3. Internationalization - i18n : i18n 국제화
+4. Versioning : 버전관리
+5. HATEOAS
+6. Static Filtering : 정적 필터링
+7. Dynamic Filtering : 동적 필터링
+8. Monitoring : 모니터링
+9. ...
 
 ---
