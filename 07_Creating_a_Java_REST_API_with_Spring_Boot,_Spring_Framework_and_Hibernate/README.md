@@ -31,6 +31,7 @@
 27. [JPA와 Hibernate를 이용해 REST API를 H2에 연결하기 - 개요](#27단계---jpa와-hibernate를-이용해-rest-api를-h2에-연결하기---개요)
 28. [User 엔터티 및 테스트 데이터 생성하기](#28단계---user-엔터티-및-테스트-데이터-생성하기)
 29. [REST API를 개선하고 JPA와 Hibernate를 이용해 H2에 연결하기](#29단계---rest-api를-개선하고-jpa와-hibernate를-이용해-h2에-연결하기)
+30. [User 엔터티와 일대다 관계로 Post 엔터티 생성하기](#30단계---user-엔터티와-일대다-관계로-post-엔터티-생성하기)
 
 ---
 
@@ -1360,5 +1361,71 @@ spring.datasource.url=jdbc:h2:mem:tesdb
 1. 의존성 교체 : 기존 `UserDaoService` 를 `UserRepository`로 교체한다.
 2. `retrieveUser()` 내부의 `findOne()` 메서드를 `findById()`로 교체한다.
    - `findById()`는 `Optional<T>`을 리턴하기 때문에 이전 처럼 `.orElse(null);` 예외 처리를 사용 가능하다.
+
+---
+
+## 30단계 - User 엔터티와 일대다 관계로 Post 엔터티 생성하기
+
+#### Post 엔티티 생성
+```java
+@Entity
+public class Post {
+    
+	@Id
+	@GeneratedValue
+	private Integer id;
+	private String description;
+	
+	//기본 생성자, 생성자, Getter, Setter ...
+}
+```
+#### User-Post 1:N 매핑
+```java
+@Entity
+public class Post {
+	//...필드
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	private User user;	
+	
+	//기본 생성자, 생성자, Getter, Setter ...
+}
+
+@Entity(name = "user_details")
+public class User {
+	//...필드
+    
+	@OneToMany(mappedBy = "user")
+	@JsonIgnore
+	private List<Post> posts;
+	
+	//기본 생성자, 생성자, Getter, Setter ...
+}
+```
+- @ManyToOne : N:1 관계 - '여러 개의 Post'(N)를 '하나의 User'(1)가 가질 수 있음을 나타낸다.
+  - (fetch = FetchType.LAZY) : 관계를 지연 로딩으로 설정한다.
+    - Post를 조회할 때 User 정보는 실제로 사용될 때까지 로딩되지 않는다.
+- @OneToMany : 1:N 관계 - Post에서 줬던 관계를 역전시켜서 선언해준다.
+  - (mappedBy = "user") : N이 되는 관계에서 해당 엔티티의 이름을 어떤 것으로 알고 있는지 작성한다. (`Post`의 `User` 필드의 이름 작성)
+- @JsonIgnore : 순환 참조 방지용
+  - 순환 참조 : User를 조회하면 Post가 그리고 그 Post 안에 또 User가 무한으로 반복해서 참조되는 현상
+
+#### SQL 쿼리 확인 (application.properties 파일에 `spring.jpa.show-sql=true` 설정 추가)
+```
+Hibernate: create sequence post_seq start with 1 increment by 50
+Hibernate: create sequence user_details_seq start with 1 increment by 50
+Hibernate: create table post (id integer not null, user_id integer, description varchar(255), primary key (id))
+Hibernate: create table user_details (birth_date date, id integer not null, name varchar(255), primary key (id))
+Hibernate: alter table if exists post add constraint FKa3biitl48c71riii9uyelpdhb foreign key (user_id) references user_details
+```
+1. post 테이블의 시퀀스 생성 
+   - Post의 id 필드에 '@GeneratedValue'를 부여했기에 생성됨
+   - 자동 증가된 id를 생성하는 데이터베이스 객체이다.
+2. user_details 테이블의 시퀀스 생성
+3. post 테이블의 생성
+4. user_details 테이블의 생성
+5. post 테이블에 FK(외래 키)를 생성 (FK = user_id)
+   - FK(foreign key) : post 테이블의 각 행에서 user_id를 함께 삽입해 각행의 post의 주인이 user_id의 user_details 이라는 것을 알 수 있다. 
 
 ---
