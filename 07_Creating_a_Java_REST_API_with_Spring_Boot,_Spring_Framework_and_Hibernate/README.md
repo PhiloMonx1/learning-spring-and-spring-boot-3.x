@@ -19,6 +19,7 @@
 15. [고급 REST API 기능의 개요](#15단계---고급-rest-api-기능의-개요)
 16. [Open API 사양 및 Swagger 파악하기](#16단계---open-api-사양-및-swagger-파악하기)
 17. [Swagger 문서의 자동 생성 구성하기](#17단계---swagger-문서의-자동-생성-구성하기)
+18. [콘텐츠 협상 알아보기 - XML 지원 구현하기](#18단계---콘텐츠-협상-알아보기---xml-지원-구현하기)
 
 ---
 
@@ -799,5 +800,29 @@ protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotV
     - paths : 서버에서 제공하는 API의 엔드포인트 리스트를 볼 수 있다.
       - 각 엔드포인트 패스에서 메소드별로 분리된 API 세부 사양을 확인할 수 있다.
     - components : 'schemas' 내부에 API에 연관된 객체 및 객체의 세부정보를 볼 수 있다.
+
+---
+
+## 18단계 - 콘텐츠 협상 알아보기 - XML 지원 구현하기
+
+클라이언트와 서버가 주고받을 데이터의 형식(예: JSON, XML)을 결정하는 과정을 의미
+
+#### 예시
+  - 동일한 API에 대해 다른 컨텐츠 타입 - JSON | XML | ...
+    - Accept header (MIME typrs - application/xml) 등으로 접근하게 할 수 있다.
+  - 동일한 API에 대해 다른 언어 - 한국어 | 영어 | ...
+    - Accept-Language 헤더를 추가해서 원하는 언어를 선택하도록 할 수 있다.
+
+#### 리소스에 대해 XML 표현 추가하기 (Accept 헤더를 이용한 방법)
+1. 라이브러리 추가 (jackson-dataformat-xml)
+    ```xml
+    <dependency>
+        <groupId>com.fasterxml.jackson.dataformat</groupId>
+        <artifactId>jackson-dataformat-xml</artifactId>
+    </dependency>
+    ```
+2. XML형식으로 API 요청
+   ![xml-content-request.png](image/xml-content-request.png)
+    - 헤더(HEADERS) 섹션에 'key=Accept', 'value=application/xml' 헤더를 추가한 후 요청을하면 xml 형태로 데이터 리소스를 받을 수 있다.
 
 ---
