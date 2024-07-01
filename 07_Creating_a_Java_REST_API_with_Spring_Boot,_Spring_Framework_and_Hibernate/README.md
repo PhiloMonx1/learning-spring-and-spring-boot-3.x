@@ -22,6 +22,7 @@
 18. [콘텐츠 협상 알아보기 - XML 지원 구현하기](#18단계---콘텐츠-협상-알아보기---xml-지원-구현하기)
 19. [REST API의 국제화 알아보기](#19단계---rest-api의-국제화-알아보기)
 20. [REST API 버전 관리 - URI 버전 관리](#20단계---rest-api-버전-관리---uri-버전-관리)
+21. [REST API 버전 관리 - 요청 매개변수, 헤더, 콘텐츠 협상](#21단계---rest-api-버전-관리---요청-매개변수-헤더-콘텐츠-협상)
 
 ---
 
@@ -923,5 +924,85 @@ public class VersioningPersonController {
 }
 ```
 - URL 엔드포인트에 v1, v2 구분을 주는 것으로 사용자가 API 버전을 선택하게 할 수 있다.
+
+---
+
+## 21단계 - REST API 버전 관리 - 요청 매개변수, 헤더, 콘텐츠 협상
+
+#### 요청 파라미터를 사용한 버전 관리 구현 실습
+```java
+@RestController
+public class VersioningPersonController {
+    //...(생략)
+	@GetMapping(path = "/person", params = "version=1")
+	public PersonV1 getFirstVersionOfPersonRequestParameter() {
+		return new PersonV1("이첨지");
+	}
+
+	@GetMapping(path = "/person", params = "version=2")
+	public PersonV2 getSecondVersionOfPersonRequestParameter() {
+		return new PersonV2(new Name("이", "첨지"));
+	}
+}
+```
+
+#### 헤더를 사용한 버전 관리 구현 실습
+```java
+@RestController
+public class VersioningPersonController {
+	//...(생략)
+	@GetMapping(path = "/person", headers = "X_API_VERSION=1")
+	public PersonV1 getFirstVersionOfPersonHeaders(){
+		return new PersonV1("박첨지");
+	}
+
+	@GetMapping(path = "/person", headers = "X_API_VERSION=2")
+	public PersonV2 getSecondVersionOfPersonHeaders(){
+		return new PersonV2(new Name("박", "첨지"));
+	}
+}
+```
+- 'key=X_API_VERSION', 'value=1' 헤더를 포함해서 요청을 보내는 것으로 사용할 수 있다.
+
+#### 미디어 유형을 사용한 버전 관리 구현 실습
+```java
+@RestController
+public class VersioningPersonController {
+	@GetMapping(path = "/person", produces = "application/vnd.company.app-v1+json")
+	public PersonV1 getFirstVersionOfPersonAcceptHeader(){
+		return new PersonV1("최첨지");
+	}
+
+	@GetMapping(path = "/person", produces = "application/vnd.company.app-v2+json")
+	public PersonV2 getSecondVersionOfPersonAcceptHeader(){
+		return new PersonV2(new Name("최", "첨지"));
+	}
+}
+```
+- 'key=Accept', 'value=application/vnd.company.app-v1+json' 헤더를 포함해서 요청을 보내는 것으로 사용할 수 있다.
+- 해당 방법의 장점은 '콘텐츠 협상(Content Negotiation)과의 일치성'이다.
+  - 미디어 타입을 사용한 버전 관리는 HTTP의 콘텐츠 협상 메커니즘과 자연스럽게 통합된다.
+  - Accept 헤더를 통해 원하는 버전의 리소스를 요청하는 것은 HTTP 프로토콜의 기본 원칙과 일치한다.
+
+#### REST API 버전 관리의 방법을 결정할 때 고려해야 할 여러 요인
+1. URI 오염 (URI Pollution) : 
+   - URI 버전 관리와 요청 파라미터 버전 관리의 경우 불필요하게 URL이 길어진다는 점을 유의해야 한다. 
+2. HTTP 헤더의 오용 : 
+   - HTTP 헤더는 버전 관리 용도로 사용해서는 안된다. 
+     - HTTP 헤더는 주로 요청이나 응답에 대한 메타데이터를 전달하는 데 사용되기 때문에 버전 관리는 본래 목적에 어긋난다는 주장이다.
+     - 반론 : 버전 정보는 리소스에 대한 메타데이터로 볼 수 있으며, HTTP 헤더는 메타데이터를 전달하는 데 적합한 메커니즘이라는 주장도 있다.
+3. 캐싱 (Caching) : 
+   - 헤더 버전 관리와 미디어 유형 버전 관리에서는 URL을 기반으로 캐싱을 할 수 없다.
+4. 브라우저에서 요청을 수행할 수 있는지 여부 : 
+   - URI 버전 관리와 요청 매개변수 버전 관리의 경우, 브라우저에서 간편하게 실행 가능하다. 
+   - 헤더를 사용한 방식은 헤더에 대한 이해 및 REST API 클라이언트 등의 도구가 필요하다.
+5. API 문서
+   - API 문서 도구가 헤더를 기준으로 구분하는 문서의 생성을 지원하지 않을 가능성이 있다.
+
+따라서 버전 관리에 대한 완벽한 솔루션은 없다. 여러 기업에서도 각자 다른 방식을 사용한다. (URI = Twitter, 요청 파라미터 = Amazon, 헤더 = Microsoft, 미디어 유형 = GitHub)
+
+다만 어떠한 버전 관리를 채택하든 일관된 하나의 버전 관리 방식을 유지하는 것이 권장된다.
+
+ps. 개인적으로 URL 방식이 가장 명확하게 버전 파악이 가능하다는 점과, 캐싱의 용이성, 사용 편의성의 우수함을 갖추고 있다고 생각한다. 버전 관리는 실제 버전을 사용하는 사용자 입장에 맞춰서 고려하는 것이 좋다.
 
 ---
