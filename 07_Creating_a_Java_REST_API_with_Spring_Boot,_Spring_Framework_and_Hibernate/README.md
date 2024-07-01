@@ -26,6 +26,7 @@
 22. [REST API HATEOAS 구현하기](#22단계---rest-api-hateoas-구현하기)
 23. [REST API 정적 필터링 구현하기](#23단계---rest-api-정적-필터링-구현하기)
 24. [REST API 동적 필터링 구현하기](#24단계---rest-api-동적-필터링-구현하기)
+25. [Spring Boot Actuator로 API 모니터링하기](#25단계---spring-boot-actuator로-api-모니터링하기)
 
 ---
 
@@ -1207,5 +1208,51 @@ public class FilteringController {
 }
 ```
 - `MappingJacksonValue`에는 List도 주입할 수 있다.
+
+---
+
+## 25단계 - Spring Boot Actuator로 API 모니터링하기
+
+[4챕터 ReadMe 12단계](..%2F04_Getting_Started_with_Spring_Boot%2FREADME.md) 참고.
+#### Spring Boot Actuator 적용 실습
+1. 라이브러리 추가
+    ```xml
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    ```
+2. 모니터링 확인
+- ['/actuator'](http://localhost:8080/actuator) 엔드포인트 접근
+    ```json
+    {
+      "_links": {
+        "self": {
+          "href": "http://localhost:8080/actuator",
+          "templated": false
+        },
+        "health": {
+          "href": "http://localhost:8080/actuator/health",
+          "templated": false
+        },
+        "health-path": {
+          "href": "http://localhost:8080/actuator/health/{*path}",
+          "templated": true
+        }
+      }
+    }
+    ```
+    - 'HATEOAS'가 적용된 API로 이동할 수 있는 다른 엔드포인트를 보여주고 있다.
+
+3. 추가 정보 확인
+   - `application.properties` 파일 설정.
+       ```properties
+       management.endpoints.web.exposure.include=*
+       ```
+        - '*'로 전체 엔드포인트를 활성화.
+   - 'beans', 'env', 'loggers', 'metrics' 등 자세한 정보를 확인 할 수 있다.
+     - beans : 애플리케이션 컨텍스트에 로드된 모든 Spring 빈의 정보를 제공
+     - env : 애플리케이션 실행 환경에 대한 세부 정보 제공
+     - loggers : 로그 제공
 
 ---
