@@ -18,6 +18,7 @@
 14. [REST API에서 유효성 검증하기](#14단계---rest-api에서-유효성-검증하기)
 15. [고급 REST API 기능의 개요](#15단계---고급-rest-api-기능의-개요)
 16. [Open API 사양 및 Swagger 파악하기](#16단계---open-api-사양-및-swagger-파악하기)
+17. [Swagger 문서의 자동 생성 구성하기](#17단계---swagger-문서의-자동-생성-구성하기)
 
 ---
 
@@ -755,5 +756,48 @@ protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotV
   - API 인터페이스를 일관된 방식으로 문서화한다.
   - ...
 - Swagger Ui 통해 자동 생성 가능.
+
+---
+
+## 17단계 - Swagger 문서의 자동 생성 구성하기
+
+#### 라이브러리 추가 [springdoc-openapi](https://springdoc.org/#getting-started)
+```xml
+<dependency>
+    <groupId>org.springdoc</groupId>
+    <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+    <version>2.6.0</version>
+</dependency>
+```
+- Spring 공식 라이브러리가 아니므로 [공식 페이지](https://springdoc.org/)에서 사양 확인을 권장한다.
+- 해당 라이브러리가 지원하는 것들 (24.07.01)
+  - OpenAPI 3
+  - Spring-boot v3 (Java 17 & Jakarta EE 9)
+  - JSR-303, specifically for @NotNull, @Min, @Max, and @Size. 
+  - Swagger-ui 
+  - OAuth 2 
+  - GraalVM native images
+- 강의에서는 2.0.0 버전을 사용했으나 공식문서를 참고하여 최신버전으로 사용하기로 했다. 
+
+#### API 문서 확인
+- ['/swagger-ui.html'](http://localhost:8080/swagger-ui/index.html) 엔드포인트로 접근해서 자동 생성된 API 문서를 확인할 수 있다.
+    ![swagger-ui.png](image/swagger-ui.png)
+  - 각 API를 클릭해서 세부 정보를 확인할 수 있다.
+    - API를 직접 실행해보는 것도 가능하다. (실제로 반영되니 주의해서 사용해야 함)
+- ['/v3/api-docs'](http://localhost:8080/v3/api-docs) 엔드포인트로 접근해서 API에 대한 오픈 API 사양을 확인할 수 있다.
+    ```json
+    {
+    "openapi": "3.0.1",
+    "info": {...}, // 2 items
+    "servers": {...}, // 1 items
+    "paths": {...}, // 5 items
+    "components": {...} // 1 items
+    }
+    ```
+    - info : 제목, 버전 등 일반적인 정보가 담겨있다.
+    - servers : API 서버의 노출 위치(URL)를 확인할 수 있다.
+    - paths : 서버에서 제공하는 API의 엔드포인트 리스트를 볼 수 있다.
+      - 각 엔드포인트 패스에서 메소드별로 분리된 API 세부 사양을 확인할 수 있다.
+    - components : 'schemas' 내부에 API에 연관된 객체 및 객체의 세부정보를 볼 수 있다.
 
 ---
