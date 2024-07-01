@@ -23,6 +23,7 @@
 19. [REST API의 국제화 알아보기](#19단계---rest-api의-국제화-알아보기)
 20. [REST API 버전 관리 - URI 버전 관리](#20단계---rest-api-버전-관리---uri-버전-관리)
 21. [REST API 버전 관리 - 요청 매개변수, 헤더, 콘텐츠 협상](#21단계---rest-api-버전-관리---요청-매개변수-헤더-콘텐츠-협상)
+22. [REST API HATEOAS 구현하기](#22단계---rest-api-hateoas-구현하기)
 
 ---
 
@@ -1004,5 +1005,92 @@ public class VersioningPersonController {
 다만 어떠한 버전 관리를 채택하든 일관된 하나의 버전 관리 방식을 유지하는 것이 권장된다.
 
 ps. 개인적으로 URL 방식이 가장 명확하게 버전 파악이 가능하다는 점과, 캐싱의 용이성, 사용 편의성의 우수함을 갖추고 있다고 생각한다. 버전 관리는 실제 버전을 사용하는 사용자 입장에 맞춰서 고려하는 것이 좋다.
+
+---
+
+## 22단계 - REST API HATEOAS 구현하기
+
+#### HATEOAS (Hypermedia as the engine of Application State)
+RESTful API 설계의 한 원칙으로, API 응답에 관련된 다른 리소스에 대한 하이퍼링크를 포함시키는 방식
+- API 사용자가 API 문서 전체를 보지 않고도 API 사용에 큰 지장이 없도록 하는 RESTful API 작성 방식.
+- ex) User 스키마에 관련된 API 전체를 보지 않고 User 생성이나 단일 조회만 했을 때, 응답에 관련된 API (예를 들어 전체 유저 조회, 유저 삭제)에 대한 정보를 함께 포함하는 것
+
+#### HATEOAS API의 응답 예시
+```json
+{
+  "name" : "Adam",
+  "birthDate" : "2022-08-16",
+  "_links" : {
+    "all-users" : {
+      "href" : "http://localhost:8080/users"
+    }
+  }
+}
+```
+- 리소스 뿐만 아니라 "_links"를 통해 연결된 API 링크를 포함하고 있다.
+
+#### 구현 방식
+1. 사용자 정의 구현 (Custom Implementation) : API 개발자가 직접 HATEOAS 구조를 설계 및 구현
+2. 표준 구현 : 'HAL' 등의 표준화된 방식으로 구현 (`Spring HATEOAS` 등의 라이브러리를 사용할 수 있다.)
+    - HAL(Hypertext Application Language) : RESTful API에서 하이퍼미디어 링크를 표현하기 위한 표준화된 형식의 이름이다.
+    - 위에서 제시한 예시 JSON이 'HAL' 표준을 따르고 있다.
+
+#### 구현 실습
+1. 라이브러리 추가 (spring-boot-starter-hateoas)
+    ```xml
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-hateoas</artifactId>
+    </dependency>
+    ```
+2. 컨트롤러 수정
+    ```java
+    @RestController
+    public class UserResource {
+        //...(생략)
+        @GetMapping("/users/{id}")
+        public EntityModel<User> retrieveUser(@PathVariable int id) {
+            User user = service.findOne(id);
+            if (user == null) {
+                throw new UserNotFoundException("id:" + id);
+            }
+    
+            WebMvcLinkBuilder link = WebMvcLinkBuilder.linkTo(
+                    WebMvcLinkBuilder.methodOn(this.getClass()).retrieveAllUsers()
+            );
+    
+            // HATEOAS
+            EntityModel<User> entityModel = EntityModel.of(user);
+            entityModel.add(link.withRel("all-users"));
+    
+            return entityModel;
+        }
+        //...(생략)
+    }
+    ```
+    - EntityModel : 'HATEOAS'를 적용하기 위해서는 리턴 타입이 `EntityModel`이어야 한다. 
+      - `link.withRel()` EntityModel에 링크를 포함시킨다. 인자를 전달해서 링크의 이름을 지정할 수 있다.
+    - WebMvcLinkBuilder : HATEOAS 원칙을 구현하기 위한 링크 생성 클래스 (Spring HATEOAS 라이브러리에서 제공)
+      -  methodOn(Class).method() : 컨트롤러 클래스의 메서드를 참조하는 데 사용하는 메서드
+        - 클래스와 해당 클래스의 메서드 호출을 함께 사용해야 한다.
+        - 메서드를 통해 부여된 API URL을 참조할 수 있다. (추후 URL이 바뀌어도 해당 코드는 바뀔 필요가 없다는 장점이 있다.) 
+3. API 확인
+    ```json
+    {
+      "id": 1,
+      "name": "Adam",
+      "birthDate": "1994-07-01",
+      "_links": {
+        "all-users": {
+          "href": "http://localhost:8080/users"
+        }
+      }
+    }
+    ```
+
+#### HATEOAS를 적용할 때 고려할 사항
+1. 필요성 기반: 모든 API 엔드포인트가 HATEOAS를 필요로 하지는 않는다. 복잡한 워크플로우나 상태 전이가 필요한 리소스를 우선 적용하는 것이 좋다.
+2. 성능 고려: HATEOAS는 응답 크기를 증가시킬 수 있으므로, 성능이 중요한 일부 엔드포인트에서는 제외할 수 있다.
+3. 문서화 : HATEOAS가 있다고 해서 API 문서화가 필요 없는 것은 아니다. (특히 일부 API에만 적용한다면 문서화를 통해 명시하는 것이 좋다.)
 
 ---
