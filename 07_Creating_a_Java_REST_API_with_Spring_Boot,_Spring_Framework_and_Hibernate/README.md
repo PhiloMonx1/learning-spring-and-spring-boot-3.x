@@ -29,6 +29,7 @@
 25. [Spring Boot Actuator로 API 모니터링하기](#25단계---spring-boot-actuator로-api-모니터링하기)
 26. [Spring Boot HAL Explorer로 API 탐색하기](#26단계---spring-boot-hal-explorer로-api-탐색하기)
 27. [JPA와 Hibernate를 이용해 REST API를 H2에 연결하기 - 개요](#27단계---jpa와-hibernate를-이용해-rest-api를-h2에-연결하기---개요)
+28. [User 엔터티 및 테스트 데이터 생성하기](#28단계---user-엔터티-및-테스트-데이터-생성하기)
 
 ---
 
@@ -1307,5 +1308,39 @@ JPA와 Hibernate를 이용해 REST API를 데이터베이스에 연결하는 법
             </dependency>
         </dependencies>
     ```
+
+---
+
+## 28단계 - User 엔터티 및 테스트 데이터 생성하기
+
+#### `User` 클래스 엔티티화 
+1. @Entity(name = "user_details") 클래스 어노테이션 부여
+   - name = "user_details" : h2 데이터베이스에 'user' 테이블이 예약어로 설정되어 있어서 테이블 명 변경함
+2. id 필드에 @Id, @GeneratedValue 어노테이션 부여
+3. 빈 생성자 추가
+
+#### H2 콘솔 설정
+`application.properties` 설정
+
+```properties
+spring.h2.console.enabled=true
+spring.datasource.url=jdbc:h2:mem:tesdb
+```
+- spring.h2.console.enabled : h2 콘솔 활성화
+- spring.datasource.url : 데이터베이스 URL 지정
+
+#### 시작 데이터 생성
+- '/src/main/resources/data.sql' 생성
+- sql 쿼리 입력
+    ```sql
+    insert into user_details(id,birth_date,name)
+    values(10001, current_date(),'Ranga');
+    ```
+- `application.properties` 설정
+    ```properties
+    spring.jpa.defer-datasource-initialization=true
+    ```
+    - SQL 쿼리가 JPA 초기화 시점보다 빠르게 실행돼서 테이블을 찾지 못하는 현상 방지
+      - JPA 초기화 후 `data.sql` 실행 옵션
 
 ---
