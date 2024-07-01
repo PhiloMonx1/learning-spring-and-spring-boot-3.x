@@ -20,6 +20,7 @@
 16. [Open API 사양 및 Swagger 파악하기](#16단계---open-api-사양-및-swagger-파악하기)
 17. [Swagger 문서의 자동 생성 구성하기](#17단계---swagger-문서의-자동-생성-구성하기)
 18. [콘텐츠 협상 알아보기 - XML 지원 구현하기](#18단계---콘텐츠-협상-알아보기---xml-지원-구현하기)
+19. [REST API의 국제화 알아보기](#19단계---rest-api의-국제화-알아보기)
 
 ---
 
@@ -824,5 +825,69 @@ protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotV
 2. XML형식으로 API 요청
    ![xml-content-request.png](image/xml-content-request.png)
     - 헤더(HEADERS) 섹션에 'key=Accept', 'value=application/xml' 헤더를 추가한 후 요청을하면 xml 형태로 데이터 리소스를 받을 수 있다.
+
+---
+
+## 19단계 - REST API의 국제화 알아보기
+
+다양한 국가의 소비자를 위해 API를 다양한 언어로 사용자 정의화 하는 것.
+
+#### i18n (internationalization)
+- 국제화를 처리할 때 HTTP Request 헤더를 사용한다.
+  - ex) 'key=Accept-Language', 'value=en'은 영어.
+- ps : 'i18n'는 쿠버네티스(Kubernetes)를 'k8s'로 줄여서 부르는 것처럼 'internationalization' 단어가 'i'와 'n' 사이의 18글자가 있다는 것으로 줄여부르는 용어이다.
+
+#### 국제화 구현 실습 
+1. `messages.properties` 생성 (번역 파일)
+   - 'src/main/resources/messages.properties' 폴더 경로와 파일명을 유의하여 예시와 일치하도록 작성해야 한다. (MessageSourceAutoConfiguration 자동 설정 클래스에 설정되어 있다.)
+    ```properties
+    good.morning.message=Good Morning
+    ```
+2. `MessageSource` 의존성 주입 (컨트롤러 API에 연결)
+    ```java
+    @RestController
+    public class HelloWorldController {
+    
+        private MessageSource messageSource;
+    
+        public HelloWorldController(MessageSource messageSource) {
+            this.messageSource = messageSource;
+        }
+    
+        //...(생략)
+    
+        @GetMapping("/hello-world-internationalized")
+        public String helloWorldInternationalized() {
+            Locale locale = LocaleContextHolder.getLocale();
+            return messageSource.getMessage("good.morning.message", null, "Default Message", locale);
+        }
+    }
+    ```
+    - `MessageSource` 의존성 주입
+    - `LocaleContextHolder.getLocale()` : `Accept-Language` 헤더의 값을 인식하며 값이 존재하지 않을 시 로컬 시스템 기본 값으로 지정된다.
+      ![hello-world-en.png](image/hello-world-en.png)
+       
+3. 다른 언어로 국제화 (네덜란드어)
+- `messages_nl.properties` 생성
+    ```properties
+    good.morning.message=Goedemorgen
+    ```
+    ![hello-world-nl.png](image/hello-world-nl.png)
+  - 헤더 `key=Accept-Language`, `value=nl`로 요청
+
+#### 한국어 국제화 문자열 깨지는 문제 (인텔리제이 IDE)
+![hello-world-ko.png](image/hello-world-ko.png)
+[messages_ko.properties](..%2F00_module%2Frestful-web-services%2Fsrc%2Fmain%2Fresources%2Fmessages_ko.properties)를 추가한 후 '안녕하세요' 문자열이 깨지는 문제가 발생함. 인텔리제이가 `messages_ko.properties` 파일을 인코딩 할 때 'USO-8859-1'로 인코딩 했기 때문에 발생한다.
+
+#### 한국어 깨지는 문제 해결법
+![intellij-setting.png](image/intellij-setting.png)
+- 인텔리제이 IDE 설정에서 `messages_ko.properties` 파일을 인코딩 할 때 UTF-8로 인코딩하도록 설정을 변경한다
+- 적용이 되지 않은 경우 이미 파일이 인코딩 된 상태로 저장된 것으로 파일을 삭제 후 다시 생성하면 설정한대로 UTF-8로 `messages_ko.properties` 파일을 인코딩 한다.
+
+#### `messages_en.properties` 추가
+로컬 시스템 언어가 자동으로 'ko'를 잡기 때문에 `messages_ko.properties` 파일을 생성하면 'Accept-Language' 헤더가 주어지지 않을 경우 `messages_ko.properties` 파일을 기준으로 국제화가 진행된다.
+
+- `messages_en.properties` 파일을 추가해서 해결할 수 있다.
+- `messages.properties` 파일은 일종의 템플릿으로 생각하는 것이 좋다.
 
 ---
