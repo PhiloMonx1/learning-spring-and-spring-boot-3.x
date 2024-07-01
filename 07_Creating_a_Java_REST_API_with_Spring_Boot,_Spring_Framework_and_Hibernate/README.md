@@ -24,6 +24,7 @@
 20. [REST API 버전 관리 - URI 버전 관리](#20단계---rest-api-버전-관리---uri-버전-관리)
 21. [REST API 버전 관리 - 요청 매개변수, 헤더, 콘텐츠 협상](#21단계---rest-api-버전-관리---요청-매개변수-헤더-콘텐츠-협상)
 22. [REST API HATEOAS 구현하기](#22단계---rest-api-hateoas-구현하기)
+23. [REST API 정적 필터링 구현하기](#23단계---rest-api-정적-필터링-구현하기)
 
 ---
 
@@ -1092,5 +1093,49 @@ RESTful API 설계의 한 원칙으로, API 응답에 관련된 다른 리소스
 1. 필요성 기반: 모든 API 엔드포인트가 HATEOAS를 필요로 하지는 않는다. 복잡한 워크플로우나 상태 전이가 필요한 리소스를 우선 적용하는 것이 좋다.
 2. 성능 고려: HATEOAS는 응답 크기를 증가시킬 수 있으므로, 성능이 중요한 일부 엔드포인트에서는 제외할 수 있다.
 3. 문서화 : HATEOAS가 있다고 해서 API 문서화가 필요 없는 것은 아니다. (특히 일부 API에만 적용한다면 문서화를 통해 명시하는 것이 좋다.)
+
+---
+
+## 23단계 - REST API 정적 필터링 구현하기
+
+#### 직렬화 (Serialization) : 객체를 스트림(Stream)으로 전환하는 프로세스
+EntityModel<User>이나 List<User>를 JSON | XML 등으로 전환하는 전환하는 작업을 의미한다.
+- 지금까지 써왔던 'Jackson'은 'JSON 직렬화 프레임워크'이다.
+
+#### 반환하는 객체 커스터마이징
+현재 '/users/{id}' API가 반환하는 값은 `User` 객체와 완전 동일하다. (User 클래스 내부에 정의된 필드를 모두 반환) 만약에 패스워드와 같은 일부 항목을 전달하고 싶지 않을 때는 어떻게 해야 할까?
+1. `@JSONProperty` :필드 이름 커스터마이징 
+    ```java
+    //...(생략)
+    public class User {
+        //...(생략)
+        @JsonProperty("user_name")
+        private String name;
+        //...(생략)
+    }
+    ```
+    - 응답 리소스에 'user_name' 로 노출된다.
+2. 필터링(Filtering) : 선택한 필드만 반환
+   - 정적 필터링(Static Filtering) : API와 관계없이 항상 특정 필드를 차단하거나 필터링
+     - @JsonIgnoreProperties, @JsonIgnore
+   - 동적 필터링(Dynamic Filtering) : 특정 API에서만 특정 필드를 차단하거나 필터링
+     - @JsonFilter with FilterProvider
+
+#### 정적 필터링 실습
+```java
+@JsonIgnoreProperties("field1")
+public class SomeBean {
+
+	private String field1;
+
+	@JsonIgnore
+	private String field2;
+	private String field3;
+}
+```
+- `SomeBean` 객체를 리턴하는 모든 API의 리소스에 `field1`, `field2`는 제외된다.
+- `@JsonIgnore` : 필드에 부여할 수 있다.
+- `@JsonIgnoreProperties()` : 클래스에 적용, 인자로 필드명을 전달해서 필드를 지정한다. (쉼표로 구분하여 여러 개의 필드를 지정할 수 있다.)
+  - 필드의 이름이 바뀌면 함께 변경해줘야 하는 단점이 있다.
 
 ---
