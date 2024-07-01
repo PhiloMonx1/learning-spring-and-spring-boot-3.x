@@ -30,6 +30,7 @@
 26. [Spring Boot HAL Explorer로 API 탐색하기](#26단계---spring-boot-hal-explorer로-api-탐색하기)
 27. [JPA와 Hibernate를 이용해 REST API를 H2에 연결하기 - 개요](#27단계---jpa와-hibernate를-이용해-rest-api를-h2에-연결하기---개요)
 28. [User 엔터티 및 테스트 데이터 생성하기](#28단계---user-엔터티-및-테스트-데이터-생성하기)
+29. [REST API를 개선하고 JPA와 Hibernate를 이용해 H2에 연결하기](#29단계---rest-api를-개선하고-jpa와-hibernate를-이용해-h2에-연결하기)
 
 ---
 
@@ -1342,5 +1343,22 @@ spring.datasource.url=jdbc:h2:mem:tesdb
     ```
     - SQL 쿼리가 JPA 초기화 시점보다 빠르게 실행돼서 테이블을 찾지 못하는 현상 방지
       - JPA 초기화 후 `data.sql` 실행 옵션
+
+---
+
+## 29단계 - REST API를 개선하고 JPA와 Hibernate를 이용해 H2에 연결하기
+
+#### 리포지토리 생성
+- 인터페이스로 만든다.
+- `@Repository` 클래스 어노테이션 부여
+- `JpaRepository<T, ID>` 상속
+
+#### 컨트롤러 생성
+기존 컨트롤러 역할을 하는 [UserResource.java](..%2F00_module%2Frestful-web-services%2Fsrc%2Fmain%2Fjava%2Fcom%2Fin28minutes%2Frest%2Fwebservices%2Frestful_web_services%2Fuser%2FUserResource.java)를 복제해서 사용할 것이다.
+
+#### API 수정
+1. 의존성 교체 : 기존 `UserDaoService` 를 `UserRepository`로 교체한다.
+2. `retrieveUser()` 내부의 `findOne()` 메서드를 `findById()`로 교체한다.
+   - `findById()`는 `Optional<T>`을 리턴하기 때문에 이전 처럼 `.orElse(null);` 예외 처리를 사용 가능하다.
 
 ---
