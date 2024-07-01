@@ -17,6 +17,7 @@
 13. [DELETE 메소드로 사용자 리소스 삭제하기](#13단계---delete-메소드로-사용자-리소스-삭제하기)
 14. [REST API에서 유효성 검증하기](#14단계---rest-api에서-유효성-검증하기)
 15. [고급 REST API 기능의 개요](#15단계---고급-rest-api-기능의-개요)
+16. [Open API 사양 및 Swagger 파악하기](#16단계---open-api-사양-및-swagger-파악하기)
 
 ---
 
@@ -715,5 +716,44 @@ protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotV
 7. Dynamic Filtering : 동적 필터링
 8. Monitoring : 모니터링
 9. ...
+
+---
+
+## 16단계 - Open API 사양 및 Swagger 파악하기
+
+#### API 컨슈머가 알아야 하는 정보
+- 노출되는 리소스
+- Actions (수행되는 작업)
+- 요청/응답 구조 및 요청 형식(밸리데이션 등)
+
+#### 고려해야 할 사항
+- 문서는 늘 최신버전이어야 한다.
+- 문서는 정확해야 한다. (코드와 동기화)
+- 문서는 일관된 형식으로 이루어져 있어야 한다.
+
+#### 문서를 다루는 방법
+1. 수동
+   - REST API의 관련 문서를 관리하는 문서나 HTML 파일을 직접 가지고 있고, 관리하는 방식
+   - 고려해야 할 사항을 지키기 위해 노력이 필요하다.
+2. 코드에서 자동 생성
+   - 프로젝트 코드를 읽어서 이에 대한 문서를 자동으로 생성하는 방법
+
+#### Swagger Quick overview
+- 2011: 'Swagger Specification' & 'Swagger Tools' 도입
+- 2016: 'Swagger Specification'을 기반으로 오픈 API 사양 등장
+
+#### Swagger
+- REST API 문서화 및 시각화를 위한 프레임워크
+- Swagger Tools
+  - [Swagger Ui](https://swagger.io/tools/swagger-ui/) : API 문서 자동 생성 Tool
+
+#### OpenAPI 사양
+- REST API를 정의하기 위한 표준 인터페이스
+  - API의 구조, 엔드포인트, 작업, 요청/응답 형식 등을 상세히 기술한다.
+  - 프로그래밍 언어나 플랫폼에 구애받지 않고 API를 설명할 수 있어야 한다.
+  - 사람과 컴퓨터 모두가 읽을 수 있는 형식으로 작성한다.
+  - API 인터페이스를 일관된 방식으로 문서화한다.
+  - ...
+- Swagger Ui 통해 자동 생성 가능.
 
 ---
