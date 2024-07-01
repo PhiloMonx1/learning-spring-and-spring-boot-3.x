@@ -27,6 +27,7 @@
 23. [REST API 정적 필터링 구현하기](#23단계---rest-api-정적-필터링-구현하기)
 24. [REST API 동적 필터링 구현하기](#24단계---rest-api-동적-필터링-구현하기)
 25. [Spring Boot Actuator로 API 모니터링하기](#25단계---spring-boot-actuator로-api-모니터링하기)
+26. [Spring Boot HAL Explorer로 API 탐색하기](#26단계---spring-boot-hal-explorer로-api-탐색하기)
 
 ---
 
@@ -1254,5 +1255,31 @@ public class FilteringController {
      - beans : 애플리케이션 컨텍스트에 로드된 모든 Spring 빈의 정보를 제공
      - env : 애플리케이션 실행 환경에 대한 세부 정보 제공
      - loggers : 로그 제공
+
+---
+
+## 26단계 - Spring Boot HAL Explorer로 API 탐색하기
+
+#### HAL Explorer
+HAL을 이용하는 RESTful 하이퍼미디어 API를 탐색하는 API 탐색기
+- 비전문가 팀도 API를 쉽게 활용할 수 있다.
+
+#### 실습
+1. 라이브러리 추가
+    ```xml
+    <dependency>
+        <groupId>org.springframework.data</groupId>
+        <artifactId>spring-data-rest-hal-explorer</artifactId>
+    </dependency>
+    ```
+
+2. HAL explorer 메인 페이지
+   ![HAL-explorer-main.png](image/HAL-explorer-main.png)
+    - '/' 루트 엔드포인트로 접근하면 자동으로 HAL 익스플로러와 연결된다.
+
+3. HAL explorer 사용법
+   ![HAL-explorer-get-users-1.png](image/HAL-explorer-get-users-1.png)
+   - 주소 입력란에 엔드포인트를 입력하고 'Go' 버튼을 클릭하면 해당 엔드포인트의 HAL 링크를 나열한다.
+   - 링크 HTTP Request에 GET, POST, PUT, DELETE 메서드에 해당하는 버튼이 각각 있다.
 
 ---
