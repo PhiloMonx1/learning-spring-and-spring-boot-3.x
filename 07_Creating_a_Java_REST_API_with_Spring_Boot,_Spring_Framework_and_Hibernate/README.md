@@ -28,6 +28,7 @@
 24. [REST API 동적 필터링 구현하기](#24단계---rest-api-동적-필터링-구현하기)
 25. [Spring Boot Actuator로 API 모니터링하기](#25단계---spring-boot-actuator로-api-모니터링하기)
 26. [Spring Boot HAL Explorer로 API 탐색하기](#26단계---spring-boot-hal-explorer로-api-탐색하기)
+27. [JPA와 Hibernate를 이용해 REST API를 H2에 연결하기 - 개요](#27단계---jpa와-hibernate를-이용해-rest-api를-h2에-연결하기---개요)
 
 ---
 
@@ -1281,5 +1282,30 @@ HAL을 이용하는 RESTful 하이퍼미디어 API를 탐색하는 API 탐색기
    ![HAL-explorer-get-users-1.png](image/HAL-explorer-get-users-1.png)
    - 주소 입력란에 엔드포인트를 입력하고 'Go' 버튼을 클릭하면 해당 엔드포인트의 HAL 링크를 나열한다.
    - 링크 HTTP Request에 GET, POST, PUT, DELETE 메서드에 해당하는 버튼이 각각 있다.
+
+---
+
+## 27단계 - JPA와 Hibernate를 이용해 REST API를 H2에 연결하기 - 개요
+
+JPA와 Hibernate를 이용해 REST API를 데이터베이스에 연결하는 법을 중점적으로 알아볼 예정이다.
+- H2(인메모리 데이터베이스)로 작업하다가 MySQL로 바꿀 것이다.
+- `UserResource`를 업그레이드 할 것이다.
+  - 기존 `UserResource`는 정적 리스트로 작업을 진행했다.
+  - `UserResource` -> `UserRepository`로 바꿀 것 
+    -  JPA와 Hibernate를 이용해 데이터베이스와 소통
+- 라이브러리는 프로젝트를 생성할 당시 추가했기에 추가할 필요가 없다.
+    ```xml
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-jpa</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <scope>runtime</scope>
+            </dependency>
+        </dependencies>
+    ```
 
 ---
