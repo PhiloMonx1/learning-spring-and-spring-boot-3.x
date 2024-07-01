@@ -21,6 +21,7 @@
 17. [Swagger 문서의 자동 생성 구성하기](#17단계---swagger-문서의-자동-생성-구성하기)
 18. [콘텐츠 협상 알아보기 - XML 지원 구현하기](#18단계---콘텐츠-협상-알아보기---xml-지원-구현하기)
 19. [REST API의 국제화 알아보기](#19단계---rest-api의-국제화-알아보기)
+20. [REST API 버전 관리 - URI 버전 관리](#20단계---rest-api-버전-관리---uri-버전-관리)
 
 ---
 
@@ -335,7 +336,7 @@ public class UserDaoService {
 
 ---
 
-##  9단계 - User Resource에서 POST 메서드 구현하기
+## 9단계 - User Resource에서 POST 메서드 구현하기
 
 #### User POST API 추가
 ```java
@@ -889,5 +890,38 @@ protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotV
 
 - `messages_en.properties` 파일을 추가해서 해결할 수 있다.
 - `messages.properties` 파일은 일종의 템플릿으로 생각하는 것이 좋다.
+
+---
+
+## 20단계 - REST API 버전 관리 - URI 버전 관리
+
+이미 공개된 API에 변경 사항이 발생하게 된다면 어떻게 해야 할까? 그 변경 사항이 API 요청이나 응답에 영향을 주는 경우 변경 사항은 해당 API를 사용하고 있는 고객이나 다른 시스템에 큰 영향을 줄 수 있다. 이 문제를 해결 하기 위해서 API를 버전 별로 분리해서 기존 API에 영향을 주지 않고 변경사항을 적용해 새로운 버전의 API를 동시 운영하는 것이 권장된다.
+
+#### REST API 버전 관리 방법의 종류
+1. URL
+   - URL 엔드포인트로 버전을 나누는 방법
+2. 요청 파라미터
+   - 요청 파라미터에 버전을 받는 방법
+3. Header
+4. Media Type
+
+#### URL을 통한 버전 관리 방법 실습
+```java
+@RestController
+public class VersioningPersonController {
+
+	@GetMapping("/v1/person")
+	public PersonV1 getFirstVersionOfPerson(){
+		return new PersonV1("김첨지");
+	}
+
+	@GetMapping("/v2/person")
+	public PersonV2 getSecondVersionOfPerson(){
+		return new PersonV2(new Name("김", "첨지"));
+	}
+
+}
+```
+- URL 엔드포인트에 v1, v2 구분을 주는 것으로 사용자가 API 버전을 선택하게 할 수 있다.
 
 ---
