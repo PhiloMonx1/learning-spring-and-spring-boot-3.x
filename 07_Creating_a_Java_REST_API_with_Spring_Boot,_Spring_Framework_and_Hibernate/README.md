@@ -25,6 +25,7 @@
 21. [REST API 버전 관리 - 요청 매개변수, 헤더, 콘텐츠 협상](#21단계---rest-api-버전-관리---요청-매개변수-헤더-콘텐츠-협상)
 22. [REST API HATEOAS 구현하기](#22단계---rest-api-hateoas-구현하기)
 23. [REST API 정적 필터링 구현하기](#23단계---rest-api-정적-필터링-구현하기)
+24. [REST API 동적 필터링 구현하기](#24단계---rest-api-동적-필터링-구현하기)
 
 ---
 
@@ -1137,5 +1138,74 @@ public class SomeBean {
 - `@JsonIgnore` : 필드에 부여할 수 있다.
 - `@JsonIgnoreProperties()` : 클래스에 적용, 인자로 필드명을 전달해서 필드를 지정한다. (쉼표로 구분하여 여러 개의 필드를 지정할 수 있다.)
   - 필드의 이름이 바뀌면 함께 변경해줘야 하는 단점이 있다.
+
+---
+
+## 24단계 - REST API 동적 필터링 구현하기
+
+객체의 특정 필드를 API 구분 없이 노츨하지 않는 정적 필터링과 달리 동적 필터링은 API를 선택해서 노출 여부를 결정할 수 있다.
+
+#### API 수정
+```java
+@RestController
+public class FilteringController {
+
+	@GetMapping("/filtering")
+	public MappingJacksonValue Filtering() {
+		MappingJacksonValue mappingJacksonValue =
+				new MappingJacksonValue(new SomeBean("value1", "value2", "value3"));
+
+		SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("field3");
+		FilterProvider filters = new SimpleFilterProvider().addFilter("SomeBeanFilter", filter);
+
+		mappingJacksonValue.setFilters(filters);
+
+		return mappingJacksonValue;
+	}
+	//...(생략)
+}
+```
+- MappingJacksonValue : JSON 직렬화 과정을 제어하기 위한 Spring 클래스
+  - setFilters() : 특정 필터를 적용하는 setter 
+- SimpleBeanPropertyFilter : 자바 Bean 필터링
+  - filterOutAllExcept() : 인자로 전달한 필드만 반환 값에 포함.
+- FilterProvider : 필터 관리를 위한 인터페이스 (한 번에 여러 개의 필터 적용 가능)
+  - SimpleFilterProvider : FilterProvider의 기본 구현체
+    - addFilter() : 특정 이름으로 필터 등록
+
+#### `SomeBean` 객체 클래스 필터 적용
+```java
+@JsonFilter("SomeBeanFilter")
+public class SomeBean {
+//...(생략)
+}
+```
+- `@JsonFilter` 어노테이션에 생성된 필터 이름을 인자로 전달해서 객체에 필터를 적용할 수 있다.
+
+#### List에 필터링 적용
+```java
+@RestController
+public class FilteringController {
+	//...(생략)
+	@GetMapping("/filtering-list")
+	public MappingJacksonValue FilteringList() {
+		List<SomeBean> someBeanList = Arrays.asList(
+				new SomeBean("value1", "value2", "value3"),
+				new SomeBean("value4", "value5", "value6"),
+				new SomeBean("value7", "value8", "value9")
+		);
+
+		SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("field2",
+				"field3");
+		FilterProvider filters = new SimpleFilterProvider().addFilter("SomeBeanFilter", filter);
+
+		MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(someBeanList);
+		mappingJacksonValue.setFilters(filters);
+
+		return mappingJacksonValue;
+	}
+}
+```
+- `MappingJacksonValue`에는 List도 주입할 수 있다.
 
 ---
