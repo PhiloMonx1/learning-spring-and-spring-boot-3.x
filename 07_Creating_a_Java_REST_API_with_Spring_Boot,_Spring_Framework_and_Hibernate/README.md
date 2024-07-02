@@ -38,6 +38,7 @@
 34. [Docker 설치하기](#34단계-docker-설치하기)
 35. [REST API를 MySQL 데이터베이스에 연결하기](#35단계-rest-api를-mysql-데이터베이스에-연결하기)
 36. [Spring Security로 기본 인증 구현하기](#36단계---spring-security로-기본-인증-구현하기)
+37. [Spring Security 기본 인증 설정 개선하기](#37단계---spring-security-기본-인증-설정-개선하기)
 
 ---
 
@@ -1752,5 +1753,65 @@ docker run --detach --env MYSQL_ROOT_PASSWORD=dummypassword --env MYSQL_USER=soc
 ![talend-api-tester-get.png](image/talend-api-tester-get.png)
 - GET을 제외한 POST 등의 요청은 같은 인증 정보로 요청을 보내도 403(권한 없음)에러가 발생한다.
   - Spring Security는 기본적으로 CSRF 보호 기능으로 인한 증상 (CSRF 토큰이 필요없는 데이터 변경을 하지 않는 요청은 차단되지 않는다.)
+
+---
+
+## 37단계 - Spring Security 기본 인증 설정 개선하기
+
+#### Spring Security 간단한 원리
+- API 요청을 보낼 때 마다 Spring Security가 요청을 가로챈다.
+- 이후 Spring Security는 일련의 필터를 실행한다. (이 필터 실행 과정을 묶어서 필터 체인이라고 부른다.)
+  - 그리고 이 작업은 디스패처 서블릿(Dispatcher Servlet) 보다 선행된다. (Spring Security가 서블릿 필터로 구현되어 있기 때문)
+
+#### Spring Security 필터 기본 보안 설정
+1. 모든 요청이 인증되어야 한다.
+2. 요청에 자격 증명이 포함되지 않았다면(인증이 되지 않았다면) 기본 값으로 폼 기반 로그인 페이지가 나타난다.
+3. HTTP Basic 인증이 활성화된다.
+4. 로그아웃 기능이 활성화된다.
+5. CSRF 보호가 활성화된다.
+6. Session Fixation 보호가 활성화된다.
+7. Security Headers 통합이 활성화된다. (X-Frame-Options, X-XSS-Protection, X-Content-Type-Options 등).
+8. 서블릿 API 메서드와의 통합이 활성화된다. ex) `HttpServletRequest::getRemoteUser()` 등
+
+#### CSRF(Cross-Site Request Forgery) 보호
+- CSRF(Cross-Site Request Forgery) : 사용자의 인증 권한을 탈취하여 의도하지 않은 요청을 서버에 보내는 공격.
+  - 위험성 : 사용자도 모르게 계정 정보 변경, 자금 이체, 게시물 삭제 등의 작업이 수행될 수 있다.
+  - 방어방법 : 서버에서 CSRF 토큰을 발급하여 데이터 조작(생성, 변경, 삭제)에 관련된 API를 요청할 때 토큰을 함께 보내도록 할 수 있다.
+    - CSRF 토큰 역시 탈취되면 위험하지만 제한시간 존재, 세션 종속성 등으로 비교적 안전한 방어 방법을 제공한다.
+
+
+
+#### Spring Security 필터 체인 커스터마이징
+1. `SpringSecurityConfiguration` 클래스 생성
+    ```java
+    @Configuration
+    public class SpringSecurityConfiguration {
+    
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+            return http.build();
+        }
+    
+    }
+    ```
+    - `SecurityFilterChain`을 Bean으로 등록하고 있으며, `HttpSecurity` 객체를 기본 값으로 빌드하고 있다. (Spring Security의 기본 보안 설정으로 적용됨)
+2. 필터 체인 커스터마이징
+    ```java
+    @Configuration
+    public class SpringSecurityConfiguration {
+    
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+            return http
+                    .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                    .httpBasic(Customizer.withDefaults())
+				    .csrf(csrf -> csrf.disable())
+                    .build();
+        }
+    }
+    ```
+    - `authorizeHttpRequests(auth -> auth.anyRequest().authenticated())` : 모든 요청 비허용 (인증 필요)
+    - `httpBasic(Customizer.withDefaults())` : HTTP Basic 인증 활성화 (기본 값으로 설정)
+    - `csrf(csrf -> csrf.disable())` : csrf 비활성화
 
 ---
