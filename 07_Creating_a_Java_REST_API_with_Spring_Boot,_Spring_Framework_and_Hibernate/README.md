@@ -37,6 +37,7 @@
 33. [JPA와 Hibernate가 만든 REST API 쿼리 살펴보기](#33단계---jpa와-hibernate가-만든-rest-api-쿼리-살펴보기)
 34. [Docker 설치하기](#34단계-docker-설치하기)
 35. [REST API를 MySQL 데이터베이스에 연결하기](#35단계-rest-api를-mysql-데이터베이스에-연결하기)
+36. [Spring Security로 기본 인증 구현하기](#36단계---spring-security로-기본-인증-구현하기)
 
 ---
 
@@ -1730,5 +1731,26 @@ docker run --detach --env MYSQL_ROOT_PASSWORD=dummypassword --env MYSQL_USER=soc
 
 #### mysqlsh (MySQL Shell) 설치
 인텔리제이 데이터베이스 툴에 연결한 것으로 대체한다.
+
+---
+
+## 36단계 - Spring Security로 기본 인증 구현하기
+
+#### 라이브러리 추가
+```xml
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+```
+
+#### Talend API Tester(API 클라이언트)에서 인가 받기
+![talend-api-tester-401.png](image/talend-api-tester-401.png)
+- Spring Security에 의해 모든 API 요청에 인가가 필요하다.
+
+#### GET 요청의 경우 Spring Security 기본 패스워드를 통해 인증할 수 있다.
+![talend-api-tester-get.png](image/talend-api-tester-get.png)
+- GET을 제외한 POST 등의 요청은 같은 인증 정보로 요청을 보내도 403(권한 없음)에러가 발생한다.
+  - Spring Security는 기본적으로 CSRF 보호 기능으로 인한 증상 (CSRF 토큰이 필요없는 데이터 변경을 하지 않는 요청은 차단되지 않는다.)
 
 ---
