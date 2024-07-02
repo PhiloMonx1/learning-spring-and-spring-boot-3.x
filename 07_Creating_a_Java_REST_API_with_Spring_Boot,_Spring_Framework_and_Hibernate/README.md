@@ -34,6 +34,7 @@
 30. [User 엔터티와 일대다 관계로 Post 엔터티 생성하기](#30단계---user-엔터티와-일대다-관계로-post-엔터티-생성하기)
 31. [사용자의 모든 게시물을 가져올 GET API 구현하기](#31단계---사용자의-모든-게시물을-가져올-get-api-구현하기)
 32. [사용자에 대한 게시물을 생성할 POST API 구현하기](#32단계---사용자에-대한-게시물을-생성할-post-api-구현하기)
+33. [JPA와 Hibernate가 만든 REST API 쿼리 살펴보기](#33단계---jpa와-hibernate가-만든-rest-api-쿼리-살펴보기)
 
 ---
 
@@ -1593,5 +1594,36 @@ public class PostJpaResource {
   - `UserNotFoundException`와 같은 예외 처리 클래스를 별도 생성하거나 `EntityNotFoundException` 와 같은 공통 예외 처리 클래스를 만들어서 처리하는 것도 고려할 수 있다.
 - `UserJpaResource`에서 `PostRepository`를 직접 호출하는 부분 역시 아직 개선하지 않았다.
   - `PostJpaResource` 에서 `Post` 객체를 리턴하는 `postRepository.save(post)` 처리 메서드를 만든 후 `UserJpaResource`에선 해당 메서드를 호출하는 것이 정석이다.
+
+---
+
+## 33단계 - JPA와 Hibernate가 만든 REST API 쿼리 살펴보기
+
+#### application.properties 설정
+```properties
+spring.jpa.show-sql=true
+```
+- jpa가 백그라운드에서 실행하는 SQL 쿼리를 볼 수 있다.
+
+#### '/jpa/users' GET API 쿼리
+```sql
+Hibernate: select u1_0.id,u1_0.birth_date,u1_0.name from user_details u1_0
+```
+
+
+#### '/jpa/users/10001/posts' GET API 쿼리
+```sql
+Hibernate: select u1_0.id,u1_0.birth_date,u1_0.name from user_details u1_0 where u1_0.id=?
+Hibernate: select p1_0.user_id,p1_0.id,p1_0.description from post p1_0 where p1_0.user_id=?
+```
+- 두 개의 쿼리가 실행되고 있다.
+
+#### '/jpa/users/10002/posts' POST API 쿼리
+```sql
+Hibernate: select u1_0.id,u1_0.birth_date,u1_0.name from user_details u1_0 where u1_0.id=?
+Hibernate: select next value for post_seq
+Hibernate: insert into post (description,user_id,id) values (?,?,?)
+```
+- user_details에서 id를 먼저 찾고, 연결된 시퀀스의 다음 찾는다. 찾은 두 정보를 포함해서 post를 생성한다.
 
 ---
