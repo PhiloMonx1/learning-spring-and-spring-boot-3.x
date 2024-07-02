@@ -35,6 +35,7 @@
 31. [사용자의 모든 게시물을 가져올 GET API 구현하기](#31단계---사용자의-모든-게시물을-가져올-get-api-구현하기)
 32. [사용자에 대한 게시물을 생성할 POST API 구현하기](#32단계---사용자에-대한-게시물을-생성할-post-api-구현하기)
 33. [JPA와 Hibernate가 만든 REST API 쿼리 살펴보기](#33단계---jpa와-hibernate가-만든-rest-api-쿼리-살펴보기)
+34. [Docker 설치하기](#34단계-docker-설치하기)
 
 ---
 
@@ -1627,3 +1628,26 @@ Hibernate: insert into post (description,user_id,id) values (?,?,?)
 - user_details에서 id를 먼저 찾고, 연결된 시퀀스의 다음 찾는다. 찾은 두 정보를 포함해서 post를 생성한다.
 
 ---
+
+## 34단계 Docker 설치하기
+
+[Docker 공식 문서](https://docs.docker.com/engine/install/)에서 설치 및 설치에 대한 안내를 확인할 수 있다.
+
+#### Docker Desktop 설치 (Window) - 24.07.02 기준
+1. [Docker Desktop 윈도우 설치](https://docs.docker.com/desktop/install/windows-install/)에 접속한다.
+2. 'Docker Desktop Installer.exe' 를 다운로드 한다.
+    - Docker Desktop for Windows - x86_64: 전통적인 x86_64 아키텍처를 사용하는 Windows 시스템을 위한 것 (대부분 이거)
+    - Docker Desktop for Windows - Arm (Beta): ARM 아키텍처를 사용하는 Windows 시스템을 위한 것
+3. 동일 페이지 하단에 'Install Docker Desktop on Windows' 섹션으로 설치 과정 안내가 있다.
+4. 주의 : 반드시 '관리자 계정'으로 설치하자.
+5. 특별한 상황이 아니라면 기본 값으로 설치하면 된다.
+
+#### WSL 2와 Hyper-V
+설치를 진행하면 "Use WSL 2 instead of Hyper-V" 옵션에 체크가 되어 있는 것을 볼 수 있다.
+- WSL 2, Hyper-V 둘 중 어떤 것을 선택하냐는 질문
+    - WSL 2 : 더 가볍다
+    - Hyper-V : 서버 환경이나 복잡한 가상화 요구 사항이 있는 경우에 사용 (더 무거움)
+    - 특수한 상황이 아니라면 체크된 상태(WSL 2 사용)을 유지하고 설치한다.
+
+---
+
