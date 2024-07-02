@@ -33,6 +33,7 @@
 29. [REST API를 개선하고 JPA와 Hibernate를 이용해 H2에 연결하기](#29단계---rest-api를-개선하고-jpa와-hibernate를-이용해-h2에-연결하기)
 30. [User 엔터티와 일대다 관계로 Post 엔터티 생성하기](#30단계---user-엔터티와-일대다-관계로-post-엔터티-생성하기)
 31. [사용자의 모든 게시물을 가져올 GET API 구현하기](#31단계---사용자의-모든-게시물을-가져올-get-api-구현하기)
+32. [사용자에 대한 게시물을 생성할 POST API 구현하기](#32단계---사용자에-대한-게시물을-생성할-post-api-구현하기)
 
 ---
 
@@ -1481,5 +1482,116 @@ public class UserJpaResource {
     - 주의할 점은, `User` 도메인의 서비스 로직에서 `PostRepository`를 직접적으로 호출하는 것은 지양해야 한다는 것이다. `Repository`와 `Service`를 분리하면, `UserService`에서 `PostService`를 호출하는 방식으로 개선할 수 있다.
 - retrievePostsForUser() 메서드에서 특정 User을 가져오는 메서드가 retrieveUser() 메서드와 중복되는데, 해당 문제는 Repository와 Service를 분리해서 해결할 수 있다.
   - 일반적으로 'HATEOAS'는 컨트롤러의 책임이다.
+
+---
+
+## 32단계 - 사용자에 대한 게시물을 생성할 POST API 구현하기
+
+#### `PostRepository` 추가
+```java
+@Repository
+public interface PostRepository extends JpaRepository<Post, Integer> { }
+```
+
+#### `Post` 클래스 필드 밸리데이션 & `User` 매핑 필드 Getter, Setter 추가
+```java
+//...(생략)
+@Entity
+public class Post {
+
+	@Id
+	@GeneratedValue
+	private Integer id;
+	@Size(min = 10, message = "description' 값은 최소 10글자 이상이어야 합니다.")
+	private String description;
+
+	//...(생략)
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	//...(생략)
+}
+
+```
+
+#### API 추가
+```java
+@RestController
+public class UserJpaResource {
+	private UserRepository repository;
+	private PostRepository postRepository;
+
+	public UserJpaResource(UserRepository repository, PostRepository postRepository) {
+		this.repository = repository;
+		this.postRepository = postRepository;
+	}
+	//...(생략)
+
+	@PostMapping("/jpa/users/{id}/posts")
+	public ResponseEntity<Post> createPostForUser(@PathVariable int id, @Valid @RequestBody Post post) {
+		User user = repository.findById(id).orElse(null);
+		if (user == null) {
+			throw new UserNotFoundException("id:" + id);
+		}
+
+		post.setUser(user);
+		Post savedPost = postRepository.save(post);
+
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().
+				path("/{id}").
+				buildAndExpand(savedPost.getId())
+				.toUri();
+
+		return ResponseEntity.created(location).build();
+	}
+}
+```
+- 생성되는 `Post`에 `User`를 연결하기 위해 특정 `User`의 `id`를 패스 변수로 받고 있다.
+  - 해당 방식은 추후 스프링 시큐리티를 통해 인증 객체에 `User`의 `id를` 담아 개선할 수 있으며, 엔드포인트도 '/jpa/posts'로 줄일 수 있다.
+
+#### 과제 : 특정 id의 Post 조회 API 추가
+```java
+@RestController
+public class PostJpaResource {
+
+	private PostRepository repository;
+
+	public PostJpaResource(PostRepository repository) {
+		this.repository = repository;
+	}
+
+
+	@GetMapping("/jpa/posts/{id}")
+	public EntityModel<Post> retrievePost(@PathVariable int id) {
+		Post post = repository.findById(id).orElse(null);
+		if (post == null) {
+			throw new RuntimeException("id:" + id);
+		}
+
+		WebMvcLinkBuilder link = WebMvcLinkBuilder.linkTo(
+				WebMvcLinkBuilder.methodOn(UserJpaResource.class)
+						.retrievePostsForUser(post.getUser().getId())
+		);
+
+		// HATEOAS
+		EntityModel<Post> entityModel = EntityModel.of(post);
+		entityModel.add(link.withRel("all-posts"));
+
+		return entityModel;
+	}
+}
+```
+- `PostJpaResource`를 새로 생성하여 작성하였다.
+- `link` 에 `UserJpaResource`클레스의 `retrievePostsForUser` 메서드를 사용하고 인자로 `post.getUser().getId()`를 전달했다.
+- `Post`가 null일 경우의 예외처리를 `RuntimeException`으로 임시 적용하였다.
+  - `UserNotFoundException`와 같은 예외 처리 클래스를 별도 생성하거나 `EntityNotFoundException` 와 같은 공통 예외 처리 클래스를 만들어서 처리하는 것도 고려할 수 있다.
+- `UserJpaResource`에서 `PostRepository`를 직접 호출하는 부분 역시 아직 개선하지 않았다.
+  - `PostJpaResource` 에서 `Post` 객체를 리턴하는 `postRepository.save(post)` 처리 메서드를 만든 후 `UserJpaResource`에선 해당 메서드를 호출하는 것이 정석이다.
 
 ---

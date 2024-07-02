@@ -5,8 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class Post {
@@ -14,6 +14,7 @@ public class Post {
 	@Id
 	@GeneratedValue
 	private Integer id;
+	@Size(min = 10, message = "description' 값은 최소 10글자 이상이어야 합니다.")
 	private String description;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -41,6 +42,14 @@ public class Post {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	@Override

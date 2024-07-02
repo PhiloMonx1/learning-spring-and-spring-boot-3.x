@@ -21,9 +21,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class UserJpaResource {
 
 	private UserRepository repository;
+	private PostRepository postRepository;
 
-	public UserJpaResource(UserRepository repository) {
+	public UserJpaResource(UserRepository repository, PostRepository postRepository) {
 		this.repository = repository;
+		this.postRepository = postRepository;
 	}
 
 	@GetMapping("/jpa/users")
@@ -34,7 +36,7 @@ public class UserJpaResource {
 	@GetMapping("/jpa/users/{id}")
 	public EntityModel<User> retrieveUser(@PathVariable int id) {
 		User user = repository.findById(id).orElse(null);
-		if(user == null) {
+		if (user == null) {
 			throw new UserNotFoundException("id:" + id);
 		}
 
@@ -69,11 +71,28 @@ public class UserJpaResource {
 	@GetMapping("/jpa/users/{id}/posts")
 	public List<Post> retrievePostsForUser(@PathVariable int id) {
 		User user = repository.findById(id).orElse(null);
-		if(user == null) {
+		if (user == null) {
 			throw new UserNotFoundException("id:" + id);
 		}
 
 		return user.getPosts();
 	}
 
+	@PostMapping("/jpa/users/{id}/posts")
+	public ResponseEntity<Post> createPostForUser(@PathVariable int id, @Valid @RequestBody Post post) {
+		User user = repository.findById(id).orElse(null);
+		if (user == null) {
+			throw new UserNotFoundException("id:" + id);
+		}
+
+		post.setUser(user);
+		Post savedPost = postRepository.save(post);
+
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().
+				path("/{id}").
+				buildAndExpand(savedPost.getId())
+				.toUri();
+
+		return ResponseEntity.created(location).build();
+	}
 }
