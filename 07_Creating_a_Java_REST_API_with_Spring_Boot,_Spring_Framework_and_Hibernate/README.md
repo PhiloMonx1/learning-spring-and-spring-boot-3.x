@@ -43,6 +43,7 @@
 ---
 
 ## 0단계 - Spring Boot로 REST API 생성하기 - 개요
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/468a1cb918d8fb11fbf7c607f87ba286dc526163)
 
 #### 챕터 목표
 1. REST API를 빌드하는 데 Spring Boot가 최적의 프레임워크 중 하나인 이유
@@ -91,6 +92,7 @@
 ---
 
 ## 1단계 - Spring Boot로 REST API 프로젝트 초기화하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/5c4353c9cb25b54f296322cf8b11a0fe863f8b66)
 
 #### 프로젝트 생성
 ![Spring-initializer.png](image/Spring-initializer.png)
@@ -102,6 +104,7 @@
 ---
 
 ## 2단계 - Spring Boot로 Hello World REST API 생성하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/653cab4e568c8cb4477bdbbd3d0983145f0ef13a)
 
 #### Hello Wolrd GET API 작성
 ```java
@@ -122,6 +125,7 @@ public class HelloWorldController {
 ---
 
 ## 3단계 - Hello World REST API를 업그레이드하여 Bean 반환하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/63a9d9661baefc929fea09b65ecb86ef233141db)
 
 ```java
 @RestController
@@ -149,6 +153,7 @@ public class HelloWorldBean {
 ---
 
 ## 4단계 - 백엔드에서는 어떤 일이 벌어지고 있을까? Spring Boot 스타터와 자동 설정
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/9547ecc8b28aab47f3702335d7c6fe2b4688a63e)
 
 #### 디스패처 서블릿 (Dispatcher Servlet)
 - 애플리케이션의 모든 요청을 중앙 집권 관리하는 주체 '검문소'에 비유할 수 있다.
@@ -204,6 +209,7 @@ DEBUG 13972 --- [restful-web-services] [nio-8080-exec-2] o.s.web.servlet.Dispatc
 ---
 
 ## 5단계 - 패스 변수로 Hello World REST API 업그레이드하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/ae5fe31008577adb81d34520066d875998b49ccb)
 
 #### @PathVariable
 ```java
@@ -223,6 +229,7 @@ public class HelloWorldController {
 ---
 
 ## 6단계 - SNS 애플리케이션용 REST API 설계하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/1dddf3b326a45e320301c5d129419567f04e8ae5)
 
 #### 주요 리소스 (Model)
 - Users : 사용자
@@ -264,6 +271,7 @@ public class HelloWorldController {
 ---
 
 ## 7단계 - 사용자 Bean과 UserDaoService 생성하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/4be22c9c555f986fbe4afc0e0c3777fab8d4243b)
 
 #### User 클래스 선언
 [User.java](..%2F00_module%2Frestful-web-services%2Fsrc%2Fmain%2Fjava%2Fcom%2Fin28minutes%2Frest%2Fwebservices%2Frestful_web_services%2Fuser%2FUser.java)
@@ -295,6 +303,7 @@ public class UserDaoService {
 ---
 
 ## 8단계 - User Resource에서 GET 메서드 구현하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/b6af043b63bb936058fe7613f8eab3e08f67bd1f)
 
 #### 모든 Users 검색
 ```java
@@ -354,6 +363,7 @@ public class UserDaoService {
 ---
 
 ## 9단계 - User Resource에서 POST 메서드 구현하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/52e50dfc9dbaa3f8e78d1c042710cabf39516b56)
 
 #### User POST API 추가
 ```java
@@ -401,6 +411,7 @@ GET 메서드와 달리 웹 브라우저에서 바로 POST 요청을 보낼 수 
 ---
 
 ## 10단계 - POST 메소드를 개선해 올바른 HTTP 상태 코드와 Location
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/4551629f23c3320aaa8c8131c7547a9b112f8695)
 
 #### REST API의 다양한 응답 형태
 REST API를 구현할 때는, 정확한 응답 상태를 반환하는 것이 중요하다.
@@ -468,6 +479,7 @@ public class UserResource {
 ---
 
 ## 11단계 - 예외 처리 구현하기 - 404 Resource Not found
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/a4adafe10bf596b9820f77299e9faf679e1b8f44)
 
 GET 'users/{id}' 엔드포인트에 존재하지 않는 id를 입력시 500(서버)에러가 발생한다. 존재하지 않은 User을 조회하려는 시도이기 때문에 404(Not Found)로 변경이 필요하다.
 
@@ -554,6 +566,7 @@ java.util.NoSuchElementException: No value present
 ---
 
 ## 12단계 - 모든 리소스를 대상으로 예외 처리 구현하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/a3b2f7a8af57ff6e2c7a8f5b5c99eae44dcf3b7c)
 
 #### [ErrorDetails.java](..%2F00_module%2Frestful-web-services%2Fsrc%2Fmain%2Fjava%2Fcom%2Fin28minutes%2Frest%2Fwebservices%2Frestful_web_services%2Fexception%2FErrorDetails.java) 커스텀 예외 구조 생성
 ```java
@@ -623,6 +636,7 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 ---
 
 ## 13단계 - DELETE 메소드로 사용자 리소스 삭제하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/b8c0d64657e2834612bc5aa686a655113546d75c)
 
 #### User 삭제 메서드 추가
 ```java
@@ -669,6 +683,7 @@ public class UserResource {
 ---
 
 ## 14단계 - REST API에서 유효성 검증하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/062e9beaf9d90e2e800d7dcd59c46ddc262deb07)
 
 POST 신규 User 생성 API에는 몇 가지 문제가 있다. 1:필드가 빈 값이거나, 2:출생일이 현시점 미래 날짜여도 생성이 가능하다. 유효성 검증을 추가해서 문제점을 해결할 것이다.
 
@@ -726,6 +741,7 @@ protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotV
 ---
 
 ## 15단계 - 고급 REST API 기능의 개요
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/b01a7906b2e8f4699cc05b9593cb571cdd7d6560)
 
 #### 학습 키워드
 1. Documentation : REST API에 대한 문서
@@ -741,6 +757,7 @@ protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotV
 ---
 
 ## 16단계 - Open API 사양 및 Swagger 파악하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/4e47c527fd8d0bb4c7183e4fbd9e2ce1fb95438e)
 
 #### API 컨슈머가 알아야 하는 정보
 - 노출되는 리소스
@@ -780,6 +797,7 @@ protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotV
 ---
 
 ## 17단계 - Swagger 문서의 자동 생성 구성하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/4e551f5672f4ba4816da1c3d14e215f820679cb8)
 
 #### 라이브러리 추가 [springdoc-openapi](https://springdoc.org/#getting-started)
 ```xml
@@ -823,6 +841,7 @@ protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotV
 ---
 
 ## 18단계 - 콘텐츠 협상 알아보기 - XML 지원 구현하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/06dc6f0a63f08bacdbd92177c7473c8cf299f195)
 
 클라이언트와 서버가 주고받을 데이터의 형식(예: JSON, XML)을 결정하는 과정을 의미
 
@@ -847,6 +866,7 @@ protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotV
 ---
 
 ## 19단계 - REST API의 국제화 알아보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/f9cf014f01d2d251ca6efcfbb74b71996bbdd30b)
 
 다양한 국가의 소비자를 위해 API를 다양한 언어로 사용자 정의화 하는 것.
 
@@ -911,6 +931,7 @@ protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotV
 ---
 
 ## 20단계 - REST API 버전 관리 - URI 버전 관리
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/a2d8308e19bd8e2e0a3e2b0f3f1af0ce4334049b)
 
 이미 공개된 API에 변경 사항이 발생하게 된다면 어떻게 해야 할까? 그 변경 사항이 API 요청이나 응답에 영향을 주는 경우 변경 사항은 해당 API를 사용하고 있는 고객이나 다른 시스템에 큰 영향을 줄 수 있다. 이 문제를 해결 하기 위해서 API를 버전 별로 분리해서 기존 API에 영향을 주지 않고 변경사항을 적용해 새로운 버전의 API를 동시 운영하는 것이 권장된다.
 
@@ -944,6 +965,7 @@ public class VersioningPersonController {
 ---
 
 ## 21단계 - REST API 버전 관리 - 요청 매개변수, 헤더, 콘텐츠 협상
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/84d0253f3ea6919323573852539f0789213fbc70)
 
 #### 요청 파라미터를 사용한 버전 관리 구현 실습
 ```java
@@ -1024,6 +1046,7 @@ ps. 개인적으로 URL 방식이 가장 명확하게 버전 파악이 가능하
 ---
 
 ## 22단계 - REST API HATEOAS 구현하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/ea1b227cbafea6f4ac671e339711a4cc451a4c24)
 
 #### HATEOAS (Hypermedia as the engine of Application State)
 RESTful API 설계의 한 원칙으로, API 응답에 관련된 다른 리소스에 대한 하이퍼링크를 포함시키는 방식
@@ -1111,6 +1134,7 @@ RESTful API 설계의 한 원칙으로, API 응답에 관련된 다른 리소스
 ---
 
 ## 23단계 - REST API 정적 필터링 구현하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/cde6986370204891afd3012df7b6666e8c3f4abe)
 
 #### 직렬화 (Serialization) : 객체를 스트림(Stream)으로 전환하는 프로세스
 EntityModel<User>이나 List<User>를 JSON | XML 등으로 전환하는 전환하는 작업을 의미한다.
@@ -1155,6 +1179,7 @@ public class SomeBean {
 ---
 
 ## 24단계 - REST API 동적 필터링 구현하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/a76780ef05b1b14b10d74804667c46624bb077f2)
 
 객체의 특정 필드를 API 구분 없이 노츨하지 않는 정적 필터링과 달리 동적 필터링은 API를 선택해서 노출 여부를 결정할 수 있다.
 
@@ -1224,6 +1249,7 @@ public class FilteringController {
 ---
 
 ## 25단계 - Spring Boot Actuator로 API 모니터링하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/7da2ca3b95efc29089a7c54be978d84738646537)
 
 [4챕터 ReadMe 12단계](..%2F04_Getting_Started_with_Spring_Boot%2FREADME.md) 참고.
 #### Spring Boot Actuator 적용 실습
@@ -1270,6 +1296,7 @@ public class FilteringController {
 ---
 
 ## 26단계 - Spring Boot HAL Explorer로 API 탐색하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/095450cb5ba636febbdacbe171ad3fb1a98e590c)
 
 #### HAL Explorer
 HAL을 이용하는 RESTful 하이퍼미디어 API를 탐색하는 API 탐색기
@@ -1296,6 +1323,7 @@ HAL을 이용하는 RESTful 하이퍼미디어 API를 탐색하는 API 탐색기
 ---
 
 ## 27단계 - JPA와 Hibernate를 이용해 REST API를 H2에 연결하기 - 개요
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/75ad95750b05fc2cc88dd8bc076740e8f3edff66)
 
 JPA와 Hibernate를 이용해 REST API를 데이터베이스에 연결하는 법을 중점적으로 알아볼 예정이다.
 - H2(인메모리 데이터베이스)로 작업하다가 MySQL로 바꿀 것이다.
@@ -1321,6 +1349,7 @@ JPA와 Hibernate를 이용해 REST API를 데이터베이스에 연결하는 법
 ---
 
 ## 28단계 - User 엔터티 및 테스트 데이터 생성하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/7f89a1e65e950fdd66905bcdad823c38c73dbe83)
 
 #### `User` 클래스 엔티티화 
 1. @Entity(name = "user_details") 클래스 어노테이션 부여
@@ -1355,6 +1384,7 @@ spring.datasource.url=jdbc:h2:mem:tesdb
 ---
 
 ## 29단계 - REST API를 개선하고 JPA와 Hibernate를 이용해 H2에 연결하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/e1a1cf2ecd8c8f5a82f199971cc963db8b3b4dbd)
 
 #### 리포지토리 생성
 - 인터페이스로 만든다.
@@ -1372,6 +1402,7 @@ spring.datasource.url=jdbc:h2:mem:tesdb
 ---
 
 ## 30단계 - User 엔터티와 일대다 관계로 Post 엔터티 생성하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/a4222445ce233115637af37800153f2a17e03113)
 
 #### Post 엔티티 생성
 ```java
@@ -1438,6 +1469,7 @@ Hibernate: alter table if exists post add constraint FKa3biitl48c71riii9uyelpdhb
 ---
 
 ## 31단계 - 사용자의 모든 게시물을 가져올 GET API 구현하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/c391b2252d359a6e7ea2de77cffaa66f7cfbb44b)
 
 #### `User` 엔티티에 Post Getter 생성
 ```java
@@ -1491,6 +1523,7 @@ public class UserJpaResource {
 ---
 
 ## 32단계 - 사용자에 대한 게시물을 생성할 POST API 구현하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/96659783ebe49baff5cc54c2232b9903c7b6cb7a)
 
 #### `PostRepository` 추가
 ```java
@@ -1602,6 +1635,7 @@ public class PostJpaResource {
 ---
 
 ## 33단계 - JPA와 Hibernate가 만든 REST API 쿼리 살펴보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/25c36510f838fd8145bdece0ab317075f2744471)
 
 #### application.properties 설정
 ```properties
@@ -1633,6 +1667,7 @@ Hibernate: insert into post (description,user_id,id) values (?,?,?)
 ---
 
 ## 34단계 Docker 설치하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/9db2b944f0b41ff62ee13d2f24b36a0fbe967958)
 
 [Docker 공식 문서](https://docs.docker.com/engine/install/)에서 설치 및 설치에 대한 안내를 확인할 수 있다.
 
@@ -1655,6 +1690,7 @@ Hibernate: insert into post (description,user_id,id) values (?,?,?)
 ---
 
 ## 35단계 REST API를 MySQL 데이터베이스에 연결하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/b05c969363f19f266544cd9e8a38a971fc5530a4)
 
 #### 설치확인
 - 터미널에 'docker version' 을 입력하면 설치된 도커 정보를 확인할 수 있다.
@@ -1736,6 +1772,7 @@ docker run --detach --env MYSQL_ROOT_PASSWORD=dummypassword --env MYSQL_USER=soc
 ---
 
 ## 36단계 - Spring Security로 기본 인증 구현하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/236099418930c93347492c876b83e9da808d6a05)
 
 #### 라이브러리 추가
 ```xml
@@ -1757,6 +1794,7 @@ docker run --detach --env MYSQL_ROOT_PASSWORD=dummypassword --env MYSQL_USER=soc
 ---
 
 ## 37단계 - Spring Security 기본 인증 설정 개선하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/fe4de33a1b3353b5216d3b5991de410c5c401eac)
 
 #### Spring Security 간단한 원리
 - API 요청을 보낼 때 마다 Spring Security가 요청을 가로챈다.
