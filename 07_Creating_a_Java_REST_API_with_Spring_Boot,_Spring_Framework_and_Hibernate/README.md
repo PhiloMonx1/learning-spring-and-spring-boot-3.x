@@ -32,6 +32,7 @@
 28. [User 엔터티 및 테스트 데이터 생성하기](#28단계---user-엔터티-및-테스트-데이터-생성하기)
 29. [REST API를 개선하고 JPA와 Hibernate를 이용해 H2에 연결하기](#29단계---rest-api를-개선하고-jpa와-hibernate를-이용해-h2에-연결하기)
 30. [User 엔터티와 일대다 관계로 Post 엔터티 생성하기](#30단계---user-엔터티와-일대다-관계로-post-엔터티-생성하기)
+31. [사용자의 모든 게시물을 가져올 GET API 구현하기](#31단계---사용자의-모든-게시물을-가져올-get-api-구현하기)
 
 ---
 
@@ -1427,5 +1428,58 @@ Hibernate: alter table if exists post add constraint FKa3biitl48c71riii9uyelpdhb
 4. user_details 테이블의 생성
 5. post 테이블에 FK(외래 키)를 생성 (FK = user_id)
    - FK(foreign key) : post 테이블의 각 행에서 user_id를 함께 삽입해 각행의 post의 주인이 user_id의 user_details 이라는 것을 알 수 있다. 
+
+---
+
+## 31단계 - 사용자의 모든 게시물을 가져올 GET API 구현하기
+
+#### `User` 엔티티에 Post Getter 생성
+```java
+public class User {
+	//...(생략)
+	@OneToMany(mappedBy = "user")
+	@JsonIgnore
+	private List<Post> posts;
+
+	//...(생략)
+
+	public List<Post> getPosts() {
+		return posts;
+	}
+
+	public void setPosts(
+			List<Post> posts) {
+		this.posts = posts;
+	}
+
+    //...(생략)
+}
+```
+
+#### API 추가 
+```java
+@RestController
+public class UserJpaResource {
+	//...(생략)
+	@GetMapping("/jpa/users/{id}/posts")
+	public List<Post> retrievePostsForUser(@PathVariable int id) {
+		User user = repository.findById(id).orElse(null);
+		if(user == null) {
+			throw new UserNotFoundException("id:" + id);
+		}
+
+		return user.getPosts();
+	}
+
+}
+
+```
+- `User` 엔티티와 `Post` 엔티티가 서로 JPA 관계 매핑이 되어 있기 때문에 `PostRepository`가 없어도 데이터를 가지고 오는 것이 가능하다.
+  - 규모가 있는 프로젝트나 복잡한 로직인 경우 도메인별로 Repository를 분리하는 것이 권장된다. (컨벤션을 위해 분리하기도 한다.)
+  - `retrievePostsForUser()`메서드가 `UserService` 와 `PostService` 중 어디에 위치할지를 결정하는 일은 각각의 장단점이 있기 때문에 추가 고려사항을 반영하여 설계가 필요하다. 
+    - 다만, `User`와 `Post`가 1:N 이라는 점을 고려해 `User`에서 책임지는 것이 적절하다는 개인적 의견이다.
+    - 주의할 점은, `User` 도메인의 서비스 로직에서 `PostRepository`를 직접적으로 호출하는 것은 지양해야 한다는 것이다. `Repository`와 `Service`를 분리하면, `UserService`에서 `PostService`를 호출하는 방식으로 개선할 수 있다.
+- retrievePostsForUser() 메서드에서 특정 User을 가져오는 메서드가 retrieveUser() 메서드와 중복되는데, 해당 문제는 Repository와 Service를 분리해서 해결할 수 있다.
+  - 일반적으로 'HATEOAS'는 컨트롤러의 책임이다.
 
 ---
