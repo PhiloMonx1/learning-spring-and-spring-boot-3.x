@@ -5,6 +5,7 @@
 2. [React 애플리케이션 시작하기 - Counte](#2단계---react-애플리케이션-시작하기---counter)
 3. [React 애플리케이션 시작하기 - Counter-2](#3단계---react-애플리케이션-시작하기---counter-2)
 4. [useState 훅을 사용해 React State 알아보기 - Counter에 상태 추가](#4단계---usestate-훅을-사용해-react-state-알아보기---counter에-상태-추가)
+5. [React State 알아보기 - 백그라운드에서는 무슨 일이 일어날까?](#5단계---react-state-알아보기---백그라운드에서는-무슨-일이-일어날까)
 
 ---
 
@@ -226,5 +227,65 @@ export default function Counter() {
 }
 ```
 - `const [count, setCount] = useState(0)`로 `useState(0)`의 각 인덱스를 '`useState[0]`=`count`', '`useState[1]`=`setCount`' 로 매핑시킬 수 있다.
+
+---
+
+## 5단계 - React State 알아보기 - 백그라운드에서는 무슨 일이 일어날까?
+
+#### DOM(Document Object Model)
+- HTML 페이지는 일반적으로 DOM 요소로 표현된다.
+- HTML 페이지의 각 요소는 DOM 노드에 해당한다.
+- 요소를 업데이트하려면 DOM을 업데이트해야 한다.
+
+#### 순수 JS로 DOM 조작 예시
+```js
+// 상태를 관리할 변수
+let count = 0;
+
+// DOM 요소 선택
+const counterElement = document.getElementById('counter');
+const incrementButton = document.getElementById('incrementButton');
+const decrementButton = document.getElementById('decrementButton');
+
+// 카운터 값을 업데이트하고 화면에 표시하는 함수
+function updateCounter() {
+    counterElement.textContent = count;
+}
+
+// 증가 함수
+function incrementCounter() {
+    count++;
+    updateCounter();
+}
+
+// 감소 함수
+function decrementCounter() {
+    count--;
+    updateCounter();
+}
+
+// 이벤트 리스너 추가
+incrementButton.addEventListener('click', incrementCounter);
+decrementButton.addEventListener('click', decrementCounter);
+
+// 초기 카운터 값 표시
+updateCounter();
+```
+
+#### 리액트의 동작 방식
+- 리액트는 ‘가상 DOM(Virtual DOM)’을 사용한다.
+  - 가상 DOM : HTML DOM을 가상으로 만들어 메모리에 보관하는 가상 UI 표현
+- JSX 코드는 가상 DOM를 업데이트 한다.
+- 가상 DOM이 업데이트되면 리액트가 변경 사항을 파악해 HTML 페이지에 동기화 시킨다.
+  - 페이지가 로딩 시 리액트는 페이지의 첫 번째 가상 DOM을 생성 (DOM v1)
+  - 상태 업데이트 로직 발생 시 해당 컴포넌트를 다시 랜더링 하고 두 번째 가상 DOM 생성 (DOM v2)
+  - DOM v1 과 DOM v2의 차이점을 비교해서 달라진 부분을 HTML 페이지에 반영
+
+#### 추가 학습 '가상 DOM'이라는 용어에 대해...
+최근 React 팀에서는 '가상 DOM' 이라는 용어의 사용을 줄이고 있다. 대신 'UI 트리(UI tree)' 또는 '리액트 엘리먼트 트리(React element tree)'라는 용어를 더 선호하는 추세이다.
+
+- 이는 가상 DOM이 실제로는 React 요소 트리라는 점을 강조하기 위함이다.
+- JSX 코드는 실제로 가상 DOM을 직접 업데이트하지 않는다.
+  - JSX는 React.createElement() 호출로 변환되어 React 요소 트리를 생성하며, 이 트리가 가상 DOM의 역할을 수행한다.
 
 ---
