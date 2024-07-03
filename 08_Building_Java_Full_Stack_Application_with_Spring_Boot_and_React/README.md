@@ -11,6 +11,7 @@
 8. [Visual Studio Code와 Create React App 살펴보기](#8단계---visual-studio-code와-create-react-app-살펴보기)
 9. [Create React App의 폴더 구조 살펴보기](#9단계---create-react-app의-폴더-구조-살펴보기)
 10. [React 컴포넌트 시작하기](#10단계---react-컴포넌트-시작하기)
+11. [첫 번째 React 컴포넌트 생성 등](#11단계---첫-번째-react-컴포넌트-생성-등)
 
 ---
 
@@ -343,5 +344,82 @@ export default App;
 - 컴포넌트의 State(상태)는 컴포넌트 내부의 데이터 저장소와 비슷하다.
 - Props를 통해 컴포넌트 간의 데이터 전달이 가능하다.
 - 컴포넌트의 이름은 항상 대문자로 시작해야 한다.
+
+---
+
+## 11단계 - 첫 번째 React 컴포넌트 생성 등
+
+#### 함수 컴포넌트
+```js 
+//경로 : /src/App.js
+
+import logo from './logo.svg';
+import './App.css';
+
+function App() {
+  return (
+    <div className="App">
+      <FirstComponent></FirstComponent>
+      <SecondComponent></SecondComponent>
+    </div>
+  );
+}
+
+function FirstComponent() {
+  return (
+      <div className="FirstComponent">첫 번째 컴포넌트</div>
+  );
+}
+
+function SecondComponent() {
+  return (
+      <div className="SecondComponent">두 번째 컴포넌트</div>
+  );
+}
+
+export default App;
+```
+- Js 함수를 선언하고 return으로 원하는 HTML을 입력한다.
+- 함수와 동일한 이름의 커스텀 HTML 태그(컴포넌트)를 사용할 수 있다. (IDE에서 자동완성 지원됨)
+- 함수 형태로 선언하기 때문에 '함수 컴포넌트' 라고 부른다.
+
+#### 클래스 컴포넌트
+```js
+//경로 : /src/App.js
+
+import logo from './logo.svg';
+import './App.css';
+import { Component } from 'react';
+
+function App() {
+  return (
+          <div className="App">
+            <FirstComponent></FirstComponent>
+            <SecondComponent></SecondComponent>
+          </div>
+  );
+}
+
+//...(생략)
+
+class ThirdComponent extends Component {
+  render() {
+    return (
+            <div className="ThirdComponent">세 번째 컴포넌트</div>
+    );
+  }
+}
+
+class FourthComponent extends Component {
+  render() {
+    return (
+            <div className="FourthComponent">네 번째 컴포넌트</div>
+    );
+  }
+}
+```
+1. `import { Component } from 'react';` : 리액트의 'Component'를 임포트한다
+2. Component를 상속하는 클래스를 작성한다.
+3. 클래스에 'render()' 함수를 작성하고 리턴할 HTML문을 작성한다.
 
 ---
