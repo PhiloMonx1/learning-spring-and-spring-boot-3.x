@@ -15,6 +15,7 @@
 12. [React에서 State 시작하기 - Hook으로 State 사용하기](#12단계---react에서-state-시작하기---hook으로-state-사용하기)
 13. [JSX 탐색 - React 뷰](#13단계---jsx-탐색---react-뷰)
 14. [JavaScript 모범 사례 따라하기 - 모듈로 리팩토링](#14단계---javascript-모범-사례-따라하기---모듈로-리팩토링)
+15. [향후 JavaScript](#15단계---향후-javascript)
 
 ---
 
@@ -636,5 +637,38 @@ export default function LearningComponent() {
 }
 ```
 - 이후 App.js에서는 `LearningComponent` 컴포넌트만 불러와서 한 번에 사용하는 것이 가능하다.
+
+---
+
+## 15단계 - 향후 JavaScript
+
+#### JSX에서 JavaScript 코드 조작하기
+```js
+const person = {
+  name: 'EH13',
+  address: {
+    city: 'Goyang',
+    country: 'Korea',
+  },
+  profiles: ['github', 'linkedin', 'instagram'],
+  printProfile: () => {person.profiles.map((profile) => console.log(profile))},
+}
+
+export default function LearningJavaScript() {
+  return (
+      <>
+        <div>{person.name}</div>
+        <div>{person.address.city}</div>
+        <div>{person.address.country}</div>
+        <div>{person.profiles[0]}</div>
+        <div>{person.profiles[1]}</div>
+        <div>{person.profiles[2]}</div>
+        <div>{person.printProfile()}</div>
+      </>
+  );
+}
+```
+- js 객체를 생성하고 사용할 수 있다.
+- 객체 내에 '하위 객체', '필드', '배열', '함수'를 선언하고 사용할 수 있다.
 
 ---
