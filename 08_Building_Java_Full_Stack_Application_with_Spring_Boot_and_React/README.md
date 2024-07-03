@@ -6,6 +6,7 @@
 3. [JavaScript와 ECMA Script의 역사 이해하기](#3단계---javascript와-ecma-script의-역사-이해하기)
 4. [Visual Studio Code 설치](#4단계---visual-studio-code-설치)
 5. [Node.js와 npm 설치](#5단계---nodejs와-npm-설치)
+6. [Create React App으로 React 앱 생성하기](#6단계---create-react-app으로-react-앱-생성하기)
 
 ---
 
@@ -167,5 +168,44 @@ npm install jquery
 }
 ```
 - 'package.json' 파일을 보면 'dependencies' 항목에 "jquery"가 추가 된 것을 볼 수 있다.
+
+---
+
+## 6단계 - Create React App으로 React 앱 생성하기
+
+#### 리액트 (React)
+SPA(Single Page Application) 구축에 가장 인기 있는 JavaScript 라이브러리
+- facebook 으로 유명한 Meta에서 만든 오픈 소스 프로젝트이다.
+- 컴포넌트 기반 : 컴포넌트를 조합하여 애플리케이션을 만든다.
+  - Spring의 컨포넌트와는 다르다.
+- 
+
+#### SPA(Single Page Application)
+초기에 하나의 HTML 페이지만 로드하고, 이후 필요한 데이터만 동적으로 갱신하는 기술
+
+예를 들어 JSP로 만든 'Todo' 관리 웹 애플리케이션의 경우 Todo List 페이지에서 새로운 Todo를 생성 할 때 페이지 전체가 새로고침 되면서 변경 사항을 반영한다. SPA는 페이지를 새로고침 하지 않고, 변경 부분만 새로고침 하여 반영할 수 있다.
+
+#### Create React App을 사용해서 React 프로젝트 시작하기
+```
+npx create-react-app todo-app
+```
+- 해당 명령어를 입력해서 'todo-app'라는 이름으로 React 프로젝트를 생성할 수 있다. (todo-app 폴더까지 자동으로 생성된다.)
+
+![/run-react.png](image/run-react.png)
+- 생성이 완료되면 `npm start` 명령어로 리액트 애플리케이션을 실행할 수 있다.
+
+#### 부록 : 인텔리제이에서 React 프로젝트 생성
+
+![IntelliJ-tool-react.png](image/IntelliJ-tool-react.png)
+- 인텔리제이 프로젝트 생성 tool에서도 React를 지원한다.
+- 리액트 프로젝트를 시작하는 명령어가 포함된다.
+- 주의 : Node JS가 설치되어 있어야 한다.
+
+![IntelliJ-project-react.png](image/IntelliJ-project-react.png)
+- 프로젝트 파일 생성이 완료된 후 리액트 프로젝트 생성 명령어에 대한 응답을 요청한다.
+  - y를 눌러 진핼할 수 있다.
+
+![IntelliJ-run-react.png](image/IntelliJ-run-react.png)
+- 리액트 초기화가 완료되면, 인텔리제이에서 'run' 버튼으로 `npm start` 명령어를 실행할 수 있다.
 
 ---
