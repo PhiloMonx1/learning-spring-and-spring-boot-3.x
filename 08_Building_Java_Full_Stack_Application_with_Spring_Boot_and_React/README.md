@@ -7,6 +7,7 @@
 4. [Visual Studio Code 설치](#4단계---visual-studio-code-설치)
 5. [Node.js와 npm 설치](#5단계---nodejs와-npm-설치)
 6. [Create React App으로 React 앱 생성하기](#6단계---create-react-app으로-react-앱-생성하기)
+7. [중요한 Node.js 명령어 살펴보기 - Create React App](#7단계---중요한-nodejs-명령어-살펴보기---create-react-app)
 
 ---
 
@@ -207,5 +208,16 @@ npx create-react-app todo-app
 
 ![IntelliJ-run-react.png](image/IntelliJ-run-react.png)
 - 리액트 초기화가 완료되면, 인텔리제이에서 'run' 버튼으로 `npm start` 명령어를 실행할 수 있다.
+
+---
+
+## 7단계 - 중요한 Node.js 명령어 살펴보기 - Create React App
+
+1. npm start : 개발 모드에서 애플리케이션 실행
+   - `npm start`로 리액트 애플리케이션을 실행하고 프로젝트 경로 '/public/index.html' 파일을 수정하면 수정 사항이 바로 웹 페이지에 반영되는 것을 볼 수 있다.
+2. npm test : React 프로젝트 코드의 유닛 단위 테스트를 실행할 수 있다.
+3. npm run build : 배포 가능 유닛을 프로덕션으로 빌드한다.
+  - 코드를 압축해서 main에 해당하는 html, js, css 파일을 생성한다.
+4. npm install : 특정 라이브러리를 설치한다. ex) npm install jquery
 
 ---
