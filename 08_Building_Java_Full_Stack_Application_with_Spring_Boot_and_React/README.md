@@ -8,6 +8,7 @@
 5. [Node.js와 npm 설치](#5단계---nodejs와-npm-설치)
 6. [Create React App으로 React 앱 생성하기](#6단계---create-react-app으로-react-앱-생성하기)
 7. [중요한 Node.js 명령어 살펴보기 - Create React App](#7단계---중요한-nodejs-명령어-살펴보기---create-react-app)
+8. [Visual Studio Code와 Create React App 살펴보기](#8단계---visual-studio-code와-create-react-app-살펴보기)
 
 ---
 
@@ -219,5 +220,11 @@ npx create-react-app todo-app
 3. npm run build : 배포 가능 유닛을 프로덕션으로 빌드한다.
   - 코드를 압축해서 main에 해당하는 html, js, css 파일을 생성한다.
 4. npm install : 특정 라이브러리를 설치한다. ex) npm install jquery
+
+---
+
+## 8단계 - Visual Studio Code와 Create React App 살펴보기
+
+VS Code 사용법 및 팁 (파일 검색 등)을 강의했으나 인텔리제이를 사용하는 관계로 노트를 작성하지 않았다.
 
 ---
