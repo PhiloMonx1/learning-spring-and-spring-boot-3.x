@@ -4,6 +4,7 @@
 1. [카운터 예제를 통해 React 컴포넌트 살펴보기](#1단계---카운터-예제를-통해-react-컴포넌트-살펴보기)
 2. [React 애플리케이션 시작하기 - Counte](#2단계---react-애플리케이션-시작하기---counter)
 3. [React 애플리케이션 시작하기 - Counter-2](#3단계---react-애플리케이션-시작하기---counter-2)
+4. [useState 훅을 사용해 React State 알아보기 - Counter에 상태 추가](#4단계---usestate-훅을-사용해-react-state-알아보기---counter에-상태-추가)
 
 ---
 
@@ -146,5 +147,84 @@ export default function Counter() {
 }
 ```
 - 임포트만 해주면 CSS가 적용된다.
+
+---
+
+## 4단계 - useState 훅을 사용해 React State 알아보기 - Counter에 상태 추가
+
+#### State
+리액트의 내장 객체로 컴포넌트의 데이터나 정보를 저장하는 데 사용한다.
+- 생성된 모든 객체는 모두 State를 가질 수 있다.
+  - 같은 컴포넌트라도 인스턴스를 5개 만들면 5개 모두 각각 다른 state를 가진다.
+- ‘useState’ 훅(Hooks)를 사용해 함수형 컴포넌트에 State를 구현할 수 있다.
+  - ‘useState’가 반환하는 값
+    - 현재 state 값
+    - state를 업데이트하는 함수
+
+#### 컴포넌트에 상태 추가 실습
+```js
+export default function Counter() {
+
+  const state = useState(0);
+
+  function incrementCounterFunction() {
+    console.log(state);
+    console.log("증가 버튼 클릭 됨");
+  }
+  
+  //...(생략)
+}
+```
+- 콘솔에 노출된 state는 두 개의 값을 리턴한다.
+  - 첫 번째 인덱스 : '상태의 초기값'
+  - 두 번째 인덱스 : 'dispatchSetState()' - 상태 업데이트를 처리하는 함수
+
+#### `dispatchSetState()` 사용해서 컴포넌트의 상태 변경 실습
+```js
+export default function Counter() {
+
+  const state = useState(0);
+  function incrementCounterFunction() {
+    state[1](state[0] + 1);
+  }
+
+  return (
+          <div className="Counter">
+            <span className="counter">{state[0]}</span>
+            <div>
+              <button className="counterButton"
+                      onClick={incrementCounterFunction}
+              >+1</button>
+            </div>
+          </div>
+  )
+}
+```
+- `state[1]()` : `dispatchSetState()` 함수와 동일하다.
+
+#### 구조 분해를 활용해서 리팩토링
+```js
+import {useState} from 'react';
+import './Counter.css';
+export default function Counter() {
+
+  const [count, setCount] = useState(0);
+  function incrementCounterFunction() {
+    setCount(count + 1);
+  }
+
+  return (
+      <div className="Counter">
+        <span className="counter">{count}</span>
+        <div>
+          <button className="counterButton"
+                  onClick={incrementCounterFunction}
+          >+1</button>
+        </div>
+      </div>
+  )
+}
+```
+- `const [count, setCount] = useState(0)`로 `useState(0)`의 각 인덱스를 '`useState[0]`=`count`', '`useState[1]`=`setCount`' 로 매핑시킬 수 있다.
 
 ---

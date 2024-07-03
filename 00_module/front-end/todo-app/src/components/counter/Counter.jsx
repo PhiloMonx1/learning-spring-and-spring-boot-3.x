@@ -1,13 +1,15 @@
+import {useState} from 'react';
 import './Counter.css';
 export default function Counter() {
 
+  const [count, setCount] = useState(0);
   function incrementCounterFunction() {
-    console.log("증가 버튼 클릭 됨");
+    setCount(count + 1);
   }
 
   return (
       <div className="Counter">
-        <span className="counter">0</span>
+        <span className="counter">{count}</span>
         <div>
           <button className="counterButton"
                   onClick={incrementCounterFunction}
