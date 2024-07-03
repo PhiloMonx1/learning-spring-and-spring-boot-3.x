@@ -3,6 +3,7 @@
 ## 목록
 1. [카운터 예제를 통해 React 컴포넌트 살펴보기](#1단계---카운터-예제를-통해-react-컴포넌트-살펴보기)
 2. [React 애플리케이션 시작하기 - Counte](#2단계---react-애플리케이션-시작하기---counter)
+3. [React 애플리케이션 시작하기 - Counter-2](#3단계---react-애플리케이션-시작하기---counter-2)
 
 ---
 
@@ -45,5 +46,105 @@ export default function Counter() {
 - 'onClick' 속성으로 함수를 버튼과 연결시킬 수 있다.
 - 연결하는 함수는 중괄호로 묶어야 하고 이름 뒤에'()'를 붙이면 안된다.
   - 이름 뒤에'()'를 붙일 경우 페이지가 랜딩될 때 함수가 실행되며, 이 때 버튼 클릭으로 인한 함수 호출은 동작하지 않는다.
+
+---
+
+## 3단계 - React 애플리케이션 시작하기 - Counter-2
+
+#### 리액트 컴포넌트 스타일 적용
+1. Style 속성 사용
+2. className 사용
+
+#### Style 속성 사용 실습
+```js
+export default function Counter() {
+
+  function incrementCounterFunction() {
+    console.log("증가 버튼 클릭 됨");
+  }
+
+  return (
+      <div className="Counter">
+        <span className="counter">0</span>
+        <div>
+          <button className="counterButton"
+              onClick={incrementCounterFunction}
+              style={{
+                fontSize: "30px",
+                backgroundColor: "#00a5ab"
+              }}
+          >+1
+          </button>
+        </div>
+      </div>
+  )
+}
+```
+- style 속성을 부여하고 중괄호를 두 번 묶어야 한다.
+
+#### Style 속성 사용 개선 : 객체로 분리해서 사용하기
+```js
+export default function Counter() {
+
+  const buttonStyle = {
+    fontSize: "30px",
+    backgroundColor: "#00a5ab"
+  }
+
+  function incrementCounterFunction() {
+    console.log("증가 버튼 클릭 됨");
+  }
+
+  return (
+      <div className="Counter">
+        <span className="counter">0</span>
+        <div>
+          <button className="counterButton"
+                  onClick={incrementCounterFunction}
+                  style={buttonStyle}
+          >+1</button>
+        </div>
+      </div>
+  )
+}
+```
+- 'buttonStyle' 객체를 선언하여 사용할 수 있다.
+
+#### CSS 파일을 생성해서 개선하기
+1. CSS 파일 작성
+```css
+/* /src/components/counter/Counter.css */
+
+.counterButton {
+  font-size: 30px;
+  background-color: #00a5ab;
+}
+```
+- '.counterButton' : css 선택자를 사용해서 버튼 컴포넌트를 선택한다.
+- css 문법과 JSX 스타일 문법은 작성 방법이 다르다.
+
+```js
+/* /src/components/counter/Counter.js */
+
+import './Counter.css';
+export default function Counter() {
+
+  function incrementCounterFunction() {
+    console.log("증가 버튼 클릭 됨");
+  }
+
+  return (
+      <div className="Counter">
+        <span className="counter">0</span>
+        <div>
+          <button className="counterButton"
+                  onClick={incrementCounterFunction}
+          >+1</button>
+        </div>
+      </div>
+  )
+}
+```
+- 임포트만 해주면 CSS가 적용된다.
 
 ---
