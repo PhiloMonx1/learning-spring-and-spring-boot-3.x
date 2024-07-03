@@ -13,6 +13,7 @@
 10. [React 컴포넌트 시작하기](#10단계---react-컴포넌트-시작하기)
 11. [첫 번째 React 컴포넌트 생성 등](#11단계---첫-번째-react-컴포넌트-생성-등)
 12. [React에서 State 시작하기 - Hook으로 State 사용하기](#12단계---react에서-state-시작하기---hook으로-state-사용하기)
+13. [JSX 탐색 - React 뷰](#13단계---jsx-탐색---react-뷰)
 
 ---
 
@@ -432,5 +433,53 @@ class FourthComponent extends Component {
   - 초기 버전의 리액트에서는 클래스 컴포넌트 State를 가질 수 있었다.
 - Hooks : 함수 컴포넌트에도 State를 추가할 수 있다. (16.8 버전 이후)
   - 리액트 버전 확인은 'package.json' 파일 내부에서 확인할 수 있다.
+
+---
+
+## 13단계 - JSX 탐색 - React 뷰
+
+#### JSX(JavaScript XML) 
+JSX는 React 컴포넌트를 구성하는 언어이다. HTML보다 엄격한 문법 규칙을 고수하고 있다.
+1. 닫는 태그가 필수이다.
+  ```js
+  function FirstComponent() {
+    return (
+            <div className="FirstComponent">
+    );
+  }
+  ```
+  - 해당 문법은 `<div>`의 닫는 태그가 없어서 컴파일 에러가 발생한다.
+  - `<div className="FirstComponent" / >` 와 같이 'self-closing' 태그를 사용하는 것은 허용된다.
+2. 최상위 태그는 하나만 가능하다. (공유 부모로 묶어줘야 한다.)
+  ```js
+  function FirstComponent() {
+    return (
+            <div className="FirstComponent">첫 번째 컴포넌트</div>
+            <div className="SecondComponent">두 번째 컴포넌트</div>
+    );
+  }
+  ```
+  - 해당 코드는 최상위 div 태그가 하나를 초과해서 컴파일 에러가 발생한다. (두 태그를 묶는 부모 태그 안에 위치시키면 해결된다.) 
+    - 부모 태그는 `<></>`로 빈 태그를 사용해도 가능하다.
+3. 컴포넌트 이름은 대문자로 시작해야 한다. (파스칼 케이스)
+   - HTML 태그가 전부 소문자로 시작하기 때문. (HTML과 리액트 컴포넌트 간의 구분 용이를 위해)
+4. JSX 전용 특정 CSS 클래스에 유의해야 한다.
+   - ex) 'class' 가 아닌 'className'
+
+#### 컴포넌트 CSS 적용법
+```css
+/* /src/App.css */
+
+.FirstComponent {
+  color: #ff0000;
+}
+```
+
+#### Bable
+ES는 계속해서 발전해왔으며 많은 버전이 있다. 간혹 오래된 브라우저는 최신 ES를 지원하지 않는 경우가 있다. 이 문제를 해결하는 것이 'Bable'이다.
+- 최신 JS 코드를 작성해도 옛날 브라우저에서 실행할 수 있도록 해준다.
+- JSX를 JS 코드로 변환하는 작업을 해준다.
+- [babeljs.io](https://babeljs.io/repl)에서 데모를 사용해볼 수 있다.
+  - 데모 사이트에서 틀린 문법으로 JSX를 작성하면 경고를 피드백해준다.
 
 ---
