@@ -12,6 +12,7 @@
 9. [Create React App의 폴더 구조 살펴보기](#9단계---create-react-app의-폴더-구조-살펴보기)
 10. [React 컴포넌트 시작하기](#10단계---react-컴포넌트-시작하기)
 11. [첫 번째 React 컴포넌트 생성 등](#11단계---첫-번째-react-컴포넌트-생성-등)
+12. [React에서 State 시작하기 - Hook으로 State 사용하기](#12단계---react에서-state-시작하기---hook으로-state-사용하기)
 
 ---
 
@@ -421,5 +422,15 @@ class FourthComponent extends Component {
 1. `import { Component } from 'react';` : 리액트의 'Component'를 임포트한다
 2. Component를 상속하는 클래스를 작성한다.
 3. 클래스에 'render()' 함수를 작성하고 리턴할 HTML문을 작성한다.
+
+---
+
+## 12단계 - React에서 State 시작하기 - Hook으로 State 사용하기
+
+#### 함수 컴포넌트 vs 클래스 컴포넌트
+- State : 특정 컴포넌트에 대한 정보(데이터)를 의미함.
+  - 초기 버전의 리액트에서는 클래스 컴포넌트 State를 가질 수 있었다.
+- Hooks : 함수 컴포넌트에도 State를 추가할 수 있다. (16.8 버전 이후)
+  - 리액트 버전 확인은 'package.json' 파일 내부에서 확인할 수 있다.
 
 ---
