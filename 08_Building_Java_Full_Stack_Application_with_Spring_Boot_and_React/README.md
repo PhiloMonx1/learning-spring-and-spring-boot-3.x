@@ -9,6 +9,7 @@
 6. [Create React App으로 React 앱 생성하기](#6단계---create-react-app으로-react-앱-생성하기)
 7. [중요한 Node.js 명령어 살펴보기 - Create React App](#7단계---중요한-nodejs-명령어-살펴보기---create-react-app)
 8. [Visual Studio Code와 Create React App 살펴보기](#8단계---visual-studio-code와-create-react-app-살펴보기)
+9. [Create React App의 폴더 구조 살펴보기](#9단계---create-react-app의-폴더-구조-살펴보기)
 
 ---
 
@@ -226,5 +227,102 @@ npx create-react-app todo-app
 ## 8단계 - Visual Studio Code와 Create React App 살펴보기
 
 VS Code 사용법 및 팁 (파일 검색 등)을 강의했으나 인텔리제이를 사용하는 관계로 노트를 작성하지 않았다.
+
+---
+
+## 9단계 - Create React App의 폴더 구조 살펴보기
+
+#### 프로젝트 폴더 구조
+```프로젝트 디렉토리 트리
+todo-app
+├── /build
+├── /node_modules
+├── /public
+│   └── index.html
+├── /src
+│   ├── index.js
+│   └── App.js
+├── package.json
+└── README.md
+```
+대표적인 폴더 및 파일 구조만 그렸다.
+- '/build' : `npm run build` 명령어로 빌드한 결과물
+- '/node_modules' : 라이브러리 루트 폴더
+- '/public/index.html' : React를 초기화 할 때 처음으로 로드되는 파일
+- '/src/index.js' : 'index.html' 파일 내부에 들어가는 컴포넌트를 연결하는 파일
+- '/src/App.js' : 프로젝트 실행을 위한 컴포넌트
+- 'package.json' : 프로젝트 설정 & 라이브러리 목록에 대한 정보를 담은 json 파일
+- 'README.md' : 프로젝트를 설명하는 문서
+
+#### React 애플리케이션의 간단한 실행 원리
+1. 'index.html' 로드
+```html
+<!-- /public/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<!-- (생략) -->
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <!-- (생략) -->
+  </body>
+</html>
+```
+- `<div id="root"></div>` root id를 가진 태그에 주목하자 (index.js 파일과 연결.)
+
+2. index.js
+```js
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
+```
+- 파일 내부 임포트 문을 보면 'index.css', '/App' 등을 불러오는 것을 알 수 있다.
+- 'root' 변수를 보면 `ReactDOM.createRoot(document.getElementById('root'))`으로 'root'라는 id를 가진 HTML 요소를 선택하고 있다.
+- `root.render()`를 통해 내부에서 `<App />`을 불러오고 있다. (App.js)
+
+#### App.js
+```js
+import logo from './logo.svg';
+import './App.css';
+
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+    </div>
+  );
+}
+
+export default App;
+```
+- 리액트 애플리케이션을 실행했을 때 나타난 페이지를 정의하고 있다.
 
 ---
