@@ -4,6 +4,7 @@
 1. [시작하기 - 풀 스택 Spring Boot와 React 애플리케이션](#1단계---시작하기---풀-스택-spring-boot와-react-애플리케이션)
 2. [풀 스택 아키텍처는 무엇이며 왜 필요한가](#2단계---풀-스택-아키텍처는-무엇이며-왜-필요한가)
 3. [JavaScript와 ECMA Script의 역사 이해하기](#3단계---javascript와-ecma-script의-역사-이해하기)
+4. [Visual Studio Code 설치](#4단계---visual-studio-code-설치)
 
 ---
 
@@ -66,5 +67,26 @@
 - ECMA-262 기술 규격에 따라 정의한 표준화된 스크립트 프로그래밍 언어.
   - 지속적인 버전 업데이트를 거쳐왔다.
   - 자바스크립트의 표준화된 버전이다.
+
+---
+
+## 4단계 - Visual Studio Code 설치
+
+#### VS 코드 설치
+[공식페이지 - 다운로드](https://code.visualstudio.com/download)
+
+#### 부록 : 인텔리제이에서 React 프로젝트 생성
+
+![IntelliJ-tool-react.png](image/IntelliJ-tool-react.png)
+- 인텔리제이 프로젝트 생성 tool에서도 React를 지원한다.
+- 리액트 프로젝트를 시작하는 명령어가 포함된다.
+- 주의 : Node JS가 설치되어 있어야 한다.
+
+![IntelliJ-project-react.png](image/IntelliJ-project-react.png)
+- 프로젝트 파일 생성이 완료된 후 리액트 프로젝트 생성 명령어에 대한 응답을 요청한다.
+  - y를 눌러 진핼할 수 있다.
+
+![IntelliJ-run-react.png](image/IntelliJ-run-react.png)
+- 리액트 초기화가 완료되면, 인텔리제이에서 'run' 버튼으로 `npm start` 명령어를 실행할 수 있다.
 
 ---
