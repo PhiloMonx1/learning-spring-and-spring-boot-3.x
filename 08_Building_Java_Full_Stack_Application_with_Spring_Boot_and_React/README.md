@@ -14,6 +14,7 @@
 11. [첫 번째 React 컴포넌트 생성 등](#11단계---첫-번째-react-컴포넌트-생성-등)
 12. [React에서 State 시작하기 - Hook으로 State 사용하기](#12단계---react에서-state-시작하기---hook으로-state-사용하기)
 13. [JSX 탐색 - React 뷰](#13단계---jsx-탐색---react-뷰)
+14. [JavaScript 모범 사례 따라하기 - 모듈로 리팩토링](#14단계---javascript-모범-사례-따라하기---모듈로-리팩토링)
 
 ---
 
@@ -481,5 +482,159 @@ ES는 계속해서 발전해왔으며 많은 버전이 있다. 간혹 오래된 
 - JSX를 JS 코드로 변환하는 작업을 해준다.
 - [babeljs.io](https://babeljs.io/repl)에서 데모를 사용해볼 수 있다.
   - 데모 사이트에서 틀린 문법으로 JSX를 작성하면 경고를 피드백해준다.
+
+---
+
+## 14단계 - JavaScript 모범 사례 따라하기 - 모듈로 리팩토링
+
+#### 각 컴포넌트는 각 모듈(파일)에 분리되어 있어야 한다.
+```js
+// /src/components/learning-examples/FirstComponent.jsx
+
+export default function FirstComponent() {
+  return (
+      <div className="FirstComponent">첫 번째 컴포넌트</div>
+  );
+}
+```
+- 컴포넌트를 분리했다.
+- `export default`를 붙여서 내보내주어야 외부 파일에서 해당 컴포넌트 사용이 가능하다.
+
+```js
+// /src/App.js
+
+import './App.css';
+import FirstComponent from './components/learning-examples/FirstComponent';
+import SecondComponent from "./components/learning-examples/SecondComponent";
+import ThirdComponent from "./components/learning-examples/ThirdComponent";
+import FourthComponent from "./components/learning-examples/FourthComponent";
+
+function App() {
+  return (
+    <div className="App">
+      <FirstComponent></FirstComponent>
+      <SecondComponent></SecondComponent>
+      <ThirdComponent></ThirdComponent>
+      <FourthComponent></FourthComponent>
+    </div>
+  );
+}
+
+export default App;
+```
+- 분리한 컴포넌트를 import 해서 사용할 수 있다.
+
+#### export default
+1. export default 는 모듈 내에서 하나의 컴포넌트에만 사용할 수 있다.
+   - 모듈에 다른 컴포넌트가 있다면 하나를 제외하고는 모두 'export' 만 붙여서 선언해야 한다.
+2. 모듈 내 기본 컴포넌트를 의미한다.
+    ```js
+    // /src/components/learning-examples/FirstComponent.jsx
+    
+    export default function FirstComponent() {
+      return (
+              <div className="FirstComponent">첫 번째 컴포넌트</div>
+      );
+    }
+    
+    export function FifthComponent() {
+      return (
+              <div className="FifthComponent">다섯 번째 컴포넌트</div>
+      );
+    }
+    
+    
+    // /src/App.js
+    
+    import './App.css';
+    import FirstComponent from './components/learning-examples/FirstComponent';
+    //...(생략)
+    import FifthComponent from './components/learning-examples/FirstComponent';
+    
+    function App() {
+      return (
+              <div className="App">
+                <FirstComponent></FirstComponent>
+                // ...(생략)
+                <FifthComponent></FifthComponent>
+              </div>
+      );
+    }
+    
+    export default App;
+    
+    ```
+    - 이렇게 작성해도 'FifthComponent' 컴포넌트는 노출되지 않는다. 대신 기본 컴포넌트인 'FirstComponent'가 노출된다.
+
+    ```js
+    // /src/App.js
+   
+    import './App.css';
+    import FirstComponent from './components/learning-examples/FirstComponent';
+    //...(생략)
+    import 아무이름 from './components/learning-examples/FirstComponent';
+    
+    function App() {
+      return (
+              <div className="App">
+                <FirstComponent></FirstComponent>
+                // ...(생략)
+                <아무이름></아무이름>
+              </div>
+      );
+    }
+    
+    export default App;
+    ```
+    - 심지어 이렇게 실제 모듈에 등록되어 있지 않는 이름으로 선언해도 'FirstComponent'가 노출된다.
+
+#### 모듈 내의 여러 개 컴포넌트 export
+```js
+// /src/App.js
+
+import './App.css';
+import FirstComponent from './components/learning-examples/FirstComponent';
+//...(생략)
+import {FifthComponent} from './components/learning-examples/FirstComponent';
+
+function App() {
+  return (
+          <div className="App">
+            <FirstComponent></FirstComponent>
+            // ...(생략)
+            <FifthComponent></FifthComponent>
+          </div>
+  );
+}
+
+export default App;
+```
+- 이와 같이 컴포넌트를 임포트 할 때 `{FifthComponent}` 중괄호로 묶어주면 기본 컴포넌트가 아닌 해당 이름을 가진 컴포넌트를 가져온다.
+
+#### 래퍼 컴포넌트 (Wrapper Component)를 사용해서 리팩토링
+App.js 파일에서 많은 컴포넌트를 임포트하고 있다. 앞으로 더 많은 컴포넌트가 생겨나게 되면 임포트문이 훨씬 길어지게 될 것이다. 이 문제를 개선할 방법이 있다.
+
+```js
+// /src/components/learning-examples/LearningComponent.jsx
+
+import FirstComponent from "./FirstComponent";
+import SecondComponent from "./SecondComponent";
+import ThirdComponent from "./ThirdComponent";
+import FourthComponent from "./FourthComponent";
+import {FifthComponent} from "./FirstComponent";
+
+export default function LearningComponent() {
+  return (
+      <>
+        <FirstComponent></FirstComponent>
+        <SecondComponent></SecondComponent>
+        <ThirdComponent></ThirdComponent>
+        <FourthComponent></FourthComponent>
+        <FifthComponent></FifthComponent>
+      </>
+  );
+}
+```
+- 이후 App.js에서는 `LearningComponent` 컴포넌트만 불러와서 한 번에 사용하는 것이 가능하다.
 
 ---
