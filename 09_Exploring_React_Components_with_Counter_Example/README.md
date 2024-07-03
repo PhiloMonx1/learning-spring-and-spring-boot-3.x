@@ -6,6 +6,7 @@
 3. [React 애플리케이션 시작하기 - Counter-2](#3단계---react-애플리케이션-시작하기---counter-2)
 4. [useState 훅을 사용해 React State 알아보기 - Counter에 상태 추가](#4단계---usestate-훅을-사용해-react-state-알아보기---counter에-상태-추가)
 5. [React State 알아보기 - 백그라운드에서는 무슨 일이 일어날까?](#5단계---react-state-알아보기---백그라운드에서는-무슨-일이-일어날까)
+6. [React Props 알아보기 - 카운터 증분 값 설정하기](#6단계---react-props-알아보기---카운터-증분-값-설정하기)
 
 ---
 
@@ -287,5 +288,86 @@ updateCounter();
 - 이는 가상 DOM이 실제로는 React 요소 트리라는 점을 강조하기 위함이다.
 - JSX 코드는 실제로 가상 DOM을 직접 업데이트하지 않는다.
   - JSX는 React.createElement() 호출로 변환되어 React 요소 트리를 생성하며, 이 트리가 가상 DOM의 역할을 수행한다.
+
+---
+
+## 6단계 - React Props 알아보기 - 카운터 증분 값 설정하기
+
+#### 프로퍼티(Props)
+컴포넌트 간 데이터를 전달하는 방식
+- 하나의 컴포넌트는 여러 개의 프로퍼티를 가질 수 있다.
+- 컴포넌트끼리 프로퍼티를 넘겨줄 수 있다.
+
+#### 프로퍼티(Props) 사용 실습
+```js
+function App() {
+  return (
+    <div className="App">
+      <PlayWithProps property1="value1" property2="value2"/>
+    </div>
+  );
+}
+
+function PlayWithProps(properties) {
+  console.log(properties)
+  return (
+    <div>Props</div>
+  );
+}
+```
+- 콘솔 로그에서 `{property1: 'value1', property2: 'value2'}`를 확인할 수 있다.
+  - 각각 property1, property2라는 프로퍼티를 가진 객체 형태로 전달된 것이다.
+  - `properties.property1` 으로 각 객체에 접근이 가능하다. (값은 'value1'이다.)
+
+#### 모던 JS의 프로퍼티 사용
+```js
+function PlayWithProps({property1, property2}) {
+  console.log(property1)
+  return (
+    <div>Props</div>
+  );
+}
+```
+- 이와 같이 객체 구조 분해를 활용해서 리팩토링 할 수 있다.
+
+#### 프로퍼티 활용해서 다양한 카운터 생산 실습
+```js
+
+// /src/App.js
+function App() {
+  return (
+          <div className="App">
+            <Counter by={1}/>
+            <Counter by={2}/>
+            <Counter by={5}/>
+          </div>
+  );
+}
+
+// /src/components/counter/Counter.jsx
+import {useState} from 'react';
+import './Counter.css';
+export default function Counter({by}) {
+
+  const [count, setCount] = useState(0);
+  function incrementCounterFunction() {
+    setCount(count + by);
+  }
+
+  function decrementCounterFunction() {
+    setCount(count - by);
+  }
+
+  return (
+      <div className="Counter">
+        <span className="counter">{count}</span>
+        <div>
+          <button className="counterButton" onClick={incrementCounterFunction}>+{by}</button>
+          <button className="counterButton" onClick={decrementCounterFunction}>-{by}</button>
+        </div>
+      </div>
+  )
+}
+```
 
 ---
