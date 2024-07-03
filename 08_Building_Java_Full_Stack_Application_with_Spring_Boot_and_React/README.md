@@ -2,6 +2,8 @@
 
 ## 목록
 1. [시작하기 - 풀 스택 Spring Boot와 React 애플리케이션](#1단계---시작하기---풀-스택-spring-boot와-react-애플리케이션)
+2. [풀 스택 아키텍처는 무엇이며 왜 필요한가](#2단계---풀-스택-아키텍처는-무엇이며-왜-필요한가)
+3. [JavaScript와 ECMA Script의 역사 이해하기](#3단계---javascript와-ecma-script의-역사-이해하기)
 
 ---
 
@@ -49,5 +51,20 @@
 
 - 풀 스택 아키텍처는 유연하고, REST API 사용이 가능하다.
 - REST API가 있으면 다른 애플리케이션을 만들어서 API와 소통하도록 할 수 있다. ex) 모바일 앱, IoT 앱 등
+
+---
+
+## 3단계 - JavaScript와 ECMA Script의 역사 이해하기
+
+#### JS(Java Script) 역사
+- 지속적으로 진화해왔다.
+  - ES5, ES6, ES7, ES13, ES14 등
+- 초기 버전은 'DOM'을 다루는 데 사용되었고, 작성이 어려웠다.
+  - DOM(Document Object Model) : HTML의 id, class 등을 통해 접근, 조작 가능한 객체
+
+#### ES(ECMA Script)
+- ECMA-262 기술 규격에 따라 정의한 표준화된 스크립트 프로그래밍 언어.
+  - 지속적인 버전 업데이트를 거쳐왔다.
+  - 자바스크립트의 표준화된 버전이다.
 
 ---
