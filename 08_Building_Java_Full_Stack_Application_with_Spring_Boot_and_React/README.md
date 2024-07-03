@@ -20,6 +20,7 @@
 ---
 
 ## 1단계 - 시작하기 - 풀 스택 Spring Boot와 React 애플리케이션
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/a2aa68fb6dfd4e06181ac24fe92497be2f8e073e)
 
 #### 중요 키워드
 1. Modern JavaScript (ECMA 스크립트 등장 이후의 JS)
@@ -47,6 +48,7 @@
 ---
 
 ## 2단계 - 풀 스택 아키텍처는 무엇이며 왜 필요한가
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/7e9ac147200ed20fd2fe86b491f2648223380882)
 
 #### 풀 스택 애플리케이션
 ![full-stack-architecture.png](image/full-stack-architecture.png)
@@ -67,6 +69,7 @@
 ---
 
 ## 3단계 - JavaScript와 ECMA Script의 역사 이해하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/c8a9e0c4a63cbeccc305eade8f2b174c9945f42f)
 
 #### JS(Java Script) 역사
 - 지속적으로 진화해왔다.
@@ -82,6 +85,7 @@
 ---
 
 ## 4단계 - Visual Studio Code 설치
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/08b37574008963390b7da7d21ca227bb234714ce)
 
 #### VS 코드 설치
 [공식페이지 - 다운로드](https://code.visualstudio.com/download)
@@ -103,6 +107,7 @@
 ---
 
 ## 5단계 - Node.js와 npm 설치
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/57092814304e9471d6de9c8e00a4674d5ed8b057)
 
 #### Node js 설치
 [공식페이지 - 다운로드](https://nodejs.org/en/download/)
@@ -181,6 +186,7 @@ npm install jquery
 ---
 
 ## 6단계 - Create React App으로 React 앱 생성하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/3cf233ac4778b23d6b5431a2f998af40fff2aff6)
 
 #### 리액트 (React)
 SPA(Single Page Application) 구축에 가장 인기 있는 JavaScript 라이브러리
@@ -220,6 +226,7 @@ npx create-react-app todo-app
 ---
 
 ## 7단계 - 중요한 Node.js 명령어 살펴보기 - Create React App
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/e68a6b7acfdac00ee762061efb5a6fa35b7eaec2)
 
 1. npm start : 개발 모드에서 애플리케이션 실행
    - `npm start`로 리액트 애플리케이션을 실행하고 프로젝트 경로 '/public/index.html' 파일을 수정하면 수정 사항이 바로 웹 페이지에 반영되는 것을 볼 수 있다.
@@ -231,12 +238,14 @@ npx create-react-app todo-app
 ---
 
 ## 8단계 - Visual Studio Code와 Create React App 살펴보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/f28fa94f18b352a4c8cf887c40f12c7897ed815d)
 
 VS Code 사용법 및 팁 (파일 검색 등)을 강의했으나 인텔리제이를 사용하는 관계로 노트를 작성하지 않았다.
 
 ---
 
 ## 9단계 - Create React App의 폴더 구조 살펴보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/be1c7aafec9f070d5cd53655d08cbe32076e0455)
 
 #### 프로젝트 폴더 구조
 ```프로젝트 디렉토리 트리
@@ -334,6 +343,7 @@ export default App;
 ---
 
 ## 10단계 - React 컴포넌트 시작하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/1d1b49d0b187f65cdd9fc826fb00b4d1ab30538f)
 
 웹 클라이언트 애플리케이션은 HTML 요소로 구성된 많은 페이지를 가지고 있다. 그리고 어떤 HTML 요소(헤더, 푸터, 네비게이션 등)는 많은 페이지에 중복으로 삽입되기도 한다.
 - React 컴포넌트는 이러한 중복 요소를 줄이기 위해 사용하는 코드조각이다. (jpsf 와 유사함)
@@ -352,6 +362,7 @@ export default App;
 ---
 
 ## 11단계 - 첫 번째 React 컴포넌트 생성 등
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/1406dced0d3630ddc970946b3f9b50d1bb0c123e)
 
 #### 함수 컴포넌트
 ```js 
@@ -429,6 +440,7 @@ class FourthComponent extends Component {
 ---
 
 ## 12단계 - React에서 State 시작하기 - Hook으로 State 사용하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/806a8b8b2c2d352a1e0f749009e7265b987b515c)
 
 #### 함수 컴포넌트 vs 클래스 컴포넌트
 - State : 특정 컴포넌트에 대한 정보(데이터)를 의미함.
@@ -439,6 +451,7 @@ class FourthComponent extends Component {
 ---
 
 ## 13단계 - JSX 탐색 - React 뷰
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/727db4ed28f5c74fe003fd7d548088dc20163088)
 
 #### JSX(JavaScript XML) 
 JSX는 React 컴포넌트를 구성하는 언어이다. HTML보다 엄격한 문법 규칙을 고수하고 있다.
@@ -487,6 +500,7 @@ ES는 계속해서 발전해왔으며 많은 버전이 있다. 간혹 오래된 
 ---
 
 ## 14단계 - JavaScript 모범 사례 따라하기 - 모듈로 리팩토링
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/dbb4607080a888fb5628a2d189a3dc0f6c8a5434)
 
 #### 각 컴포넌트는 각 모듈(파일)에 분리되어 있어야 한다.
 ```js
@@ -641,6 +655,7 @@ export default function LearningComponent() {
 ---
 
 ## 15단계 - 향후 JavaScript
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/019222b7c36ac756e4879976bdca5f3f56f66571)
 
 #### JSX에서 JavaScript 코드 조작하기
 ```js
