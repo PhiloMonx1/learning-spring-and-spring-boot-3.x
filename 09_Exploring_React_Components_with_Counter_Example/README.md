@@ -7,6 +7,7 @@
 4. [useState 훅을 사용해 React State 알아보기 - Counter에 상태 추가](#4단계---usestate-훅을-사용해-react-state-알아보기---counter에-상태-추가)
 5. [React State 알아보기 - 백그라운드에서는 무슨 일이 일어날까?](#5단계---react-state-알아보기---백그라운드에서는-무슨-일이-일어날까)
 6. [React Props 알아보기 - 카운터 증분 값 설정하기](#6단계---react-props-알아보기---카운터-증분-값-설정하기)
+7. [여러 개의 카운터 버튼 추가하기](#7단계---여러-개의-카운터-버튼-추가하기)
 
 ---
 
@@ -369,5 +370,63 @@ export default function Counter({by}) {
   )
 }
 ```
+
+---
+
+## 7단계 - 여러 개의 카운터 버튼 추가하기
+
+#### 프로퍼티를 사용할 때의 유의점
+1. 프로퍼티를 전달하지 않아도 컴파일 오류가 발생하지 않는다.
+   - `<Counter />` 이렇게 프로퍼티를 전달하지 않아도 컴파일 단계에서 오류가 발생하지 않는다.
+   - 그러나 의도하지 않은 동작으로 이어질 수 있어 유의해야 한다.
+2. 프로퍼티의 타입을 잘 확인해야 한다.
+    ```js
+    // by값을 전달하는 부분
+    function App() {
+      return (
+              <div className="App">
+                <Counter by="1"/>
+                <Counter by="2"/>
+                <Counter by="5"/>
+              </div>
+      );
+    }
+    
+    // count에 by 값을 더하는 함수
+    function incrementCounterFunction() {
+      setCount(count + by);
+    }
+    ```
+    - `incrementCounterFunction()` 에서 처리하는 `count + by` 로직은 'count'나 'by' 중 하나가 문자열일 경우 문자열을 연결시키는 방식으로 동작한다.
+      - ex) '1 + "5" = 15' 가 되는 식이다.
+      - 해당 문제는 런타임시 발생하며 컴파일 단계에서 해당 문제를 검증하려면 TS(TypeScript)를 사용하거나 별도의 검증 로직을 작성해주어야 한다.
+
+#### propTypes 제안하기
+```js
+import {PropTypes} from "prop-types";
+//...(생략)
+export default function Counter({by}) {
+//...(생략)
+  Counter.propTypes = {
+    by: PropTypes.number
+  }
+}
+```
+- 이와 같은 방식으로 'Counter'의 프로퍼티를 지정해서 기본 타입을 제안할 수 있다.
+- 이 경우 자바처럼 컴파일 단계에서 검증을 하지는 않지만, 지정하지 않은 타입이 전달되었을 때 브라우저 콘솔창에 경고 문구가 노출된다.
+  ```
+  Warning: Failed prop type: Invalid prop `by` of type `string` supplied to `Counter`, expected `number`.
+      at Counter (http://localhost:3000/static/js/bundle.js:118:3)
+      at App
+  ```
+
+#### 프로퍼티의 기본 값 지정
+
+```js
+Counter.defaultProps = {
+  by: 1
+}
+```
+- 이와 같은 방식으로 프로퍼티의 기본 값을 줄 수도 있다.
 
 ---
