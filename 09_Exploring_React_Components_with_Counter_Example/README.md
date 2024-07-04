@@ -12,6 +12,7 @@
 9. [React State 끌어올리기 - 상위 컴포넌트 메서드 호출하기](#9단계---react-state-끌어올리기---상위-컴포넌트-메서드-호출하기)
 10. [React Developer Tools 살펴보기](#10단계---react-developer-tools-살펴보기)
 11. [카운터에 초기화 버튼 추가하기](#11단계---카운터에-초기화-버튼-추가하기)
+12. [React Counter 컴포넌트 리팩토링](#12단계---react-counter-컴포넌트-리팩토링)
 
 ---
 
@@ -590,5 +591,42 @@ export default function ResetButton({resetCountMethod}){
 ```jsx
 <ResetButton resetCountMethod={resetCountFunction} />
 ```
+
+---
+
+## 12단계 - React Counter 컴포넌트 리팩토링
+
+#### 리팩토링 : 상위 컴포넌트의 함수 바로 사용하기
+```jsx
+export default function ResetButton({resetCountMethod}){
+  return (
+      <button className="ResetButton" onClick={resetCountMethod}>초기화</button>
+  )
+}
+```
+- 이와 같이 상위 컴포넌트의 함수를 바로 사용하는 것이 가능하다.
+
+#### 리팩토링 : 상위 컴포넌트 함수에 인자 전달
+```jsx
+export default function CounterButton({ by = 1, incrementMethod, decrementMethod }) {
+  return (
+      <div className="Counter">
+        <div>
+          <button className="counterButton" onClick={() => incrementMethod(by)}>+{by}</button>
+          <button className="counterButton" onClick={() => decrementMethod(by)}>-{by}</button>
+        </div>
+      </div>
+  )
+}
+```
+- 사용하는 함수에 인자를 전달할 때는 이와 같은 방식으로 할 수 있다.
+
+#### 리팩토링 : 카운트 감소 함수 음수 예외 처리
+```jsx
+  function decrementCounterParentFunction(by) {
+    setCount(prevCount => Math.max(0, prevCount - by));
+  }
+```
+- Math.max() : 첫 번째 인자와 두 번째 인자 중 더 큰 것을 리턴한다.
 
 ---

@@ -1,9 +1,5 @@
 export default function ResetButton({resetCountMethod}){
-  function resetCount(){
-    resetCountMethod();
-  }
-
   return (
-      <button className="ResetButton" onClick={resetCount}>초기화</button>
+      <button className="ResetButton" onClick={resetCountMethod}>초기화</button>
   )
 }

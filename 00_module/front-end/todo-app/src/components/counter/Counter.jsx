@@ -11,7 +11,7 @@ export default function Counter() {
   }
 
   function decrementCounterParentFunction(by) {
-    setCount(count - by);
+    setCount(prevCount => Math.max(0, prevCount - by));
   }
 
   function resetCountFunction(){
