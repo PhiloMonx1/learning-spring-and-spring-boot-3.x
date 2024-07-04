@@ -17,6 +17,7 @@
 ---
 
 ## 1단계 - 카운터 예제를 통해 React 컴포넌트 살펴보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/c8015ba516c8033589938e5c168fb232a5a36b6d)
 
 #### 컴포넌트는 여러 개의 파트로 구성되어 있다.
 - 뷰 (View) - JSX로 작성하며 빌드 후 JS로 포팅된다.
@@ -32,6 +33,7 @@
 ---
 
 ## 2단계 - React 애플리케이션 시작하기 - Counter
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/155ccb16b9978eff56675b48aacc0561c6acfffb)
 
 #### 컴포넌트 버튼에 JS 함수 연결 실습 (onClick)
 ```js
@@ -59,6 +61,7 @@ export default function Counter() {
 ---
 
 ## 3단계 - React 애플리케이션 시작하기 - Counter-2
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/b0fadd571559f4e4fa55e13a4084a33e2ffaf7bf)
 
 #### 리액트 컴포넌트 스타일 적용
 1. Style 속성 사용
@@ -159,6 +162,7 @@ export default function Counter() {
 ---
 
 ## 4단계 - useState 훅을 사용해 React State 알아보기 - Counter에 상태 추가
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/a6b0dae319bd9e83dfd55b94d6a8d67ed109b8fe)
 
 #### State
 리액트의 내장 객체로 컴포넌트의 데이터나 정보를 저장하는 데 사용한다.
@@ -238,6 +242,7 @@ export default function Counter() {
 ---
 
 ## 5단계 - React State 알아보기 - 백그라운드에서는 무슨 일이 일어날까?
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/a7990e59876b234fff4d716b57a83985546e2416)
 
 #### DOM(Document Object Model)
 - HTML 페이지는 일반적으로 DOM 요소로 표현된다.
@@ -298,6 +303,7 @@ updateCounter();
 ---
 
 ## 6단계 - React Props 알아보기 - 카운터 증분 값 설정하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/65d9e36ac586665004f90c0dae6b67673decbf62)
 
 #### 프로퍼티(Props)
 컴포넌트 간 데이터를 전달하는 방식
@@ -379,6 +385,7 @@ export default function Counter({by}) {
 ---
 
 ## 7단계 - 여러 개의 카운터 버튼 추가하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/21c4bd54870a1b157e62367993a948a37cf144aa)
 
 #### 프로퍼티를 사용할 때의 유의점
 1. 프로퍼티를 전달하지 않아도 컴파일 오류가 발생하지 않는다.
@@ -437,6 +444,7 @@ Counter.defaultProps = {
 ---
 
 ## 8단계 - React State 끌어올리기 - CounterButton 및 CounterButton 구성
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/35b878728d80468526e8853e21c4ee4e64e16c0d)
 
 #### 상태 끌어올리기(lifting state up)
 여러 컴포넌트에서 공유해야 하는 state를 그들의 가장 가까운 공통 조상 컴포넌트로 이동시키는 기법
@@ -490,6 +498,7 @@ export function CounterButton({ by = 1 }) {
 ---
 
 ## 9단계 - React State 끌어올리기 - 상위 컴포넌트 메서드 호출하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/d7fc51c0b857027cf416ef045407c0ac280cb2ff)
 
 #### 상위 컴포넌트의 함수 호출 실습
 ```js
@@ -551,6 +560,7 @@ CounterButton.propTypes = {
 ---
 
 ## 10단계 - React Developer Tools 살펴보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/774a5cbdb254e623f9e8e62769b1cd6079dbeaa6)
 
 #### [React Developer Tools](https://chromewebstore.google.com/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi) - 크롬 확장프로그램
 리액트 컴포넌트의 계층 구조를 검사하는데 사용됨. (리액트의 개발자 모드)
@@ -566,6 +576,7 @@ CounterButton.propTypes = {
 ---
 
 ## 11단계 - 카운터에 초기화 버튼 추가하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/2a756b49b6359cc18eaafa156edcfb3b9239c090)
 
 #### 카운트 초기화 함수 선언
 ```jsx
@@ -595,6 +606,7 @@ export default function ResetButton({resetCountMethod}){
 ---
 
 ## 12단계 - React Counter 컴포넌트 리팩토링
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/23ffeb1aa272183533dde2c9d168f60bd3b1f8ad)
 
 #### 리팩토링 : 상위 컴포넌트의 함수 바로 사용하기
 ```jsx
