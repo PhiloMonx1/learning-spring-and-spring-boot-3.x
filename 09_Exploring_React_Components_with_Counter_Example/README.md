@@ -11,6 +11,7 @@
 8. [React State 끌어올리기 - CounterButton 및 CounterButton 구성](#8단계---react-state-끌어올리기---counterbutton-및-counterbutton-구성)
 9. [React State 끌어올리기 - 상위 컴포넌트 메서드 호출하기](#9단계---react-state-끌어올리기---상위-컴포넌트-메서드-호출하기)
 10. [React Developer Tools 살펴보기](#10단계---react-developer-tools-살펴보기)
+11. [카운터에 초기화 버튼 추가하기](#11단계---카운터에-초기화-버튼-추가하기)
 
 ---
 
@@ -560,5 +561,34 @@ CounterButton.propTypes = {
 ![React-Developer-Tools.png](image/React-Developer-Tools.png)
 설치 후 React로 제작된 페이지에 가면 브라우저 개발자 모드에 관련 탭이 생성된 것을 볼 수 있다. 
 (탭이 보이지 않는다면 브라우저 재시작 혹은 캐시 삭제로 해결할 수 있다.)
+
+---
+
+## 11단계 - 카운터에 초기화 버튼 추가하기
+
+#### 카운트 초기화 함수 선언
+```jsx
+  function resetCountFunction(){
+    setCount(0)
+  }
+```
+
+#### ResetButton.jsx 추가
+```jsx
+export default function ResetButton({resetCountMethod}){
+  function resetCount(){
+    resetCountMethod();
+  }
+
+  return (
+      <button className="ResetButton" onClick={resetCount}>초기화</button>
+  )
+}
+```
+
+#### 초기화 버튼 연결
+```jsx
+<ResetButton resetCountMethod={resetCountFunction} />
+```
 
 ---
