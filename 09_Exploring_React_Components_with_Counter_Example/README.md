@@ -9,6 +9,7 @@
 6. [React Props 알아보기 - 카운터 증분 값 설정하기](#6단계---react-props-알아보기---카운터-증분-값-설정하기)
 7. [여러 개의 카운터 버튼 추가하기](#7단계---여러-개의-카운터-버튼-추가하기)
 8. [React State 끌어올리기 - CounterButton 및 CounterButton 구성](#8단계---react-state-끌어올리기---counterbutton-및-counterbutton-구성)
+9. [React State 끌어올리기 - 상위 컴포넌트 메서드 호출하기](#9단계---react-state-끌어올리기---상위-컴포넌트-메서드-호출하기)
 
 ---
 
@@ -482,5 +483,66 @@ export function CounterButton({ by = 1 }) {
 }
 ```
 - JS 기본 문법으로도 파라미터의 기본 값을 지정할 수 있다.
+
+---
+
+## 9단계 - React State 끌어올리기 - 상위 컴포넌트 메서드 호출하기
+
+#### 상위 컴포넌트의 함수 호출 실습
+```js
+export default function Counter() {
+  const [count, setCount] = useState(0);
+
+  function incrementCounterParentFunction(by) {
+    setCount(count + by);
+  }
+
+  function decrementCounterParentFunction(by) {
+    setCount(count - by);
+  }
+
+  return (
+      <>
+        <span className="totalCounter">{count}</span>
+        <CounterButton by={1}
+            incrementMethod={incrementCounterParentFunction}
+            decrementMethod={decrementCounterParentFunction}/>
+        <CounterButton by={2}
+            incrementMethod={incrementCounterParentFunction}
+            decrementMethod={decrementCounterParentFunction}/>
+        <CounterButton by={5}
+            incrementMethod={incrementCounterParentFunction}
+            decrementMethod={decrementCounterParentFunction}/>
+      </>
+  )
+}
+
+export function CounterButton({ by = 1, incrementMethod, decrementMethod }) {
+
+  function incrementCounterFunction() {
+    incrementMethod(by);
+  }
+
+  function decrementCounterFunction() {
+    decrementMethod(by)
+  }
+
+  return (
+      <div className="Counter">
+        <div>
+          <button className="counterButton" onClick={incrementCounterFunction}>+{by}</button>
+          <button className="counterButton" onClick={decrementCounterFunction}>-{by}</button>
+        </div>
+      </div>
+  )
+}
+
+CounterButton.propTypes = {
+  by: PropTypes.number
+}
+```
+- 하위컴포넌트를 호출하면서 `하위컴포넌트에서_사용할_메서드_명={상위컴포넌트_메서드_명}` 형식으로 속성을 줄 수 있다.
+- `CounterButton({ by = 1, 하위컴포넌트에서_사용할_메서드_명 })`
+  - 하위 컴포넌트에서 이와 같이 받아서 사용한다.
 
 ---
