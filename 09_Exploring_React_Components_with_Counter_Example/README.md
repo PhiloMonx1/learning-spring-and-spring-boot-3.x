@@ -8,6 +8,7 @@
 5. [React State 알아보기 - 백그라운드에서는 무슨 일이 일어날까?](#5단계---react-state-알아보기---백그라운드에서는-무슨-일이-일어날까)
 6. [React Props 알아보기 - 카운터 증분 값 설정하기](#6단계---react-props-알아보기---카운터-증분-값-설정하기)
 7. [여러 개의 카운터 버튼 추가하기](#7단계---여러-개의-카운터-버튼-추가하기)
+8. [React State 끌어올리기 - CounterButton 및 CounterButton 구성](#8단계---react-state-끌어올리기---counterbutton-및-counterbutton-구성)
 
 ---
 
@@ -428,5 +429,58 @@ Counter.defaultProps = {
 }
 ```
 - 이와 같은 방식으로 프로퍼티의 기본 값을 줄 수도 있다.
+
+---
+
+## 8단계 - React State 끌어올리기 - CounterButton 및 CounterButton 구성
+
+#### 상태 끌어올리기(lifting state up)
+여러 컴포넌트에서 공유해야 하는 state를 그들의 가장 가까운 공통 조상 컴포넌트로 이동시키는 기법
+- 동일한 변경 사항을 여러 컴포넌트에 반영해야 할 때 사용
+- '단방향 데이터 흐름 원칙'에 따라 상위 컴포넌트에서 하위 컴포넌트로의 전달만 허용한다. (props를 통해 데이터를 전달함)
+
+#### 상태 끌어올리기(lifting state up) 패턴 준비 작업 실습
+```js
+export default function Counter() {
+  const [count, setCount] = useState(0);
+
+  function incrementCounterParentFunction(by) {
+    setCount(count + by);
+  }
+
+  return (
+      <>
+        <span className="totalCounter">{count}</span>
+        <CounterButton by={1}/>
+        <CounterButton by={2}/>
+        <CounterButton by={5}/>
+      </>
+  )
+}
+
+export function CounterButton({ by = 1 }) {
+  // 구현 로직
+}
+```
+- 'CounterButton' 는 기존의 'Counter'이며 기존 'App.js'에 있던 코드를 새로운 'Counter'에서 처리하고 있다.
+- 이와 같이 자식 컴포넌트를 묶는 부모 컴포넌트를 생성하여 자식 컴포넌트로 props를 전달하는 "상태 끌어올리기(lifting state up)" 패턴을 구현할 수 있다.
+
+#### 추가 학습 : `defaultProps` 에 대하여...
+```js
+CounterButton.defaultProps = {
+  by: 1
+}
+```
+- 해당 방법으로 프로퍼티의 기본 값을 설정하면 브라우저 콘솔에서 경고를 노출한다,
+  - "Warning: Counter: Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead."
+  - 리액트 팀은 추후 `defaultProps`의 지원을 제거할 계획이라고 안내하고 있다.
+
+#### 프로퍼티 기본 값 지정의 권장 방법
+```js
+export function CounterButton({ by = 1 }) {
+  // 구현 로직
+}
+```
+- JS 기본 문법으로도 파라미터의 기본 값을 지정할 수 있다.
 
 ---

@@ -11,6 +11,11 @@
 }
 
 .counter {
-  font-size: 150px;
+  font-size: 50px;
   padding: 200px;
+}
+
+.totalCounter {
+  color: #00a5ab;
+  font-size: 150px;
 }
