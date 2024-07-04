@@ -10,6 +10,7 @@
 7. [여러 개의 카운터 버튼 추가하기](#7단계---여러-개의-카운터-버튼-추가하기)
 8. [React State 끌어올리기 - CounterButton 및 CounterButton 구성](#8단계---react-state-끌어올리기---counterbutton-및-counterbutton-구성)
 9. [React State 끌어올리기 - 상위 컴포넌트 메서드 호출하기](#9단계---react-state-끌어올리기---상위-컴포넌트-메서드-호출하기)
+10. [React Developer Tools 살펴보기](#10단계---react-developer-tools-살펴보기)
 
 ---
 
@@ -544,5 +545,20 @@ CounterButton.propTypes = {
 - 하위컴포넌트를 호출하면서 `하위컴포넌트에서_사용할_메서드_명={상위컴포넌트_메서드_명}` 형식으로 속성을 줄 수 있다.
 - `CounterButton({ by = 1, 하위컴포넌트에서_사용할_메서드_명 })`
   - 하위 컴포넌트에서 이와 같이 받아서 사용한다.
+
+---
+
+## 10단계 - React Developer Tools 살펴보기
+
+#### [React Developer Tools](https://chromewebstore.google.com/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi) - 크롬 확장프로그램
+리액트 컴포넌트의 계층 구조를 검사하는데 사용됨. (리액트의 개발자 모드)
+- 루트 컴포넌트 확인
+- 랜더링된 하위 컴포넌트 확인
+- 각 컴포넌트의 Props, State 확인 및 편집
+
+#### React Developer Tools 사용해보기
+![React-Developer-Tools.png](image/React-Developer-Tools.png)
+설치 후 React로 제작된 페이지에 가면 브라우저 개발자 모드에 관련 탭이 생성된 것을 볼 수 있다. 
+(탭이 보이지 않는다면 브라우저 재시작 혹은 캐시 삭제로 해결할 수 있다.)
 
 ---
