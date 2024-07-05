@@ -16,6 +16,7 @@
 13. [Bootstrap을 사용하여 Todo React 프론트엔드 애플리케이션에 스타일 적용](#13단계---bootstrap을-사용하여-todo-react-프론트엔드-애플리케이션에-스타일-적용)
 14. [React 컴포넌트를 개별 JavaScript 모듈로 리팩토링](#14단계---react-컴포넌트를-개별-javascript-모듈로-리팩토링)
 15. [인증 컨텍스트로 React State를 여러 컴포넌트와 공유하기](#14단계---react-컴포넌트를-개별-javascript-모듈로-리팩토링)
+16. [React State를 업데이트하고 인증 컨텍스트를 통해 확인](#16단계---react-state를-업데이트하고-인증-컨텍스트를-통해-확인)
 
 ---
 
@@ -693,5 +694,31 @@ export default function HeaderComponent() {
 - 외부에서 `useContext(AuthContext)`로  `AuthContext`의 State에 접근이 가능하다.
   - 콘솔을 확인해보면 `number`의 초기값이 0이 출력된다.
 - 현재 `HeaderComponent`의 경우 모든 컴포넌트와 함께 출력되기 때문에 제외한 다른 URL 라우터에서도 해당 값은 유지된다.
+
+---
+
+## 16단계 - React State를 업데이트하고 인증 컨텍스트를 통해 확인
+
+#### setInterval
+일정 주기마다 지정된 함수를 반복 실행하도록 설정하는 함수.
+```js
+  setInterval(
+      () => setNumber(number + 1),
+      10000
+  )
+```
+- 10초 (10000ms) 마다 `setNumber(number + 1)` 로직이 반복된다.
+
+#### `const authContext = useContext(AuthContext);` 개선
+```jsx
+// 선언부 AuthContext.js
+export const useAuth = () => useContext(AuthContext);
+
+// 사용부 Header.jsx
+const authContext = useAuth()
+```
+- 'AuthContext'를 기존 `const authContext = useContext(AuthContext);`로 가지고 오던 코드를 개선했다.
+- 선언하는 곳에서 `useAuth` 함수를 만들어 해당 함수를 내보내면 'AuthContext'를 직접적으로 내보내지 않아도 된다.
+  - 'AuthContext'의 내부 구현을 숨기고, 사용자에게 필요한 인터페이스만 노출
 
 ---
