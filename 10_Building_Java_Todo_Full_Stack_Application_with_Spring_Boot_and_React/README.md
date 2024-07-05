@@ -18,7 +18,8 @@
 15. [인증 컨텍스트로 React State를 여러 컴포넌트와 공유하기](#14단계---react-컴포넌트를-개별-javascript-모듈로-리팩토링)
 16. [React State를 업데이트하고 인증 컨텍스트를 통해 확인](#16단계---react-state를-업데이트하고-인증-컨텍스트를-통해-확인)
 17. [isAuthenticated를 React State에 설정 - 인증 컨텍스트](#17단계---isauthenticated를-react-state에-설정---인증-컨텍스트)
-18. [18단계 - 인증 라우터로 React 라우터 보호하기 上](#18단계---인증-라우터로-react-라우터-보호하기-上)
+18. [인증 라우터로 React 라우터 보호하기 上](#18단계---인증-라우터로-react-라우터-보호하기-上)
+19. [인증 라우터로 React 라우터 보호하기 下](#19단계---인증-라우터로-react-라우터-보호하기-下)
 
 ---
 
@@ -861,5 +862,41 @@ function logout() {
   )
 ```
 - 결과적으로 AuthContext의 'setAuthenticated'는 전달하지 않아도 되며, 외부에서 인증 상태를 직접 변경하는 것이 아닌 상태를 참조하는 방식으로 개선했다.
+
+---
+
+## 19단계 - 인증 라우터로 React 라우터 보호하기 下
+
+#### AuthencatedRoute 컴포넌트 추가
+```jsx
+function AuthencatedRoute({children}) {
+    return (
+        children
+    )
+}
+
+<Route path="/welcome/:username" element={
+  <AuthencatedRoute>
+    <WelcomeComponent />
+  </AuthencatedRoute>
+} />
+```
+- 라우터의 element를 'AuthencatedRoute' 컴포넌트로 감싼다.
+
+#### 라우터 보호 적용
+```jsx
+import {BrowserRouter} from "react-router-dom";
+
+function AuthencatedRoute({children}) {
+  const authContext = useAuth()
+  if(authContext.isAuthenticated) {
+    return children
+  }
+  else {
+    return <Navigate to="/" />
+  }
+}
+```
+- 인증이 완료되었을 경우 children을 리턴하지만 완료되지 않았을 경우 "/" 경로로 네비게이트 한다.
 
 ---

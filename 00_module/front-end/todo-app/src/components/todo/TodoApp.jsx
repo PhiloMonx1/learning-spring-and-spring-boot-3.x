@@ -1,5 +1,5 @@
 import './TodoApp.css';
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 
 import HeaderComponent from "./common/Header";
 import FooterComponent from "./common/Footer";
@@ -8,7 +8,8 @@ import ListTodosComponent from "./todos/ListTodos";
 import NotFoundErrorComponent from "./pages/NotFoundPage";
 import LogoutComponent from "./auth/Logout";
 import LoginComponent from "./auth/Login";
-import AuthProvider from "./security/AuthContext";
+import AuthProvider, {useAuth} from "./security/AuthContext";
+import AuthenticatedRoute from "./security/AuthenticatedRoute";
 
 export default function TodoApp() {
   return (
@@ -20,9 +21,21 @@ export default function TodoApp() {
           <Routes>
             <Route path="/" element={<LoginComponent />} />
             <Route path="/login" element={<LoginComponent />} />
-            <Route path="/welcome/:username" element={<WelcomeComponent />} />
-            <Route path="/todos" element={<ListTodosComponent />} />
-            <Route path="/logout" element={<LogoutComponent />} />
+            <Route path="/welcome/:username" element={
+              <AuthenticatedRoute>
+                <WelcomeComponent />
+              </AuthenticatedRoute>
+            } />
+            <Route path="/todos" element={
+              <AuthenticatedRoute>
+                <ListTodosComponent />
+              </AuthenticatedRoute>
+            } />
+            <Route path="/logout" element={
+              <AuthenticatedRoute>
+                <LogoutComponent />
+              </AuthenticatedRoute>
+            } />
 
             <Route path="*" element={<NotFoundErrorComponent />} />
           </Routes>
