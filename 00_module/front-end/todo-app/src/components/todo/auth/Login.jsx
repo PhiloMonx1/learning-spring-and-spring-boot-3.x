@@ -1,0 +1,50 @@
+import {useNavigate} from "react-router-dom";
+import {useState} from "react";
+
+export default function LoginComponent() {
+  const navigate = useNavigate();
+  const [username, setUsername] = useState('eh13');
+  const [password, setPassword] = useState('');
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
+  function handleUsernameChange(event) {
+    setUsername(event.target.value);
+  }
+
+  function handlePasswordChange(event) {
+    setPassword(event.target.value);
+  }
+
+  function handleSubmit() {
+    if(username === 'eh13' && password === '950127') {
+      setShowSuccessMessage(true);
+      setShowErrorMessage(false);
+      navigate(`/welcome/${username}`);
+    }
+    else {
+      setShowSuccessMessage(false);
+      setShowErrorMessage(true);
+    }
+  }
+
+  return (
+      <div className="Login">
+        <h1>로그인</h1>
+        {showSuccessMessage && <div className="successMessage">인증 성공</div>}
+        {showErrorMessage && <div className="errorMessage">인증 실패 : 인증 정보를 확인해주세요.</div>}
+        <div className="LoginForm">
+          <div>
+            <label>사용자명</label>
+            <input type="text" name="username" value={username} onChange={handleUsernameChange}/>
+          </div>
+          <div>
+            <label>비밀번호</label>
+            <input type="password" name="password" value={password} onChange={handlePasswordChange}/>
+          </div>
+          <div>
+            <button type="button" name="login" onClick={handleSubmit}>로그인</button>
+          </div>
+        </div>
+      </div>
+  );
+}
