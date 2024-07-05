@@ -7,7 +7,6 @@ export default function LoginComponent() {
   const navigate = useNavigate();
   const [username, setUsername] = useState('eh13');
   const [password, setPassword] = useState('');
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   function handleUsernameChange(event) {
     setUsername(event.target.value);
@@ -18,17 +17,10 @@ export default function LoginComponent() {
   }
 
   function handleSubmit() {
-    if(username === 'eh13' && password === '950127') {
-      authContext.setAuthenticated(true);
-
-      setShowSuccessMessage(true);
-      setShowErrorMessage(false);
+    if(authContext.login(username, password)) {
       navigate(`/welcome/${username}`);
     }
     else {
-      authContext.setAuthenticated(false);
-
-      setShowSuccessMessage(false);
       setShowErrorMessage(true);
     }
   }
@@ -36,7 +28,6 @@ export default function LoginComponent() {
   return (
       <div className="Login">
         <h1>로그인</h1>
-        {showSuccessMessage && <div className="successMessage">인증 성공</div>}
         {showErrorMessage && <div className="errorMessage">인증 실패 : 인증 정보를 확인해주세요.</div>}
         <div className="LoginForm">
           <div>

@@ -7,7 +7,7 @@ export default function HeaderComponent() {
   const isAuthenticated = authContext.isAuthenticated
 
   function logout() {
-    authContext.setAuthenticated(false)
+    authContext.logout();
   }
 
   return (

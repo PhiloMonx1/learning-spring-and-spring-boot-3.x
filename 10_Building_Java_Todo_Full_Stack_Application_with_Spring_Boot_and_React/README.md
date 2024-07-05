@@ -18,6 +18,7 @@
 15. [인증 컨텍스트로 React State를 여러 컴포넌트와 공유하기](#14단계---react-컴포넌트를-개별-javascript-모듈로-리팩토링)
 16. [React State를 업데이트하고 인증 컨텍스트를 통해 확인](#16단계---react-state를-업데이트하고-인증-컨텍스트를-통해-확인)
 17. [isAuthenticated를 React State에 설정 - 인증 컨텍스트](#17단계---isauthenticated를-react-state에-설정---인증-컨텍스트)
+18. [18단계 - 인증 라우터로 React 라우터 보호하기 上](#18단계---인증-라우터로-react-라우터-보호하기-上)
 
 ---
 
@@ -804,5 +805,61 @@ export default function HeaderComponent() {
   <li className="nav-item fs-5">{isAuthenticated && <Link className="nav-link" to="/logout" onClick={logout}>로그아웃</Link>}</li>
 ```
 - logout() 함수를 로그아웃 링크 onClick 으로 연결시킨다.
+
+---
+
+## 18단계 - 인증 라우터로 React 라우터 보호하기 上 
+AuthContext 사용해서 인증 상태에 따라 메뉴 노출을 제어해 보았다, 하지만 인증이 완료되지 않은 상태에서 라우터를 통한 접근을 막지 못하고 있다.
+
+이번 단계에서는 라우터 보호에 앞서 기존 인증 로직을 개선해보도록 할 것이다.
+
+#### 리팩토링 : 로그인 함수 개선
+```jsx
+// AuthContext.js
+function login(username, password) {
+  const isLoginSuccess = username === 'eh13' && password === '950127'
+  setAuthenticated(isLoginSuccess);
+  return isLoginSuccess;
+}
+
+// Login.jsx
+function handleSubmit() {
+  if(authContext.login(username, password)) {
+    navigate(`/welcome/${username}`);
+  }
+  else {
+    setShowErrorMessage(true);
+  }
+}
+```
+- AuthContext와 Login 컴포넌트의 역할을 분담했다.
+  - setAuthenticated 로직은 AuthContext 에서 처리
+  - navigate, setShowErrorMessage 로직은 Login 에서 처리
+    - setShowSuccessMessage은 더 이상 불필요하다. (로그인이 완료되면 navigate()가 동작하기 때문)
+
+#### 로그아웃 함수 개선
+```jsx
+// AuthContext.js
+function logout() {
+  setAuthenticated(false);
+}
+
+// Header.jsx
+function logout() {
+  authContext.logout();
+}
+```
+- 기존 Header 컴포넌트에서 처리하던 logout() 함수를 AuthContext의 책임으로 개선했다.
+- Header의 logout() 함수에서는 AuthContext 에게서 넘겨 받은 logout()을 사용한다.
+
+#### setAuthenticated을 전달하지 않기
+```jsx
+  return (
+      <AuthContext.Provider value={{isAuthenticated, login, logout}}>
+        {children}
+      </AuthContext.Provider>
+  )
+```
+- 결과적으로 AuthContext의 'setAuthenticated'는 전달하지 않아도 되며, 외부에서 인증 상태를 직접 변경하는 것이 아닌 상태를 참조하는 방식으로 개선했다.
 
 ---
