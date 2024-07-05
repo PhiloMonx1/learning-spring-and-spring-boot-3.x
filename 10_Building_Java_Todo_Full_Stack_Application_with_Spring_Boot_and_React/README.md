@@ -5,6 +5,7 @@
 2. [로그인 컴포넌트 시작하기 - Todo React 앱](#2단계---로그인-컴포넌트-시작하기---todo-react-앱)
 3. [로그인 컴포넌트 개선 - Todo React 앱](#3단계---로그인-컴포넌트-개선---todo-react-앱)
 4. [하드 코딩으로 인증 추가 - Todo React 앱](#4단계---하드-코딩으로-인증-추가---todo-react-앱)
+5. [로그인 컴포넌트에서 조건에 따른 메시지 표시 - Todo React 앱](#5단계---로그인-컴포넌트에서-조건에-따른-메시지-표시---todo-react-앱)
 
 ---
 
@@ -184,5 +185,33 @@ function LoginComponent() {
 }
 ```
 - `SuccessMessageComponent()` 메서드에선 조건문 안에 컴포넌트 리턴문을 담아 특정 조건에 충족할 때만 컴포넌트를 노출시키고 있다.
+
+---
+
+## 5단계 - 로그인 컴포넌트에서 조건에 따른 메시지 표시 - Todo React 앱
+
+#### JavaScript의 '단축 평가'
+JavaScript의 &&(AND 연산자)는 '단축 평가'라는 특징을 가지고 있다.
+```js
+true && 'EH13' //결과 값 : EH13
+1+1 === 2 && 'EH13' //결과 값 : EH13
+1+1 === 3 && 'EH13' //결과 값 : false
+```
+- 왼쪽 피연산자를 평가
+- 거짓이면 'false' 리턴
+- 참이면 오른쪽 피연산자 리턴
+
+#### 단축 평가 활용 실습
+```jsx
+  //...(생략)
+  return (
+      <div className="Login">
+        {showSuccessMessage && <div className="successMessage">인증 성공</div>}
+        {showErrorMessage && <div className="errorMessage">인증 실패 : 인증 정보를 확인해주세요.</div>}
+        {/*...생략  */}
+      </div>
+  );
+```
+- 단축 평가를 활용해서 기존 `SuccessMessageComponent` 함수를 아예 삭제할 수 있다.
 
 ---

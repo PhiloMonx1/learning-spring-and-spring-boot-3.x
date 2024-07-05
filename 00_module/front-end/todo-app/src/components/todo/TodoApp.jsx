@@ -50,8 +50,8 @@ function LoginComponent() {
 
   return (
       <div className="Login">
-        <SuccessMessageComponent />
-        <ErrorMessageComponent />
+        {showSuccessMessage && <div className="successMessage">인증 성공</div>}
+        {showErrorMessage && <div className="errorMessage">인증 실패 : 인증 정보를 확인해주세요.</div>}
         <div className="LoginForm">
           <div>
             <label>사용자명</label>
