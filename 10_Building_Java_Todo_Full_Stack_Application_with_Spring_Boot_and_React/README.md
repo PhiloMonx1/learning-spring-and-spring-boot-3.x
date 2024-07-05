@@ -15,6 +15,7 @@
 12. [React 프론트엔드 애플리케이션에 Bootstrap 추가](#12단계---react-프론트엔드-애플리케이션에-bootstrap-추가)
 13. [Bootstrap을 사용하여 Todo React 프론트엔드 애플리케이션에 스타일 적용](#13단계---bootstrap을-사용하여-todo-react-프론트엔드-애플리케이션에-스타일-적용)
 14. [React 컴포넌트를 개별 JavaScript 모듈로 리팩토링](#14단계---react-컴포넌트를-개별-javascript-모듈로-리팩토링)
+15. [인증 컨텍스트로 React State를 여러 컴포넌트와 공유하기](#14단계---react-컴포넌트를-개별-javascript-모듈로-리팩토링)
 
 ---
 
@@ -594,5 +595,103 @@ function HeaderComponent() {
   - 모듈 파일명은 'Component'를 제외했다. (컴포넌트는 대문자로 시작한다는 규칙을 지키면 컴포넌트임을 명시하지 않아도 알아볼 수 있을 것이라 판단)
   - 기존 'ErrorComponent'는 'NotFoundErrorComponent'로 리네이밍 했다.
   - 강의에서는 폴더 구조까지 리팩토링하지 않지만 개인적으로 진행했다.
+
+---
+
+## 15단계 - 인증 컨텍스트로 React State를 여러 컴포넌트와 공유하기
+
+#### 컨텍스트(Context)
+컴포넌트 트리 전체에 걸쳐 데이터를 효율적으로 공유할 수 있게 해주는 내장 기능 
+- 전역적으로 사용이 필요한 (사용자 정보) 등을 처리할 때 주로 사용
+- props를 통해 여러 계층의 컴포넌트를 거치지 않고도 데이터를 공유
+  - 깊은 계층 구조에서 여러 컴포넌트를 거쳐 props를 전달하는 문제(props drilling)를 해결
+- 주의점
+  - Context를 과도하게 사용하면 컴포넌트 재사용이 어려워질 수 있다.
+  - Context가 변경될 때마다 하위 컴포넌트들이 리렌더링 될 수 있다.
+
+#### 컨텍스트 사용 실습
+1. 컨텍스트 생성
+    ```jsx
+    import {createContext} from "react";
+    const AuthContext = createContext()
+    ```
+2. AuthProvider 컴포넌트 정의
+    ```jsx
+    import {createContext} from "react";
+    const AuthContext = createContext()
+    
+    export default function AuthProvider({children}) {
+      return (
+          <AuthContext.Provider>
+            {children}
+          </AuthContext.Provider>
+      )
+    }
+    ```
+    - `{children}` : `AuthProvider` 컴포넌트의 하위 컴포넌트는 children 파라미터를 통해 전달된다.
+    - 외부에서 `AuthProvider` 컴포넌트 안에 다른 컴포넌트를 하위 컴포넌트로 넣으면 결과적으로는 `<AuthContext.Provider>` 안에 하위 컴포넌트가 자리하게 된다.
+3. TodoApp 에서 사용
+    ```jsx
+    export default function TodoApp() {
+      return (
+          <div className="TodoApp">
+    
+            <AuthProvider>
+              <BrowserRouter>
+                <HeaderComponent />
+                <Routes>
+                  <Route path="/" element={<LoginComponent />} />
+                  <Route path="/login" element={<LoginComponent />} />
+                  <Route path="/welcome/:username" element={<WelcomeComponent />} />
+                  <Route path="/todos" element={<ListTodosComponent />} />
+                  <Route path="/logout" element={<LogoutComponent />} />
+    
+                  <Route path="*" element={<NotFoundErrorComponent />} />
+                </Routes>
+                <FooterComponent />
+              </BrowserRouter>
+            </AuthProvider>
+    
+          </div>
+      );
+    }
+    ```
+    - `<AuthProvider>` 컴포넌트 안에 다른 컴포넌트를 배치한다.
+    - BrowserRouter, HeaderComponent, Routes, 모든 Route 컴포넌트는 `<AuthContext.Provider>`로 묶이는 것과 같아졌다.
+
+#### 컨텍스트에 State 추가하기
+```jsx
+import {createContext, useState} from "react";
+
+export const AuthContext = createContext()
+
+export default function AuthProvider({children}) {
+  const [number, setNumber] = useState(0)
+
+  return (
+      <AuthContext.Provider value={ {number} }>
+        {children}
+      </AuthContext.Provider>
+  )
+}
+```
+- 'AuthContext.Provider'에 `value` 프로퍼티를 설정했다.
+  - value를 통해 데이터를 전달할 수 있다.
+- 'AuthContext'를 익스포트 했다.
+
+```jsx
+import {AuthContext} from "../security/AuthContext";
+import {useContext} from "react";
+
+export default function HeaderComponent() {
+
+  const authContext = useContext(AuthContext)
+  console.log(authContext.number);
+  //...(생략)
+}
+```
+- 외부에서 `useContext(AuthContext)`로  `AuthContext`의 State에 접근이 가능하다.
+  - 콘솔을 확인해보면 `number`의 초기값이 0이 출력된다.
+- 현재 `HeaderComponent`의 경우 모든 컴포넌트와 함께 출력되기 때문에 제외한 다른 URL 라우터에서도 해당 값은 유지된다.
 
 ---
