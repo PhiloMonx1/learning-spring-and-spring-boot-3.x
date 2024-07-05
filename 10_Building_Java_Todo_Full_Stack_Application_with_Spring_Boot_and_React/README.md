@@ -4,6 +4,7 @@
 1. [React로 할 일 관리 앱 구축 시작하기](#1단계---react로-할-일-관리-앱-구축-시작하기)
 2. [로그인 컴포넌트 시작하기 - Todo React 앱](#2단계---로그인-컴포넌트-시작하기---todo-react-앱)
 3. [로그인 컴포넌트 개선 - Todo React 앱](#3단계---로그인-컴포넌트-개선---todo-react-앱)
+4. [하드 코딩으로 인증 추가 - Todo React 앱](#4단계---하드-코딩으로-인증-추가---todo-react-앱)
 
 ---
 
@@ -135,5 +136,53 @@ useState는 리액트가 조작할 수 있는 데이터 객체를 생성하는 �
   - useState는 여러 개 생성할 수 있으며 지역 내에서 고유한 변수, 함수명을 사용해야 한다.
     - username(변수), setUsername(함수), password(변수), setPassword(함수) 해당 4개의 네이밍은 각각 고유해야 한다.
     - 각 useState는 서로 완전히 독립적인 상태이다. 자신만의 값과 업데이트 함수를 가진다.
+
+---
+
+## 4단계 - 하드 코딩으로 인증 추가 - Todo React 앱
+
+#### 하드코딩 인증 추가 실습
+```jsx
+function LoginComponent() {
+  const [username, setUsername] = useState('eh13');
+  const [password, setPassword] = useState('');
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
+  //...(생략)
+  function handleSubmit() {
+    if(username === 'eh13' && password === '950127') {
+      setShowSuccessMessage(true);
+      setShowErrorMessage(false);
+    }
+    else {
+      setShowSuccessMessage(false);
+      setShowErrorMessage(true);
+    }
+  }
+
+  function SuccessMessageComponent() {
+    if(showSuccessMessage) {
+      return (<div className="successMessage">인증 성공</div>)
+    }
+    return null
+  }
+
+  function ErrorMessageComponent() {
+    if(showErrorMessage) {
+      return (<div className="errorMessage">인증 실패 : 인증 정보를 확인해주세요.</div>)
+    }
+    return null
+  }
+
+  return (
+      <div className="Login">
+        <SuccessMessageComponent />
+        <ErrorMessageComponent />
+        {/*...(생략)*/}
+      </div>
+  );
+}
+```
+- `SuccessMessageComponent()` 메서드에선 조건문 안에 컴포넌트 리턴문을 담아 특정 조건에 충족할 때만 컴포넌트를 노출시키고 있다.
 
 ---
