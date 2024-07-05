@@ -8,6 +8,7 @@
 5. [로그인 컴포넌트에서 조건에 따른 메시지 표시 - Todo React 앱](#5단계---로그인-컴포넌트에서-조건에-따른-메시지-표시---todo-react-앱)
 6. [React Router DOM으로 로그인 컴포넌트에 라우팅](#6단계---react-router-dom으로-로그인-컴포넌트에-라우팅)
 7. [React 앱에 에러 컴포넌트 추가하기](#7단계---react-앱에-에러-컴포넌트-추가하기)
+8. [웰컴 컴포넌트에서 하드 코딩 삭제](#8단계---웰컴-컴포넌트에서-하드-코딩-삭제)
 
 ---
 
@@ -319,5 +320,55 @@ export default function TodoApp() {
 }
 ```
 - 'path'를 `*` 로 작성할 경우 나머지 라우터에 해당하지 않은 경우 모두 `*`로 잡힌다.
+
+---
+
+## 8단계 - 웰컴 컴포넌트에서 하드 코딩 삭제
+
+#### userParams
+라우팅 경로에 해당하는 현재 URL에서 동적 파라미터를 Key/Value 쌍을 가진 객체로 반환한다.
+
+#### userParams 실습
+1. 임포트
+    ```jsx
+    import {useParams} from "react-router-dom";
+    ```
+2. URL파라미터(동적 세그먼트) 전달
+    ```jsx
+    <Route path="/welcome/:username" element={<WelcomeComponent />} />
+    ```
+    - 'username' 이라는 이름으로 동적 세그먼트를 전달.
+    - 스프링의 `@PathVariable`과 유사하다.
+3. 네이게이터 변경
+    ```jsx
+      function handleSubmit() {
+        if(username === 'eh13' && password === '950127') {
+          setShowSuccessMessage(true);
+          setShowErrorMessage(false);
+          navigate(`/welcome/${username}`);
+        }
+        else {
+          setShowSuccessMessage(false);
+          setShowErrorMessage(true);
+        }
+      }
+    ```
+    - ${변수} 방식을 사용하기 위해서는 따옴표(')가 아닌 백틱(`)을 사용해야 한다.
+4. 파라미터 사용
+    ```jsx
+    function WelcomeComponent() {
+      const params = useParams()
+    
+      return (
+          <div className="WelcomeComponent">
+            <h1>환영합니다</h1>
+            <div>
+              {params.username}님! 만나서 반갑습니다.
+            </div>
+          </div>
+      );
+    }
+    ```
+    - `params.username` 대신 `const {username} = useParams()` 으로 사용할 수도 있다.
 
 ---
