@@ -7,6 +7,7 @@
 4. [하드 코딩으로 인증 추가 - Todo React 앱](#4단계---하드-코딩으로-인증-추가---todo-react-앱)
 5. [로그인 컴포넌트에서 조건에 따른 메시지 표시 - Todo React 앱](#5단계---로그인-컴포넌트에서-조건에-따른-메시지-표시---todo-react-앱)
 6. [React Router DOM으로 로그인 컴포넌트에 라우팅](#6단계---react-router-dom으로-로그인-컴포넌트에-라우팅)
+7. [React 앱에 에러 컴포넌트 추가하기](#7단계---react-앱에-에러-컴포넌트-추가하기)
 
 ---
 
@@ -280,5 +281,43 @@ function LoginComponent() {
 }
 ```
 - useNavigate 를 사용해서 다른 라우터를 호출할 수 있다.
+
+---
+
+## 7단계 - React 앱에 에러 컴포넌트 추가하기
+
+현재 존재하지 않는 엔드포인트 URL을 입력할 경우 빈페이지가 표시되고 콘솔창에 에러가 노출된다. 에러 컴포넌트로 예외 처리를 할 것이다.
+#### 컴포넌트 생성
+```jsx
+function ErrorComponent() {
+  return (
+      <div className="ErrorComponent">
+        <h1>NOT FOUND</h1>
+        <div>
+          404! 페이지를 찾을 수 없습니다.
+        </div>
+      </div>
+  );
+}
+```
+- 간단한 404 컴포넌트를 추가했다.
+
+```jsx
+export default function TodoApp() {
+  return (
+      <div className="TodoApp">
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<LoginComponent />} />
+            <Route path="/login" element={<LoginComponent />} />
+            <Route path="/welcome" element={<WelcomeComponent />} />
+            <Route path="*" element={<ErrorComponent />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
+  );
+}
+```
+- 'path'를 `*` 로 작성할 경우 나머지 라우터에 해당하지 않은 경우 모두 `*`로 잡힌다.
 
 ---
