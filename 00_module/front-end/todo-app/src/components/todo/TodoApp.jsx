@@ -1,6 +1,6 @@
 import './TodoApp.css';
 import {useState} from 'react';
-import {BrowserRouter, Routes, Route, useNavigate, useParams} from "react-router-dom";
+import {BrowserRouter, Routes, Route, useNavigate, useParams, Link} from "react-router-dom";
 
 export default function TodoApp() {
   return (
@@ -90,6 +90,9 @@ function WelcomeComponent() {
         <div>
           {params.username}님! 만나서 반갑습니다.
         </div>
+        <div>
+           <Link to="/todos">Todo리스트</Link>
+        </div>
       </div>
   );
 }
@@ -106,10 +109,13 @@ function ErrorComponent() {
 }
 
 function ListTodosComponent() {
+  const today = new Date();
+  const targetDate = new Date(today.getFullYear()+12, today.getMonth(), today.getDay());
+
   const todos = [
-    {id: 1, description: 'AWS 배우기'},
-    {id: 2, description: 'Spring Boot 배우기'},
-    {id: 3, description: 'React 배우기'},
+    {id: 1, description: 'AWS 배우기', done: false, targetDate: targetDate},
+    {id: 2, description: 'Spring Boot 배우기', done: false, targetDate: targetDate},
+    {id: 3, description: 'React 배우기', done: false, targetDate: targetDate},
   ]
 
 
@@ -122,6 +128,8 @@ function ListTodosComponent() {
             <tr>
               <th>id</th>
               <th>할 일</th>
+              <th>완료 여부</th>
+              <th>목표 일자</th>
             </tr>
             </thead>
             <tbody>
@@ -130,6 +138,8 @@ function ListTodosComponent() {
                   <tr key={todo.id}>
                     <td>{todo.id}</td>
                     <td>{todo.description}</td>
+                    <td>{todo.done.toString()}</td>
+                    <td>{todo.targetDate.toDateString()}</td>
                   </tr>
               ))
             }
