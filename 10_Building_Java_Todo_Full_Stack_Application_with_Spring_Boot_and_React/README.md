@@ -11,6 +11,7 @@
 8. [웰컴 컴포넌트에서 하드 코딩 삭제](#8단계---웰컴-컴포넌트에서-하드-코딩-삭제)
 9. [할 일 목록 컴포넌트 React로 만들기](#9단계---할-일-목록-컴포넌트-react로-만들기)
 10. [할 일 목록 컴포넌트에 상세 내용 보여주기](#10단계---할-일-목록-컴포넌트에-상세-내용-보여주기)
+11. [헤더, 바닥글, 로그아웃 컴포넌트 React로 만들기](#11단계---헤더-바닥글-로그아웃-컴포넌트-react로-만들기)
 
 ---
 
@@ -458,5 +459,35 @@ import {Link} from "react-router-dom";
   - `<a href="/todos">Todo리스트</a>` 와 동일하다.
 - a태그는 이동 시 페이지 전체를 로드하지만 Link의 경우 컴포넌트만 로드한다.
   - SPA 원칙에 따라 동작한다.
+
+---
+
+## 11단계 - 헤더, 바닥글, 로그아웃 컴포넌트 React로 만들기
+
+#### 헤더 푸터 적용하기
+```jsx
+export default function TodoApp() {
+  return (
+      <div className="TodoApp">
+        <HeaderComponent />
+
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<LoginComponent />} />
+            <Route path="/login" element={<LoginComponent />} />
+            <Route path="/welcome/:username" element={<WelcomeComponent />} />
+            <Route path="/todos" element={<ListTodosComponent />} />
+            <Route path="/logout" element={<LogoutComponent />} />
+
+            <Route path="*" element={<ErrorComponent />} />
+          </Routes>
+        </BrowserRouter>
+
+        <FooterComponent />
+      </div>
+  );
+}
+```
+- `TodoApp` 컴포넌트가 최상위 컴포넌트이기 때문에 해당 컴포넌트에 삽입하면 모든 라우터에서도 헤더 & 푸터가 포함된다.
 
 ---

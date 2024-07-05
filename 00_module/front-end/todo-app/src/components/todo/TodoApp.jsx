@@ -5,16 +5,21 @@ import {BrowserRouter, Routes, Route, useNavigate, useParams, Link} from "react-
 export default function TodoApp() {
   return (
     <div className="TodoApp">
+      <HeaderComponent />
+
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LoginComponent />} />
           <Route path="/login" element={<LoginComponent />} />
           <Route path="/welcome/:username" element={<WelcomeComponent />} />
           <Route path="/todos" element={<ListTodosComponent />} />
+          <Route path="/logout" element={<LogoutComponent />} />
 
           <Route path="*" element={<ErrorComponent />} />
         </Routes>
       </BrowserRouter>
+
+      <FooterComponent />
     </div>
   );
 }
@@ -145,6 +150,33 @@ function ListTodosComponent() {
             }
             </tbody>
           </table>
+        </div>
+      </div>
+  );
+}
+
+function HeaderComponent() {
+  return (
+      <div className="header">
+        헤더 <hr/>
+      </div>
+  );
+}
+
+function FooterComponent() {
+  return (
+      <div className="footer">
+        <hr/> 푸터
+      </div>
+  );
+}
+
+function LogoutComponent() {
+  return (
+      <div className="LogoutComponent">
+        <h1>로그아웃</h1>
+        <div>
+          안녕히 가세요
         </div>
       </div>
   );
