@@ -24,6 +24,7 @@
 ---
 
 ## 1단계 - React로 할 일 관리 앱 구축 시작하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/99a09a39a6bed6a86d71e68f5a00b9e29e36e2bb)
 
 #### 학습할 키워드
 - 라우팅(Routing)
@@ -43,6 +44,7 @@ Todo 관리 웹 애플리케이션을 풀스택으로 만들 것이다.
 ---
 
 ## 2단계 - 로그인 컴포넌트 시작하기 - Todo React 앱
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/4e338bdddadbb38fbd16e4a5f7c0f5e668e9c5ba)
 
 #### 컴포넌트 작성 Tip
 컴포넌트를 구조적으로 작성하는 것은 매우 중요하지만 어려운 일이기도 하다.
@@ -79,6 +81,7 @@ function WelcomeComponent() {
 ---
 
 ## 3단계 - 로그인 컴포넌트 개선 - Todo React 앱
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/dac25cf5c5cbab6fac0647ed6d83afd5d1ffe3b4)
 
 #### 읽기 전용 컴포넌트...?
 ```jsx
@@ -155,6 +158,7 @@ useState는 리액트가 조작할 수 있는 데이터 객체를 생성하는 �
 ---
 
 ## 4단계 - 하드 코딩으로 인증 추가 - Todo React 앱
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/eaf4ef418d790e32517cd9f46e49137d54ec1f86)
 
 #### 하드코딩 인증 추가 실습
 ```jsx
@@ -203,6 +207,7 @@ function LoginComponent() {
 ---
 
 ## 5단계 - 로그인 컴포넌트에서 조건에 따른 메시지 표시 - Todo React 앱
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/eaa87616a5c405e0e31eb061a76d647aa01ad16b)
 
 #### JavaScript의 '단축 평가'
 JavaScript의 &&(AND 연산자)는 '단축 평가'라는 특징을 가지고 있다.
@@ -231,6 +236,7 @@ true && 'EH13' //결과 값 : EH13
 ---
 
 ## 6단계 - React Router DOM으로 로그인 컴포넌트에 라우팅
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/db76f0ead06e2a251a4e479a38b05f8233e8306b)
 
 #### 라우터(Router)
 URL에 따라서 적절한 컴포넌트를 리턴하는 기술
@@ -297,6 +303,7 @@ function LoginComponent() {
 ---
 
 ## 7단계 - React 앱에 에러 컴포넌트 추가하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/ba58c8c6b001de4e7fd71cd622a8071de1ba486a)
 
 현재 존재하지 않는 엔드포인트 URL을 입력할 경우 빈페이지가 표시되고 콘솔창에 에러가 노출된다. 에러 컴포넌트로 예외 처리를 할 것이다.
 #### 컴포넌트 생성
@@ -335,6 +342,7 @@ export default function TodoApp() {
 ---
 
 ## 8단계 - 웰컴 컴포넌트에서 하드 코딩 삭제
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/e301d05b0e0ca2ed03494c45c66b5c1547eae777)
 
 #### userParams
 라우팅 경로에 해당하는 현재 URL에서 동적 파라미터를 Key/Value 쌍을 가진 객체로 반환한다.
@@ -385,6 +393,7 @@ export default function TodoApp() {
 ---
 
 ## 9단계 - 할 일 목록 컴포넌트 React로 만들기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/fb75006cb8c1582d3237648eb3b97843089c5876)
 
 #### 컴포넌트에서 리스트 렌더링(반목문) 실습
 ```jsx
@@ -456,6 +465,7 @@ TodoApp.jsx:125 Warning: Each child in a list should have a unique "key" prop.
 ---
 
 ## 10단계 - 할 일 목록 컴포넌트에 상세 내용 보여주기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/aa9f36bc3a01f492d45c0829b5626115a7932ab3)
 
 #### a태그 대신 Link 사용하기
 ```jsx
@@ -471,6 +481,7 @@ import {Link} from "react-router-dom";
 ---
 
 ## 11단계 - 헤더, 바닥글, 로그아웃 컴포넌트 React로 만들기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/77b590737909096483116ee006e159e5c867a8f4)
 
 #### 헤더 푸터 적용하기
 ```jsx
@@ -501,6 +512,7 @@ export default function TodoApp() {
 ---
 
 ## 12단계 - React 프론트엔드 애플리케이션에 Bootstrap 추가
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/4937dd8b715a1114abf7a17b2a9aa56081d48487)
 
 #### npm 설치 (bootstrap)
 ```
@@ -555,6 +567,7 @@ npm install bootstrap
 ---
 
 ## 13단계 - Bootstrap을 사용하여 Todo React 프론트엔드 애플리케이션에 스타일 적용
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/de6f6195398229d0e083c0d2d3993afe4a2b7414)
 
 #### "react-router-dom"를 사용할 때 주의점
 - "react-router-dom"에서 제공하는 컴포넌트(Link 등)는 'BrowserRouter' 컴포넌트 하위 컴포넌트에서만 사용이 가능하다.
@@ -591,6 +604,7 @@ function HeaderComponent() {
 ---
 
 ## 14단계 - React 컴포넌트를 개별 JavaScript 모듈로 리팩토링
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/330bb36fa7fb16bd11d7fa52d5b540f107c643f6)
 
 #### 모듈 분리
 - 같은 모듈 내에서 함수 단위로 구분되던 컴포넌트를 모듈 단위로 분리한다.
@@ -603,6 +617,7 @@ function HeaderComponent() {
 ---
 
 ## 15단계 - 인증 컨텍스트로 React State를 여러 컴포넌트와 공유하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/f2dbbdf0bfe0f494155e3ebf1bb404fb6b7759a5)
 
 #### 컨텍스트(Context)
 컴포넌트 트리 전체에 걸쳐 데이터를 효율적으로 공유할 수 있게 해주는 내장 기능 
@@ -701,6 +716,7 @@ export default function HeaderComponent() {
 ---
 
 ## 16단계 - React State를 업데이트하고 인증 컨텍스트를 통해 확인
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/51ce33ca4731037744b8a6737f5419c7afc1ef5f)
 
 #### setInterval
 일정 주기마다 지정된 함수를 반복 실행하도록 설정하는 함수.
@@ -727,6 +743,7 @@ const authContext = useAuth()
 ---
 
 ## 17단계 - isAuthenticated를 React State에 설정 - 인증 컨텍스트
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/d184d3dd2c4486cbbd22655d69d8099f6aa6aa55)
 
 #### 인증 관련 state 추가 
 ```jsx
@@ -810,6 +827,8 @@ export default function HeaderComponent() {
 ---
 
 ## 18단계 - 인증 라우터로 React 라우터 보호하기 上 
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/abb659c595beb1862d18a60d2e7ad07ed5c1ad3f)
+
 AuthContext 사용해서 인증 상태에 따라 메뉴 노출을 제어해 보았다, 하지만 인증이 완료되지 않은 상태에서 라우터를 통한 접근을 막지 못하고 있다.
 
 이번 단계에서는 라우터 보호에 앞서 기존 인증 로직을 개선해보도록 할 것이다.
@@ -866,6 +885,7 @@ function logout() {
 ---
 
 ## 19단계 - 인증 라우터로 React 라우터 보호하기 下
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/10ad96a2c64484223272b195223acec3b3f1fa88)
 
 #### AuthencatedRoute 컴포넌트 추가
 ```jsx
