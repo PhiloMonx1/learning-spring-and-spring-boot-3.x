@@ -17,6 +17,7 @@
 14. [React 컴포넌트를 개별 JavaScript 모듈로 리팩토링](#14단계---react-컴포넌트를-개별-javascript-모듈로-리팩토링)
 15. [인증 컨텍스트로 React State를 여러 컴포넌트와 공유하기](#14단계---react-컴포넌트를-개별-javascript-모듈로-리팩토링)
 16. [React State를 업데이트하고 인증 컨텍스트를 통해 확인](#16단계---react-state를-업데이트하고-인증-컨텍스트를-통해-확인)
+17. [isAuthenticated를 React State에 설정 - 인증 컨텍스트](#17단계---isauthenticated를-react-state에-설정---인증-컨텍스트)
 
 ---
 
@@ -720,5 +721,88 @@ const authContext = useAuth()
 - 'AuthContext'를 기존 `const authContext = useContext(AuthContext);`로 가지고 오던 코드를 개선했다.
 - 선언하는 곳에서 `useAuth` 함수를 만들어 해당 함수를 내보내면 'AuthContext'를 직접적으로 내보내지 않아도 된다.
   - 'AuthContext'의 내부 구현을 숨기고, 사용자에게 필요한 인터페이스만 노출
+
+---
+
+## 17단계 - isAuthenticated를 React State에 설정 - 인증 컨텍스트
+
+#### 인증 관련 state 추가 
+```jsx
+  const [isAuthenticated, setAuthenticated] = useState(false)
+```
+- AuthContext에 인증 상태를 관리하는 state를 추가한다.
+
+#### value 전달
+```jsx
+  return (
+      <AuthContext.Provider value={ {number, isAuthenticated, setAuthenticated} }>
+        {children}
+      </AuthContext.Provider>
+  )
+```
+- AuthContext.Provider의 value에 인증 관련 state를 추가한다.
+
+#### value 리팩토링
+```jsx
+  const valueToBeShared = {number, isAuthenticated, setAuthenticated}
+  return (
+      <AuthContext.Provider value={ valueToBeShared }>
+        {children}
+      </AuthContext.Provider>
+  )
+```
+- value에 포함될 객체를 변수로 선언해서 전달할 수도 있다.
+- 일반적으로 잘 사용되지 않는 방법이다. (value 객체가 복잡할 경우 고려할 수 있다)
+
+#### 로그인 컴포넌트에서 setAuthenticated 사용
+```jsx
+  function handleSubmit() {
+    if(username === 'eh13' && password === '950127') {
+      authContext.setAuthenticated(true);
+      
+      setShowSuccessMessage(true);
+      setShowErrorMessage(false);
+      navigate(`/welcome/${username}`);
+    }
+    else {
+      setShowSuccessMessage(false);
+      setShowErrorMessage(true);
+    }
+  }
+```
+- 로그인이 성공했을 때 `authContext.setAuthenticated(true)`로 'isAuthenticated' 값을 true로 바꿔준다.
+
+#### isAuthenticated 값 사용
+```jsx
+export default function HeaderComponent() {
+
+  const authContext = useAuth()
+  const isAuthenticated = authContext.isAuthenticated
+
+  return (
+      <header className="border-bottom border-light border-5 mb-5 p-2">
+        {/*...(생략)*/}
+                  <li className="nav-item fs-5">{isAuthenticated && <Link className="nav-link" to="/welcome/eh13">Home</Link>}</li>
+                  <li className="nav-item fs-5">{isAuthenticated && <Link className="nav-link" to="/todos">Todo 목록</Link>}</li>
+        {/*...(생략)*/}
+      </header>
+  );
+}
+```
+- isAuthenticated 값이 true 일 경우에만 'Home', 'Todo 목록' 링크를 노출하도록 설정한다.
+```jsx
+<li className="nav-item fs-5">{!isAuthenticated && <Link className="nav-link" to="/login">로그인</Link>}</li>
+<li className="nav-item fs-5">{isAuthenticated && <Link className="nav-link" to="/logout">로그아웃</Link>}</li>
+```
+- 로그인의 경우 `!isAuthenticated` 조건으로 isAuthenticated 값이 'false' 일 때만 메뉴 노출이 되도록 설정할 수 있다.
+
+#### 로그아웃 구현
+```jsx
+  function logout() {
+    authContext.setAuthenticated(false)
+  }
+  <li className="nav-item fs-5">{isAuthenticated && <Link className="nav-link" to="/logout" onClick={logout}>로그아웃</Link>}</li>
+```
+- logout() 함수를 로그아웃 링크 onClick 으로 연결시킨다.
 
 ---
