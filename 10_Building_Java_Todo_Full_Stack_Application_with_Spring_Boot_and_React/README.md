@@ -12,6 +12,7 @@
 9. [할 일 목록 컴포넌트 React로 만들기](#9단계---할-일-목록-컴포넌트-react로-만들기)
 10. [할 일 목록 컴포넌트에 상세 내용 보여주기](#10단계---할-일-목록-컴포넌트에-상세-내용-보여주기)
 11. [헤더, 바닥글, 로그아웃 컴포넌트 React로 만들기](#11단계---헤더-바닥글-로그아웃-컴포넌트-react로-만들기)
+12. [React 프론트엔드 애플리케이션에 Bootstrap 추가](#12단계---react-프론트엔드-애플리케이션에-bootstrap-추가)
 
 ---
 
@@ -489,5 +490,59 @@ export default function TodoApp() {
 }
 ```
 - `TodoApp` 컴포넌트가 최상위 컴포넌트이기 때문에 해당 컴포넌트에 삽입하면 모든 라우터에서도 헤더 & 푸터가 포함된다.
+
+---
+
+## 12단계 - React 프론트엔드 애플리케이션에 Bootstrap 추가
+
+#### npm 설치 (bootstrap)
+```
+npm install bootstrap
+```
+
+#### 부트스트랩 임포트
+- 페이지 전체에 적용하기 위해 'index.js' 파일에 임포트한다.
+    ```js
+    import 'bootstrap/dist/css/bootstrap.min.css'
+    ```
+    - 'node_modules' 내부에 bootstrap 폴더를 찾을 수 있다.
+    - import 할 때는 'node_modules'는 경로에서 제외해도 된다.
+
+#### 부트스트랩 사용해서 스타일 개선
+```jsx
+  //...(생략)
+  return (
+      <div className="container">
+        <h1>나의 TODO 리스트</h1>
+        <div>
+          <table className="table">
+            <thead>
+            <tr>
+              <th>id</th>
+              <th>할 일</th>
+              <th>완료 여부</th>
+              <th>목표 일자</th>
+            </tr>
+            </thead>
+            <tbody>
+            {
+              todos.map((todo) => (
+                  <tr key={todo.id}>
+                    <td>{todo.id}</td>
+                    <td>{todo.description}</td>
+                    <td>{todo.done.toString()}</td>
+                    <td>{todo.targetDate.toDateString()}</td>
+                  </tr>
+              ))
+            }
+            </tbody>
+          </table>
+        </div>
+      </div>
+  );
+//...(생략)
+```
+- ListTodosComponent()에 적용했다.
+- className="container", className="table" 가 부트스트랩이 적용된 클래스이다.
 
 ---

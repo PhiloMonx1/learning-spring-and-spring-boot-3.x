@@ -125,10 +125,10 @@ function ListTodosComponent() {
 
 
   return (
-      <div className="ListTodosComponent">
+      <div className="container">
         <h1>나의 TODO 리스트</h1>
         <div>
-          <table>
+          <table className="table">
             <thead>
             <tr>
               <th>id</th>
