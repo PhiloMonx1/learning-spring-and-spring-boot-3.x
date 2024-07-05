@@ -9,6 +9,7 @@
 6. [React Router DOM으로 로그인 컴포넌트에 라우팅](#6단계---react-router-dom으로-로그인-컴포넌트에-라우팅)
 7. [React 앱에 에러 컴포넌트 추가하기](#7단계---react-앱에-에러-컴포넌트-추가하기)
 8. [웰컴 컴포넌트에서 하드 코딩 삭제](#8단계---웰컴-컴포넌트에서-하드-코딩-삭제)
+9. [할 일 목록 컴포넌트 React로 만들기](#9단계---할-일-목록-컴포넌트-react로-만들기)
 
 ---
 
@@ -370,5 +371,76 @@ export default function TodoApp() {
     }
     ```
     - `params.username` 대신 `const {username} = useParams()` 으로 사용할 수도 있다.
+
+---
+
+## 9단계 - 할 일 목록 컴포넌트 React로 만들기
+
+#### 컴포넌트에서 리스트 렌더링(반목문) 실습
+```jsx
+function ListTodosComponent() {
+  const todos = [
+    {id: 1, description: 'AWS 배우기'},
+    {id: 2, description: 'Spring Boot 배우기'},
+    {id: 3, description: 'React 배우기'},
+  ]
+
+
+  return (
+      <div className="ListTodosComponent">
+        <h1>나의 TODO 리스트</h1>
+        <div>
+          <table>
+            <thead>
+            <tr>
+              <th>id</th>
+              <th>할 일</th>
+            </tr>
+            </thead>
+            <tbody>
+            {
+              todos.map((todo) => (
+                  <tr>
+                    <td>{todo.id}</td>
+                    <td>{todo.description}</td>
+                  </tr>
+              ))
+            }
+            </tbody>
+          </table>
+        </div>
+      </div>
+  );
+}
+```
+- `todos.map()` 배열 내부에 map 함수를 사용해서 반복할 로직을 작성하면 된다.
+  - (todo) => () : todos 배열의 각 인덱스는 화살표 다음 괄호의 로직을 반복한다.
+
+#### List의 고유 key
+위에서 제안한 방식으로 코드를 작성하면 브라우저 콘솔창에 다음과 같은 경고 메시지가 출력된다.
+```
+TodoApp.jsx:125 Warning: Each child in a list should have a unique "key" prop.
+```
+제공된 리스트의 각 인덱스에는 고유한 key가 있어야 한다고 말하고 있다. 
+- 리액트는 key를 사용하여 리스트의 각 항목을 고유하게 식별한다.
+- 해당 key를 통해서 리스트의 항목이 변경되었을 때 어떤 항목을 선택해야 하는지 리액트가 구분할 수 있다.
+- key로 인해 리스트의 전체 항목을 조회할 필요가 없어 최적화 된 렌더링 환경을 구성할 수 있다.
+
+#### List 고유 key 삽입
+```jsx
+<tbody>
+{
+  todos.map((todo) => (
+      <tr key={todo.id}>
+        <td>{todo.id}</td>
+        <td>{todo.description}</td>
+      </tr>
+  ))
+}
+</tbody>
+```
+- 반복해서 작성되는 <tr> 태그 각각에 `todo.id`를 기반으로 고유한 key가 부여된다.
+- key를 부여하는 것은 성능 최적화 및 컴포넌트의 올바른 동작을 위해 선택이 아닌 '필수' 사항으로 인지해야 한다.
+  - 컴파일 에러가 아닌 런타임 에러가 콘솔창에 노출되는 리액트의 특성상 더 유의할 필요가 있음. 
 
 ---

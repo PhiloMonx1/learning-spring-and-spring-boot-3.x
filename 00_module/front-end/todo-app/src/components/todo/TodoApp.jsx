@@ -10,6 +10,8 @@ export default function TodoApp() {
           <Route path="/" element={<LoginComponent />} />
           <Route path="/login" element={<LoginComponent />} />
           <Route path="/welcome/:username" element={<WelcomeComponent />} />
+          <Route path="/todos" element={<ListTodosComponent />} />
+
           <Route path="*" element={<ErrorComponent />} />
         </Routes>
       </BrowserRouter>
@@ -98,6 +100,41 @@ function ErrorComponent() {
         <h1>NOT FOUND</h1>
         <div>
           404! 페이지를 찾을 수 없습니다.
+        </div>
+      </div>
+  );
+}
+
+function ListTodosComponent() {
+  const todos = [
+    {id: 1, description: 'AWS 배우기'},
+    {id: 2, description: 'Spring Boot 배우기'},
+    {id: 3, description: 'React 배우기'},
+  ]
+
+
+  return (
+      <div className="ListTodosComponent">
+        <h1>나의 TODO 리스트</h1>
+        <div>
+          <table>
+            <thead>
+            <tr>
+              <th>id</th>
+              <th>할 일</th>
+            </tr>
+            </thead>
+            <tbody>
+            {
+              todos.map((todo) => (
+                  <tr key={todo.id}>
+                    <td>{todo.id}</td>
+                    <td>{todo.description}</td>
+                  </tr>
+              ))
+            }
+            </tbody>
+          </table>
         </div>
       </div>
   );
