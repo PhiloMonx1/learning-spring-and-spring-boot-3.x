@@ -13,6 +13,7 @@
 10. [할 일 목록 컴포넌트에 상세 내용 보여주기](#10단계---할-일-목록-컴포넌트에-상세-내용-보여주기)
 11. [헤더, 바닥글, 로그아웃 컴포넌트 React로 만들기](#11단계---헤더-바닥글-로그아웃-컴포넌트-react로-만들기)
 12. [React 프론트엔드 애플리케이션에 Bootstrap 추가](#12단계---react-프론트엔드-애플리케이션에-bootstrap-추가)
+13. [Bootstrap을 사용하여 Todo React 프론트엔드 애플리케이션에 스타일 적용](#13단계---bootstrap을-사용하여-todo-react-프론트엔드-애플리케이션에-스타일-적용)
 
 ---
 
@@ -544,5 +545,41 @@ npm install bootstrap
 ```
 - ListTodosComponent()에 적용했다.
 - className="container", className="table" 가 부트스트랩이 적용된 클래스이다.
+
+---
+
+## 13단계 - Bootstrap을 사용하여 Todo React 프론트엔드 애플리케이션에 스타일 적용
+
+#### "react-router-dom"를 사용할 때 주의점
+- "react-router-dom"에서 제공하는 컴포넌트(Link 등)는 'BrowserRouter' 컴포넌트 하위 컴포넌트에서만 사용이 가능하다.
+
+#### 헤더 구현 실습
+```jsx
+function HeaderComponent() {
+  return (
+      <header className="border-bottom border-light border-5 mb-5 p-2">
+        <div className="container">
+          <div className="row">
+            <nav className="navbar navbar-expand-lg">
+              <a className="navbar-brand ms-2 fs-2 fw-bold text-black" href="http://localhost:3000/">🫐블루베리 Todo</a>
+              <div className="collapse navbar-collapse">
+                <ul className="navbar-nav">
+                  <li className="nav-item fs-5"><Link className="nav-link" to="/welcome/eh13">Home</Link></li>
+                  <li className="nav-item fs-5"><Link className="nav-link" to="/todos">Todo 목록</Link></li>
+                </ul>
+              </div>
+              <ul className="navbar-nav">
+                <li className="nav-item fs-5"><Link className="nav-link" to="/login">로그인</Link></li>
+                <li className="nav-item fs-5"><Link className="nav-link" to="/logout">로그아웃</Link></li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </header>
+
+  );
+}
+```
+- 부트스트랩을 활용해서 헤더 구현.
 
 ---
