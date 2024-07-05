@@ -6,6 +6,7 @@
 3. [로그인 컴포넌트 개선 - Todo React 앱](#3단계---로그인-컴포넌트-개선---todo-react-앱)
 4. [하드 코딩으로 인증 추가 - Todo React 앱](#4단계---하드-코딩으로-인증-추가---todo-react-앱)
 5. [로그인 컴포넌트에서 조건에 따른 메시지 표시 - Todo React 앱](#5단계---로그인-컴포넌트에서-조건에-따른-메시지-표시---todo-react-앱)
+6. [React Router DOM으로 로그인 컴포넌트에 라우팅](#6단계---react-router-dom으로-로그인-컴포넌트에-라우팅)
 
 ---
 
@@ -213,5 +214,71 @@ true && 'EH13' //결과 값 : EH13
   );
 ```
 - 단축 평가를 활용해서 기존 `SuccessMessageComponent` 함수를 아예 삭제할 수 있다.
+
+---
+
+## 6단계 - React Router DOM으로 로그인 컴포넌트에 라우팅
+
+#### 라우터(Router)
+URL에 따라서 적절한 컴포넌트를 리턴하는 기술
+- ex) '/home = 홈페이지', '/login = 로그인 페이지' 등
+- Spring의 API(JSP 리턴) 엔드포인트와 유사하다.
+- 페이지 자체가 변하는 것이 아닌, 동일 페이지에서 컴포넌트만 변경한다. (SPA)
+  - 하나의 HTML 파일 내에서 URL에 따라 적절한 컴포넌트의 교체가 이루어짐.
+
+#### React Router DOM
+React 애플리케이션에서 라우팅을 구현하기 위한 라이브러리
+- SPA(Single Page Application) 구현 가능
+
+#### React Router DOM 설치
+```
+npm install react-router-dom
+```
+- npm을 통해 설치가 완료되면 `package.json` 파일 내에서 확인 할 수 있다.
+
+#### Route 사용하기
+```jsx
+import {BrowserRouter, Routes, Route} from "react-router-dom";
+
+export default function TodoApp() {
+  return (
+      <div className="TodoApp">
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<LoginComponent />} />
+            <Route path="/login" element={<LoginComponent />} />
+            <Route path="/welcome" element={<WelcomeComponent />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
+  );
+}
+```
+- path : 엔드포인트
+- element : 'path' URL에서 노출할 컴포넌트
+
+#### 다른 컴포넌트로 라우팅 실습
+```jsx
+import {BrowserRouter, Routes, Route, useNavigate} from "react-router-dom";
+//...(생략)
+
+function LoginComponent() {
+  const navigate = useNavigate();
+  //...(생략)
+  function handleSubmit() {
+    if(username === 'eh13' && password === '950127') {
+      setShowSuccessMessage(true);
+      setShowErrorMessage(false);
+      navigate('/welcome');
+    }
+    else {
+      setShowSuccessMessage(false);
+      setShowErrorMessage(true);
+    }
+  }
+  //...(생략)
+}
+```
+- useNavigate 를 사용해서 다른 라우터를 호출할 수 있다.
 
 ---

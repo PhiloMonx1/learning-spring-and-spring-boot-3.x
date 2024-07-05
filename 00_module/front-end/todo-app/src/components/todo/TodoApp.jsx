@@ -1,16 +1,23 @@
 import './TodoApp.css';
 import {useState} from 'react';
+import {BrowserRouter, Routes, Route, useNavigate} from "react-router-dom";
+
 export default function TodoApp() {
   return (
     <div className="TodoApp">
-      Todo 관리 애플리케이션
-      <LoginComponent />
-      {/*<WelcomeComponent />*/}
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<LoginComponent />} />
+          <Route path="/login" element={<LoginComponent />} />
+          <Route path="/welcome" element={<WelcomeComponent />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
 
 function LoginComponent() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('eh13');
   const [password, setPassword] = useState('');
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
@@ -27,6 +34,7 @@ function LoginComponent() {
     if(username === 'eh13' && password === '950127') {
       setShowSuccessMessage(true);
       setShowErrorMessage(false);
+      navigate('/welcome');
     }
     else {
       setShowSuccessMessage(false);
