@@ -1,7 +1,26 @@
 import {Link, useParams} from "react-router-dom";
+import axios from "axios";
 
 export default function WelcomeComponent() {
   const params = useParams()
+
+
+  function callHelloWorldRestApi() {
+    console.log("callHelloWorldRestApi")
+    axios.get('http://localhost:8080/hello-world')
+    .then ((response) => successfulResponse(response))
+    .catch((error) => failedResponse(error))
+    .finally(() => console.log("finally"))
+  }
+
+  function successfulResponse(response) {
+    console.log(response)
+  }
+
+  function failedResponse(error) {
+    console.log(error)
+  }
+
 
   return (
       <div className="WelcomeComponent">
@@ -11,6 +30,9 @@ export default function WelcomeComponent() {
         </div>
         <div>
           <Link to="/todos">Todo리스트</Link>
+        </div>
+        <div>
+          <button className="btn btn-success m-5" onClick={callHelloWorldRestApi}>Hello World GET 요청</button>
         </div>
       </div>
   );

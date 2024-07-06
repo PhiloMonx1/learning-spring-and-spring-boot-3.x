@@ -2,6 +2,7 @@
 
 ## 목록
 1. [React 풀 스택 애플리케이션을 위해 Todo REST API 프로젝트 설정하기](#1단계---react-풀-스택-애플리케이션을-위해-todo-rest-api-프로젝트-설정하기)
+2. [React Hello World 컴포넌트에서 Spring Boot Hello World REST API 호출하기](#2단계---react-hello-world-컴포넌트에서-spring-boot-hello-world-rest-api-호출하기)
 
 ---
 
@@ -42,5 +43,48 @@
 
 3. 프로젝트 실행
 모듈 불러오기가 끝난 후 'RestfulWebServicesApplication' 애플리케이션을 실행하고, ['/hello-world'](http://localhost:8080/hello-world) GET API를 확인한다.
+
+---
+
+## 2단계 - React Hello World 컴포넌트에서 Spring Boot Hello World REST API 호출하기
+
+#### Axios
+브라우저와 Node.js에서 사용할 수 있는 Promise 기반의 HTTP 클라이언트 라이브러리
+- Promise : 비동기 작업을 처리하기 위한 객체
+  - 비동기 작업 : 특정 코드의 실행이 완료될 때까지 기다리지 않고 다음 코드를 먼저 실행하는 방식의 작업
+    - ex) 서버에 요청을 보낸 후 응답을 기다리는 동안 다른 작업을 진행할 수 있다. 
+
+#### Axios 설치
+```
+npm install axios
+```
+
+#### Axios 사용
+```jsx
+import axios from "axios";
+
+function callHelloWorldRestApi() {
+    console.log("callHelloWorldRestApi")
+    axios.get('http://localhost:8080/hello-world')
+    .then ((response) => successfulResponse(response))
+    .catch((error) => failedResponse(error))
+    .finally(() => console.log("finally"))
+}
+
+function successfulResponse(response) {
+  console.log(response)
+}
+
+function failedResponse(error) {
+  console.log(error)
+}
+```
+- then : 요청 성공
+- catch : 요청 실패
+- finally : 성공과 실패 상관하지 않음
+- Promise 체이닝(Promise chaining) : 여러 개의 비동기 작업을 순차적으로 처리할 때 사용되는 기법
+  - then이 정상적으로 완료되면 catch는 실행되지 않는다.
+  - then은 여러 번 사용할 수 있다.
+  - catch와 finally는 일반적으로 체인의 끝에 한 번씩 사용된다.
 
 ---
