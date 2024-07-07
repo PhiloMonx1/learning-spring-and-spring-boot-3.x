@@ -220,3 +220,31 @@ export default function WelcomeComponent() {
   - 값이 message key에 담겨서 오기 때문에 "Hello World"를 노출하기 위해서는 `response.data.message`로 접근해야 한다.
 
 ---
+
+## 5단계 - Spring Boot REST API 호출 코드를 별도의 모듈에 리팩터링하기
+
+#### HelloWolrdBean API 리팩토링
+```js
+// HelloWorldApiService.js 
+export function retrieveHelloWorldBean() {
+  return axios.get('http://localhost:8080/hello-world-bean')
+}
+```
+- 이와 같이 axios.get 부분만 분리해서 컴포넌트 모듈에서 axios를 직접 임포트하지 않고 `retrieveHelloWorldBean()` 함수를 사용해서 api 요청을 하도록 할 수 있다.
+
+```js
+export const retrieveHelloWorldBean = () => axios.get('http://localhost:8080/hello-world-bean')
+```
+- 이와 같이 변수화 시켜서 사용하는 것도 가능하다.
+
+```jsx
+  function callHelloWorldRestApi() {
+  retrieveHelloWorldBean()
+  .then ((response) => successfulResponse(response))
+  .catch((error) => failedResponse(error))
+  .finally(() => console.log("finally"))
+}
+```
+- 사용할 때는 `axios.get('http://localhost:8080/hello-world-bean')` 대신 `retrieveHelloWorldBean()`를 사용하기만 하면 된다.
+
+---

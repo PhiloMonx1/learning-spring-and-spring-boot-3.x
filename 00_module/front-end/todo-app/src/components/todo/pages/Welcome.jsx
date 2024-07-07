@@ -1,14 +1,13 @@
 import {Link, useParams} from "react-router-dom";
-import axios from "axios";
 import {useState} from "react";
+import {retrieveHelloWorldBean} from "../api/HelloWorldApiService";
 
 export default function WelcomeComponent() {
   const params = useParams()
   const [message, setMessage] = useState(null)
 
   function callHelloWorldRestApi() {
-    console.log("callHelloWorldRestApi")
-    axios.get('http://localhost:8080/hello-world-bean')
+    retrieveHelloWorldBean()
     .then ((response) => successfulResponse(response))
     .catch((error) => failedResponse(error))
     .finally(() => console.log("finally"))
