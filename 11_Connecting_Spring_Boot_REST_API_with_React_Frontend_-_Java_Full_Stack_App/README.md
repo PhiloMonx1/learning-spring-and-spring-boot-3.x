@@ -5,6 +5,8 @@
 2. [React Hello World 컴포넌트에서 Spring Boot Hello World REST API 호출하기](#2단계---react-hello-world-컴포넌트에서-spring-boot-hello-world-rest-api-호출하기)
 3. [Spring Boot REST API에 대해 CORS 요청 활성화하기](#3단계---spring-boot-rest-api에-대해-cors-요청-활성화하기)
 4. [React에서 Spring Boot Hello World Bean과 패스 변수 REST API 호출하기](#4단계---react에서-spring-boot-hello-world-bean과-패스-변수-rest-api-호출하기)
+5. [Spring Boot REST API 호출 코드를 별도의 모듈에 리팩터링하기](#5단계---spring-boot-rest-api-호출-코드를-별도의-모듈에-리팩터링하기)
+6. [Spring Boot REST API에서 Axios를 사용하는 최적의 방식](#6단계---spring-boot-rest-api에서-axios를-사용하는-최적의-방식)
 
 ---
 
@@ -246,5 +248,29 @@ export const retrieveHelloWorldBean = () => axios.get('http://localhost:8080/hel
 }
 ```
 - 사용할 때는 `axios.get('http://localhost:8080/hello-world-bean')` 대신 `retrieveHelloWorldBean()`를 사용하기만 하면 된다.
+
+---
+
+## 6단계 - Spring Boot REST API에서 Axios를 사용하는 최적의 방식
+
+#### Axios에서 API 패스변수 처리하기
+```
+export const retrieveHelloWorldPathVariable = (username) => axios.get(`http://localhost:8080/hello-world/path-variable/${username}`)
+```
+- 이와 같은 방식으로 패스변수를 전달할 수 있다.
+
+#### Axios API 베이스 URL 설정하기
+```js
+import axios from "axios";
+
+const apiClient = axios.create({
+  baseURL: 'http://localhost:8080'
+});
+
+export const retrieveHelloWorldBean = () => apiClient.get('/hello-world-bean')
+export const retrieveHelloWorldPathVariable = (username) => apiClient.get(`/hello-world/path-variable/${username}`)
+```
+- 중복해서 발생하는 서버도메인을 해당 방식으로 개선할 수 있다.
+  - 베이스 URL 설정과 함께 선언한 `apiClient`를 통해 api요청을 한다.
 
 ---
