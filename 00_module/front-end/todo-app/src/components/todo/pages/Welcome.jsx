@@ -1,13 +1,14 @@
 import {Link, useParams} from "react-router-dom";
 import axios from "axios";
+import {useState} from "react";
 
 export default function WelcomeComponent() {
   const params = useParams()
-
+  const [message, setMessage] = useState(null)
 
   function callHelloWorldRestApi() {
     console.log("callHelloWorldRestApi")
-    axios.get('http://localhost:8080/hello-world')
+    axios.get('http://localhost:8080/hello-world-bean')
     .then ((response) => successfulResponse(response))
     .catch((error) => failedResponse(error))
     .finally(() => console.log("finally"))
@@ -15,6 +16,7 @@ export default function WelcomeComponent() {
 
   function successfulResponse(response) {
     console.log(response)
+    setMessage(response.data.message)
   }
 
   function failedResponse(error) {
@@ -34,6 +36,7 @@ export default function WelcomeComponent() {
         <div>
           <button className="btn btn-success m-5" onClick={callHelloWorldRestApi}>Hello World GET 요청</button>
         </div>
+        <div className="text-info">{message }</div>
       </div>
   );
 }

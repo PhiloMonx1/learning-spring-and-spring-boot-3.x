@@ -4,6 +4,7 @@
 1. [React 풀 스택 애플리케이션을 위해 Todo REST API 프로젝트 설정하기](#1단계---react-풀-스택-애플리케이션을-위해-todo-rest-api-프로젝트-설정하기)
 2. [React Hello World 컴포넌트에서 Spring Boot Hello World REST API 호출하기](#2단계---react-hello-world-컴포넌트에서-spring-boot-hello-world-rest-api-호출하기)
 3. [Spring Boot REST API에 대해 CORS 요청 활성화하기](#3단계---spring-boot-rest-api에-대해-cors-요청-활성화하기)
+4. [React에서 Spring Boot Hello World Bean과 패스 변수 REST API 호출하기](#4단계---react에서-spring-boot-hello-world-bean과-패스-변수-rest-api-호출하기)
 
 ---
 
@@ -179,5 +180,43 @@ public class RestfulWebServicesApplication {
       - 특정 메서드만 허용 가능 : ex) allowedMethods("GET", "POST", "PUT", "DELETE")
     - allowedOrigins() : 허용 출처, 클라이언트 도메인:포트 명시적 허용
       - 여러 출처 허용 가능: ex) allowedOrigins("http://localhost:3000", "https://example.com")
+
+---\
+
+## 4단계 - React에서 Spring Boot Hello World Bean과 패스 변수 REST API 호출하기
+
+####
+```jsx
+export default function WelcomeComponent() {
+  const [message, setMessage] = useState(null)
+
+  function callHelloWorldRestApi() {
+    console.log("callHelloWorldRestApi")
+    axios.get('http://localhost:8080/hello-world-bean')
+    .then ((response) => successfulResponse(response))
+    .catch((error) => failedResponse(error))
+    .finally(() => console.log("finally"))
+  }
+
+  function successfulResponse(response) {
+    console.log(response)
+    setMessage(response.data.message)
+  }
+  
+  //...(생략)
+  return (
+        // ...(생략)
+        <div className="text-info">{message}</div>
+  );
+}
+```
+- useState에 API response을 담을 수 있다.
+- response.data : API의 응답 데이터
+  ```json
+  {
+    "message" : "Hello World"
+  }
+  ```
+  - 값이 message key에 담겨서 오기 때문에 "Hello World"를 노출하기 위해서는 `response.data.message`로 접근해야 한다.
 
 ---
