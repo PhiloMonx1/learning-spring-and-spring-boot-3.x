@@ -3,6 +3,7 @@
 ## 목록
 1. [React 풀 스택 애플리케이션을 위해 Todo REST API 프로젝트 설정하기](#1단계---react-풀-스택-애플리케이션을-위해-todo-rest-api-프로젝트-설정하기)
 2. [React Hello World 컴포넌트에서 Spring Boot Hello World REST API 호출하기](#2단계---react-hello-world-컴포넌트에서-spring-boot-hello-world-rest-api-호출하기)
+3. [Spring Boot REST API에 대해 CORS 요청 활성화하기](#3단계---spring-boot-rest-api에-대해-cors-요청-활성화하기)
 
 ---
 
@@ -86,5 +87,97 @@ function failedResponse(error) {
   - then이 정상적으로 완료되면 catch는 실행되지 않는다.
   - then은 여러 번 사용할 수 있다.
   - catch와 finally는 일반적으로 체인의 끝에 한 번씩 사용된다.
+
+---
+
+## 3단계 - Spring Boot REST API에 대해 CORS 요청 활성화하기
+
+
+2단계를 진행 후 실제 브라우저에서 API 요청을 보내면 
+```
+"Access to XMLHttpRequest at 'http://localhost:8080/hello-world' from origin 'http://localhost:3000' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource."
+```
+다음과 같은 에러 메시지가 콘솔에 출력된다. 해석하자면 API 요청이 "CORS 정책에 의해 차단되었다"는 것이다.
+
+#### cross-origin request
+API가 차단된 이유는 3000번 포트(클라이언트)에서 8080번 포트(서버)로 보내는 요청이 'cross-origin request'이기 때문이다.
+- 다른 출처(origin)로 보내는 요청을 의미함. 아래 세 가지 중 하나라도 다르다면 다른 출처로 인식한다.
+  - 프로토콜 (예: http, https)
+  - 호스트 (도메인 또는 IP 주소)
+  - 포트 번호
+- 기본적으로 브라우저는 Same-Origin Policy를 따라 Cross-Origin 요청을 제한
+  - 대표적인 공격으로 CSRF 공격이 있다.
+
+#### CSRF(Cross-Site Request Forgery) 공격
+악의적인 웹사이트가 사용자의 브라우저를 통해 다른 신뢰할 수 있는 사이트에 요청을 보내 민감한 정보를 탈취하거나 원치 않는 작업을 수행하는 것
+1. 은행, SNS 등의 서비스를 이용하면서 로그인이 된 상태의 브라우저 환경에서
+2. 악의적인 웹 사이트에 사용자가 접속한다.
+3. 브라우저에 저장된 정보 ex) 은행 인증 권한, SNS 인증 권한 등을 악의적 웹 사이트가 탈취한다.
+4. 악의적 웹 사이트에서 사용자의 인증 권한으로 은행이나 SNS에 요청을 보낸다.
+5. 의도하지 않은 계좌 이체, 게시물 작성 등의 피해가 발생한다.
+
+이와 같은 시나리오를 CSRF 공격이라고 한다.
+
+#### CORS (Cross-Origin Resource Sharing)
+Cross-Origin 요청에 대해 리소스 공유를 허용하는 옵션.
+- 브라우저에 의해 구현되는 보안 메커니즘
+- 서버가 특정 출처로부터의 요청을 허용한다고 명시적으로 알리면 브라우저는 해당 출처로부터의 Cross-Origin 요청을 서버에 전송하는 것을 허용한다.
+- 서버에서 클라이언트 출처(http://localhost:3000/)를 명시하여 클라이언트에서의 Cross-Origin 요청을 허용할 수 있다.
+
+#### CORS 설정하기 (WebMvcConfigurer)
+대부분의 보안 설정은 Spring Security에서 지원한다. CORS 역시 Spring Security에서 지원하는 설정이다.
+
+그런테 CORS의 경우 브라우저에서 동작하는 보안 정책이다. 즉, 서버가 어떠한 보안 정책 및 보안 설정을 가지고 있는지 브라우저는 알지 못한 상태로 CORS를 강제한다. Spring Security를 사용하지 않는 서버의 경우도 CORS 보안 정책을 피해갈 수 없다.
+서버 애플리케이션이 Spring Security 라이브러리를 사용하지 않는 경우를 대비해서 스프링 프레임워크에선 기본적으로 CORS 설정을 할 수 있는 방법을 제공한다.
+
+- 애플리케이션 메인 파일에 선언.
+```java
+@SpringBootApplication
+public class RestfulWebServicesApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(RestfulWebServicesApplication.class, args);
+	}
+
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(org.springframework.web.servlet.config.annotation.CorsRegistry registry) {
+				registry.addMapping("/**")
+						.allowedMethods("*")
+						.allowedOrigins("http://localhost:3000/");
+			}
+		};
+	}
+
+}
+```
+- [WebMvcConfigurer](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/config/annotation/WebMvcConfigurer.html) : Spring MVC 구성을 사용자 정의하는 데 사용되는 인터페이스
+  - addCorsMappings : CORS 설정을 위한 메서드 (오버라이드 함)
+    - addMapping() : 허용 API 엔드포인트, "/**"를 통해 모든 API 허용 
+      - 특정 API만 허용 가능 : ex) "/api/**": /api로 시작하는 모든 경로에 적용
+        - addMapping()의 경우 한 번에 하나의 경로만 지정할 수 있다.
+          - addMapping()를 추가 선언해서 다른 경로에 대한 설정을 추가할 수 있다.
+            ```java
+            @Bean
+            public WebMvcConfigurer corsConfigurer() {
+              return new WebMvcConfigurer() {
+                @Override
+                public void addCorsMappings(org.springframework.web.servlet.config.annotation.CorsRegistry registry) {
+                  registry.addMapping("/api/**")
+                          .allowedMethods("*")
+                          .allowedOrigins("http://localhost:3000");
+                  registry.addMapping("/user")
+                          .allowedMethods("*")
+                          .allowedOrigins("http://localhost:3000");
+                }
+              };
+            }
+            ```
+    - allowedMethods() : 허용 HTTP 메서드, ("*")를 통해 모든 HTTP 메서드 허용 
+      - 특정 메서드만 허용 가능 : ex) allowedMethods("GET", "POST", "PUT", "DELETE")
+    - allowedOrigins() : 허용 출처, 클라이언트 도메인:포트 명시적 허용
+      - 여러 출처 허용 가능: ex) allowedOrigins("http://localhost:3000", "https://example.com")
 
 ---
