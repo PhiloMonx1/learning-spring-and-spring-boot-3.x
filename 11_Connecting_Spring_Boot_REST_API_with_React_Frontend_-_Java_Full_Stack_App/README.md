@@ -855,3 +855,31 @@ function validate(values){
 - validateOnBlur : 필드에서 포커스가 벗어날 때(blur 이벤트 발생 시) 유효성 검사 수행 여부
 
 ---
+
+## 15단계 - Spring Boot 백엔드 API에 Todo 업데이트 및 생성 REST API 추가하기
+
+#### 실습
+```java
+@RestController
+public class TodoResource {
+    //...(생략)
+  
+    @PostMapping("/users/{username}/todos")
+	public Todo addTodo(@PathVariable String username, @RequestBody Todo todo) {
+		return todoService.addTodo(username, todo.getDescription(), todo.getTargetDate(), false);
+	}
+
+	@PutMapping("/users/{username}/todos/{id}")
+	public ResponseEntity<Void> updateTodo(@PathVariable String username, @PathVariable int id, @RequestBody Todo todo) {
+		todo.setId(id);
+		todo.setUsername(username);
+		todo.setDone(false);
+		todoService.updateTodo(todo);
+		return ResponseEntity.noContent().build();
+	}
+	
+    //...(생략)
+}
+```
+
+---
