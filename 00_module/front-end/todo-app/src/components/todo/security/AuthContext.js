@@ -6,25 +6,40 @@ export const useAuth = () => useContext(AuthContext);
 
 export default function AuthProvider({children}) {
   const [isAuthenticated, setAuthenticated] = useState(false)
+  const [token, setToken] = useState(null)
   const [username, setUsername] = useState(null)
 
-  function login(username, password) {
+  async function login(username, password) {
     const basicToken = 'Basic ' + window.btoa(username + ":" + password)
 
-    executeBasicAuthenticationService(basicToken)
-    .then((response) => console.log(response))
-    .catch((error) => console.log(error))
+    try {
+        const response = await executeBasicAuthenticationService(basicToken)
 
-    setAuthenticated(false)
+      if(response.status === 200) {
+        setAuthenticated(true)
+        setUsername(username)
+        setToken(basicToken)
+        return true
+      }
+      else {
+        logout()
+        return false
+      }
+    } catch (error) {
+      logout()
+      return false
+    }
+
   }
 
   function logout() {
     setAuthenticated(false);
     setUsername(null);
+    setToken(null)
   }
 
   return (
-      <AuthContext.Provider value={{isAuthenticated, login, logout, username}}>
+      <AuthContext.Provider value={{isAuthenticated, login, logout, username, token}}>
         {children}
       </AuthContext.Provider>
   )

@@ -22,6 +22,7 @@
 19. [Spring Boot REST API 호출을 위해 React에 인증 헤더 추가하기](#19단계---spring-boot-rest-api-호출을-위해-react에-인증-헤더-추가하기)
 20. [모든 OPTIONS 요청을 허용하도록 Spring Security 설정하기](#20단계---모든-options-요청을-허용하도록-spring-security-설정하기)
 21. [React 앱에 로그인할 때 기본 인증 서비스 호출하기](#21단계---react-앱에-로그인할-때-기본-인증-서비스-호출하기)
+22. [async와 await를 사용하여 기본 인증 API 호출하기](#22단계---async와-await를-사용하여-기본-인증-api-호출하기)
 
 ---
 
@@ -1149,5 +1150,56 @@ public class BasicAuthenticationSecurityConfiguration {
     }
     ```
     - window.btoa : base64 인코딩 메서드
+
+---
+
+## 22단계 - async와 await를 사용하여 기본 인증 API 호출하기
+
+```js
+async function login(username, password) {
+  const basicToken = 'Basic ' + window.btoa(username + ":" + password)
+
+  try {
+    const response = await executeBasicAuthenticationService(basicToken)
+
+    if(response.status === 200) {
+      setAuthenticated(true)
+      setUsername(username)
+      return true
+    }
+    else {
+      setAuthenticated(false)
+      setUsername(null)
+      return false
+    }
+  } catch (error) {
+    setAuthenticated(false)
+    setUsername(null)
+    return false
+  }
+
+}
+```
+`executeBasicAuthenticationService()`를 통한 인증 응답이 완료될 때까지 기다리기 위해 async와 await를 사용했다.
+- async : 함수를 비동기적으로 실행한다.
+- await : 해당 작업이 완료될 때까지 코드가 일시 중지된다.
+  - async 안에서만 사용이 가능하다.
+- `login()` 함수를 사용하는 외부에서도 async, await를 함께 사용해주어야 한다.
+  ```jsx
+  async function handleSubmit() {
+    if(await authContext.login(username, password)) {
+      navigate(`/welcome/${username}`);
+    }
+    else {
+      setShowErrorMessage(true);
+    }
+  }
+  ```
+  
+#### useState에 토큰 담기 실습
+```js
+const [token, setToken] = useState(null)
+```
+useState() 선언하고 API 요청이 성공적으로 완료 시 setToken()를 사용해서 token을 담을 수 있다.
 
 ---
