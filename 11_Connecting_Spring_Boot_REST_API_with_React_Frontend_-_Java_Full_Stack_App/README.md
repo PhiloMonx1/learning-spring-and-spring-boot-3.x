@@ -10,6 +10,7 @@
 7. [Retrieve Todos Spring Boot REST API GET 메서드 만들기](#7단계---retrieve-todos-spring-boot-rest-api-get-메서드-만들기)
 8. [React 앱에서 Spring Boot REST API로부터 Todo 표시하기](#8단계---react-앱에서-spring-boot-rest-api로부터-todo-표시하기)
 9. [Todo를 받고 삭제하는 Spring Boot REST API 메서드 만들기](#9단계---todo를-받고-삭제하는-spring-boot-rest-api-메서드-만들기)
+10. [React 프론트엔드에 삭제 기능 추가하기](#10단계---react-프론트엔드에-삭제-기능-추가하기)
 
 ---
 
@@ -572,5 +573,55 @@ public class TodoResource {
 }
 ```
 두 API 모두 '/users/{username}' 부분이 필요 없으며 현재 사용되지도 않는다. 강의 코드를 유지하기 위해 리팩토링은 하지 않았다.
+
+---
+
+## 10단계 - React 프론트엔드에 삭제 기능 추가하기
+
+#### Todo 삭제 구현
+```jsx
+//TodoApiService.js
+export const deleteTodoApi = (username, id) => apiClient.delete(`/users/${username}/todos/${id}`)
+
+//ListTodos.jsx
+//...(생략)
+function deleteTodo(id) {
+  deleteTodoApi('eh13', id)
+}
+//...(생략)
+<tbody>
+{
+  todos.map((todo) => (
+          <tr key={todo.id}>
+            //...(생략)
+            <td><button className="btn btn-warning" onClick={() => deleteTodo(todo.id)}>삭제</button>
+            </td>
+          </tr>
+  ))
+}
+</tbody>
+//...(생략)
+```
+
+#### Todo 삭제 후 완료 메시지 리턴 & 리스트 업데이트
+```jsx
+//...(생략)
+const [message, setMessage] = useState("");
+
+//...(생략)
+function deleteTodo(id) {
+  deleteTodoApi('eh13', id)
+  .then(
+          () => {
+            refreshTodos();
+            setMessage(`삭제가 완료되었습니다.`)
+          }
+  )
+}
+
+//...(생략)
+{message && <div className="alert alert-success">{message}</div>}
+```
+- `{message && <div className="alert alert-success">{message}</div>}` : 메시지가 존재할 경우 메시지 div를 노출
 
 ---
