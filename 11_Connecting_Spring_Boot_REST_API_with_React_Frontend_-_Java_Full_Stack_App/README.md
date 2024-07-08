@@ -11,6 +11,7 @@
 8. [React 앱에서 Spring Boot REST API로부터 Todo 표시하기](#8단계---react-앱에서-spring-boot-rest-api로부터-todo-표시하기)
 9. [Todo를 받고 삭제하는 Spring Boot REST API 메서드 만들기](#9단계---todo를-받고-삭제하는-spring-boot-rest-api-메서드-만들기)
 10. [React 프론트엔드에 삭제 기능 추가하기](#10단계---react-프론트엔드에-삭제-기능-추가하기)
+11. [username을 React 인증 컨텍스트에 설정하기](#11단계---username을-react-인증-컨텍스트에-설정하기)
 
 ---
 
@@ -623,5 +624,59 @@ function deleteTodo(id) {
 {message && <div className="alert alert-success">{message}</div>}
 ```
 - `{message && <div className="alert alert-success">{message}</div>}` : 메시지가 존재할 경우 메시지 div를 노출
+
+---
+
+## 11단계 - username을 React 인증 컨텍스트에 설정하기
+
+#### 구현 실습
+```js
+//AuthContext.js
+export default function AuthProvider({children}) {
+  const [isAuthenticated, setAuthenticated] = useState(false)
+  const [username, setUsername] = useState(null)
+
+  function login(username, password) {
+    const isLoginSuccess = username === 'eh13' && password === '950127'
+    setUsername(username);
+    setAuthenticated(isLoginSuccess);
+    return isLoginSuccess;
+  }
+
+  function logout() {
+    setAuthenticated(false);
+    setUsername(null);
+  }
+
+  return (
+          <AuthContext.Provider value={{isAuthenticated, login, logout, username}}>
+            {children}
+          </AuthContext.Provider>
+  )
+}
+```
+
+```jsx
+//ListTodos.jsx
+
+const authContext = useAuth();
+const username = authContext.username;
+
+function refreshTodos() {
+  retrieveAllTodosForUsernameApi(username)
+  .then((response) => setTodos(response.data))
+  .catch((error) => console.log(error))
+}
+
+function deleteTodo(id) {
+  deleteTodoApi(username, id)
+  .then(
+          () => {
+            refreshTodos();
+            setMessage(`삭제가 완료되었습니다.`)
+          }
+  )
+}
+```
 
 ---
