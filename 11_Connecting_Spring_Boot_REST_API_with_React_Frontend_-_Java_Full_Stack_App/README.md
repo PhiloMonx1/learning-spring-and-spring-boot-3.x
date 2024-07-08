@@ -9,6 +9,7 @@
 6. [Spring Boot REST API에서 Axios를 사용하는 최적의 방식](#6단계---spring-boot-rest-api에서-axios를-사용하는-최적의-방식)
 7. [Retrieve Todos Spring Boot REST API GET 메서드 만들기](#7단계---retrieve-todos-spring-boot-rest-api-get-메서드-만들기)
 8. [React 앱에서 Spring Boot REST API로부터 Todo 표시하기](#8단계---react-앱에서-spring-boot-rest-api로부터-todo-표시하기)
+9. [Todo를 받고 삭제하는 Spring Boot REST API 메서드 만들기](#9단계---todo를-받고-삭제하는-spring-boot-rest-api-메서드-만들기)
 
 ---
 
@@ -547,5 +548,29 @@ UX(User Experience)라는 용어가 있다. '사용자 경험'을 의미하는 �
 패턴의 정답은 없기 때문에 설계를 할 때 협업하는 팀과의 충분한 소통을 통해 내부의 명확한 컨벤션과 규칙을 만들고, 이를 일관되게 지키는 것이 중요하다.
 
 API 설계는 상황과 요구사항에 따라 유연하게 접근해야 하며, 절대적인 RESTful API를 개념적으로만 추구하기 보다는 서비스 관점에서 다양한 의견을 조합하여 설계하는 것이 중요하다는 결론을 내린다.
+
+---
+
+## 9단계 - Todo를 받고 삭제하는 Spring Boot REST API 메서드 만들기
+
+#### 구현 실습
+```java
+@RestController
+public class TodoResource {
+    //...(생략)
+	@GetMapping("/users/{username}/todos/{id}")
+	public Todo retrieveTodo(@PathVariable String username, @PathVariable int id) {
+		return todoService.findById(id);
+	}
+
+	@DeleteMapping("/users/{username}/todos/{id}")
+	public ResponseEntity<Void> deleteTodo(@PathVariable String username, @PathVariable int id) {
+		todoService.deleteById(id);
+
+		return ResponseEntity.noContent().build();
+	}
+}
+```
+두 API 모두 '/users/{username}' 부분이 필요 없으며 현재 사용되지도 않는다. 강의 코드를 유지하기 위해 리팩토링은 하지 않았다.
 
 ---
