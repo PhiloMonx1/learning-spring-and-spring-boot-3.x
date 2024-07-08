@@ -2,7 +2,7 @@ import {useParams} from "react-router-dom";
 import {retrieveTodoApi} from "../api/TodoApiService";
 import {useAuth} from "../security/AuthContext";
 import {useEffect, useState} from "react";
-import {Formik, Form, Field} from "formik";
+import {Formik, Form, Field, ErrorMessage} from "formik";
 
 export default function TodoDetail() {
   const authContext = useAuth();
@@ -25,6 +25,19 @@ export default function TodoDetail() {
     console.log(values)
   }
 
+  function validate(values){
+    let errors = {
+
+    };
+    if(values.description.length < 5){
+      errors.description = '할 일은 5글자 이상 작성해 주십시오.';
+    }
+    if(values.targetDate == ''){
+      errors.targetDate = '목표 일자를 입력해주세요';
+    }
+    return errors;
+  }
+
   useEffect(
       () => retrieveTodo(),[id]
   )
@@ -32,10 +45,28 @@ export default function TodoDetail() {
   return (
       <div className="container">
         <h1>TODO 상세</h1>
-        <Formik initialValues={{description, targetDate}} enableReinitialize={true} onSubmit={onSubmit}>
+        <Formik
+            initialValues={{description, targetDate}}
+            enableReinitialize={true}
+            onSubmit={onSubmit}
+            validate={validate}
+            validateOnChange={false}
+            validateOnBlur={false}
+        >
           {
             (props) => (
               <Form>
+                <ErrorMessage
+                    name="description"
+                    component="div"
+                    className="alert alert-warning"
+                />
+                <ErrorMessage
+                    name="targetDate"
+                    component="div"
+                    className="alert alert-warning"
+                />
+
                 <fieldset className="form-group">
                   <label>할 일</label>
                   <Field className="form-control" type="text" name="description"/>

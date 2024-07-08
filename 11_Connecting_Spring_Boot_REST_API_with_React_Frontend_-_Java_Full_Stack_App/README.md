@@ -14,6 +14,7 @@
 11. [username을 React 인증 컨텍스트에 설정하기](#11단계---username을-react-인증-컨텍스트에-설정하기)
 12. [Todo 페이지를 표시하기 위한 Todo React 컴포넌트 만들기](#12단계---todo-페이지를-표시하기-위한-todo-react-컴포넌트-만들기)
 13. [Todo React 컴포넌트를 표시하기 위해 Formik 및 Moment 라이브러리 추가하기](#13단계---todo-react-컴포넌트를-표시하기-위해-formik-및-moment-라이브러리-추가하기)
+14. [Formik을 이용하여 Todo React 컴포넌트에 검증 추가하기](#14단계---formik을-이용하여-todo-react-컴포넌트에-검증-추가하기)
 
 ---
 
@@ -795,5 +796,62 @@ export default function TodoDetail() {
 - initialValues : 초기값 설정
 - enableReinitialize : initialValues가 변경될 때마다 폼의 상태를 재설정
 - onSubmit : form이 제출되었을 때 실행될 함수 지정
+
+---
+
+## 14단계 - Formik을 이용하여 Todo React 컴포넌트에 검증 추가하기
+
+#### 밸리데이션 실습
+```jsx
+function validate(values){
+  let errors = {
+
+  };
+  if(values.description.length < 5){
+    errors.description = '할 일은 5글자 이상 작성해 주십시오.';
+  }
+  if(values.targetDate == ''){
+    errors.targetDate = '목표 일자를 입력해주세요';
+  }
+  return errors;
+}
+
+//...(생략)
+  return (
+        <div className="container">
+          <h1>TODO 상세</h1>
+          <Formik
+                  initialValues={{description, targetDate}}
+                  enableReinitialize={true}
+                  onSubmit={onSubmit}
+                  validate={validate}
+                  validateOnChange={false}
+                  validateOnBlur={false}
+          >
+            {
+              (props) => (
+                      <Form>
+                        <ErrorMessage
+                                name="description"
+                                component="div"
+                                className="alert alert-warning"
+                        />
+                        <ErrorMessage
+                                name="targetDate"
+                                component="div"
+                                className="alert alert-warning"
+                        />
+                      {/* ...(생략) */}
+                      </Form>
+              )
+            }
+          </Formik>
+        </div>
+)
+```
+- 'onSubmit'을 사용하던 방식과 비슷하다. (함수 연결)
+- 'ErrorMessage' 컴포넌트를 사용해서 에러 메시지를 노출할 수 있다,
+- validateOnChange : 필드 값이 변경될 때마다 유효성 검사 수행 여부
+- validateOnBlur : 필드에서 포커스가 벗어날 때(blur 이벤트 발생 시) 유효성 검사 수행 여부
 
 ---
