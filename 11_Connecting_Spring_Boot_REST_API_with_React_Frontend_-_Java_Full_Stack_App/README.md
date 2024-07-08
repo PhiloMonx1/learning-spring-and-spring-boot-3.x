@@ -26,6 +26,7 @@
 23. [AuthContext에 기본 인증 토큰 설정하기](#23단계---authcontext에-기본-인증-토큰-설정하기)
 24. [인증 헤더를 추가하기 위해 Axios 인터셉터 설정하기](#24단계---인증-헤더를-추가하기-위해-axios-인터셉터-설정하기)
 25. [JWT 및 Spring Security 시작하기](#25단계---jwt-및-spring-security-시작하기)
+26. [Spring Security JWT REST API와 React 프론트엔드 통합하기](#26단계---spring-security-jwt-rest-api와-react-프론트엔드-통합하기)
 
 ---
 
@@ -1329,5 +1330,47 @@ apiClient.interceptors.request.use(
     }
     ```
 3. 강의 실습을 진행한다.
+
+---
+
+## 26단계 - Spring Security JWT REST API와 React 프론트엔드 통합하기
+
+#### jwt 토큰 생성 API 호출부 등록
+```js
+export const executeJwtAuthenticationService = (username, password) => apiClient.post(`/authenticate`, {username, password})
+```
+- 주의할 점은 get이 아닌 post로 요청해야 한다는 것이다.
+
+#### AuthContext.js 인증 객체 jwt로 변경
+```jsx
+  async function login(username, password) {
+  try {
+    const response = await executeJwtAuthenticationService(username, password)
+
+    if(response.status === 200) {
+      const jwtToken = "Bearer " + response.data.token
+      setAuthenticated(true)
+      setUsername(username)
+      setToken(jwtToken)
+
+      apiClient.interceptors.request.use(
+          (config) => {
+            config.headers.Authorization = jwtToken
+            return config
+          })
+
+      return true
+    }
+    else {
+      logout()
+      return false
+    }
+  } catch (error) {
+    logout()
+    return false
+  }
+
+}
+```
 
 ---
