@@ -21,6 +21,7 @@
 18. [Spring Security로 Spring Boot REST API 보호하기](#18단계---spring-security로-spring-boot-rest-api-보호하기)
 19. [Spring Boot REST API 호출을 위해 React에 인증 헤더 추가하기](#19단계---spring-boot-rest-api-호출을-위해-react에-인증-헤더-추가하기)
 20. [모든 OPTIONS 요청을 허용하도록 Spring Security 설정하기](#20단계---모든-options-요청을-허용하도록-spring-security-설정하기)
+21. [React 앱에 로그인할 때 기본 인증 서비스 호출하기](#21단계---react-앱에-로그인할-때-기본-인증-서비스-호출하기)
 
 ---
 
@@ -1111,5 +1112,42 @@ public class BasicAuthenticationSecurityConfiguration {
     - 첫 번째 파라미터 : HTTP 메서드가 OPTIONS 인 경우
     - 두 번째 파라미터 : 모든 엔드포인트
   - .permitAll() : 접근을 허용함
+
+---
+
+## 21단계 - React 앱에 로그인할 때 기본 인증 서비스 호출하기
+
+#### AuthContext::login() 개선
+1. 백엔드 API 추가
+    ```java
+    @GetMapping(path = "/basicauth")
+    public String basicAuthCheck() {
+        return "Success";
+    }
+    ```
+    - 인증 성공 시 리턴하기 위한 API (추후 토큰 사용 방식과 비교를 위한 API)
+2. 프론트엔드 API 호출 추가
+    ```js
+    export const executeBasicAuthenticationService
+        = (token) => apiClient.get(`/basicauth`,{
+          headers: {
+            Authorization: token
+          }
+        })
+    
+    ```
+3. AuthContext 에서 basic 토큰 넘겨주기 실습
+    ```js
+    function login(username, password) {
+      const basicToken = 'Basic ' + window.btoa(username + ":" + password)
+    
+      executeBasicAuthenticationService(basicToken)
+      .then((response) => console.log(response))
+      .catch((error) => console.log(error))
+    
+      setAuthenticated(false)
+    }
+    ```
+    - window.btoa : base64 인코딩 메서드
 
 ---
