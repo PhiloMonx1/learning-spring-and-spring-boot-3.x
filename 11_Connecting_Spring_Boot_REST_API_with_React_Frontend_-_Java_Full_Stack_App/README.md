@@ -19,6 +19,7 @@
 16. [React 프론트엔드에 업데이트 기능 추가하기](#16단계---react-프론트엔드에-업데이트-기능-추가하기)
 17. [React 프론트엔드에 새로운 Todo 생성 기능 추가하기](#17단계---react-프론트엔드에-새로운-todo-생성-기능-추가하기)
 18. [Spring Security로 Spring Boot REST API 보호하기](#18단계---spring-security로-spring-boot-rest-api-보호하기)
+19. [Spring Boot REST API 호출을 위해 React에 인증 헤더 추가하기](#19단계---spring-boot-rest-api-호출을-위해-react에-인증-헤더-추가하기)
 
 ---
 
@@ -1041,5 +1042,40 @@ public class BasicAuthenticationSecurityConfiguration {
 - httpBasic : HTTP 기본 인증 활성화 (기본 설정 사용 : 브라우저 팝업창으로 인증 요구함)
 - sessionManagement : 세션 관리 정책 설정 (STATELESS : 무상태 - 서버에서 세션 생성하지 않음)
 - csrf : CSRF(Cross-Site Request Forgery) 보호를 설정 (비활성화)
+
+---
+
+## 19단계 - Spring Boot REST API 호출을 위해 React에 인증 헤더 추가하기
+
+#### API 요청에 인증 헤더 추가하기
+```js
+export const retrieveHelloWorldPathVariable
+        = (username) => apiClient.get(`/hello-world/path-variable/${username}`,{
+  headers: {
+    Authorization: 'Basic ZWgxMzo5NTAxMjc='
+  }
+})
+```
+- 이렇게 헤더를 추가해도 인증을 통과하지 못한다.
+
+#### 인증 에러
+```
+Access to XMLHttpRequest at 'http://localhost:8080/hello-world/path-variable/eh13' from origin 'http://localhost:3000' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+```
+- "Response to preflight request doesn't pass access control check"
+  - Preflight request 실패 : 서버에 preflight request를 보냈지만, 서버의 응답이 액세스 제어 검사를 통과하지 못함
+- "No 'Access-Control-Allow-Origin' header is present on the requested resource"
+  -  실제 요청이 CORS 정책 위반으로 인해 차단됨
+
+총 두 개의 에러가 발생한다.
+
+#### Preflight request
+CORS(Cross-Origin Resource Sharing) 정책에 따라 브라우저가 자동으로 생성하여 보내는 추가적인 요청 (실제 요청이 안전한지 서버에 확인하는 역할)
+-  실제 요청을 보내기 전에 먼저 OPTIONS 메서드로 Preflight request를 보낸다.
+  -  Preflight request에는 실제 요청에 대한 정보(HTTP 메서드, 헤더 등)가 포함된다.
+- 서버는 이 Preflight request에 대해 다음과 같은 응답을 반환해야 한다.
+  - Access-Control-Allow-Origin: 허용되는 origin 정보 
+  - Access-Control-Allow-Methods: 허용되는 HTTP 메서드 정보 
+  - Access-Control-Allow-Headers: 허용되는 요청 헤더 정보
 
 ---
