@@ -20,6 +20,7 @@
 17. [React 프론트엔드에 새로운 Todo 생성 기능 추가하기](#17단계---react-프론트엔드에-새로운-todo-생성-기능-추가하기)
 18. [Spring Security로 Spring Boot REST API 보호하기](#18단계---spring-security로-spring-boot-rest-api-보호하기)
 19. [Spring Boot REST API 호출을 위해 React에 인증 헤더 추가하기](#19단계---spring-boot-rest-api-호출을-위해-react에-인증-헤더-추가하기)
+20. [모든 OPTIONS 요청을 허용하도록 Spring Security 설정하기](#20단계---모든-options-요청을-허용하도록-spring-security-설정하기)
 
 ---
 
@@ -1077,5 +1078,38 @@ CORS(Cross-Origin Resource Sharing) 정책에 따라 브라우저가 자동으�
   - Access-Control-Allow-Origin: 허용되는 origin 정보 
   - Access-Control-Allow-Methods: 허용되는 HTTP 메서드 정보 
   - Access-Control-Allow-Headers: 허용되는 요청 헤더 정보
+
+---
+
+## 20단계 - 모든 OPTIONS 요청을 허용하도록 Spring Security 설정하기
+
+#### OPTIONS HTTP 메서드
+주어진 URL 또는 서버에 대해 허용된 통신 옵션을 요청하는 HTTP 메서드 대표적으로 'Preflight request'가 있다.
+
+#### Spring Security에서 OPTIONS 요청을 허용 설정
+```java
+@Configuration
+public class BasicAuthenticationSecurityConfiguration {
+
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		return http
+				.authorizeHttpRequests(
+						auth -> auth
+						.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+						.anyRequest().authenticated()
+				)
+				.httpBasic(Customizer.withDefaults())
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.csrf(csrf -> csrf.disable())
+				.build();
+	}
+}
+```
+- `.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()` 코드가 설정 부분이다.
+  - .antMatchers : 특정 패턴의 요청에 대한 접근 권한을 설정
+    - 첫 번째 파라미터 : HTTP 메서드가 OPTIONS 인 경우
+    - 두 번째 파라미터 : 모든 엔드포인트
+  - .permitAll() : 접근을 허용함
 
 ---
