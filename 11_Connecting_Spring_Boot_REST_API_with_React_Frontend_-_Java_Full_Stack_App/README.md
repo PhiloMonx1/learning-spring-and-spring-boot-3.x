@@ -15,6 +15,8 @@
 12. [Todo 페이지를 표시하기 위한 Todo React 컴포넌트 만들기](#12단계---todo-페이지를-표시하기-위한-todo-react-컴포넌트-만들기)
 13. [Todo React 컴포넌트를 표시하기 위해 Formik 및 Moment 라이브러리 추가하기](#13단계---todo-react-컴포넌트를-표시하기-위해-formik-및-moment-라이브러리-추가하기)
 14. [Formik을 이용하여 Todo React 컴포넌트에 검증 추가하기](#14단계---formik을-이용하여-todo-react-컴포넌트에-검증-추가하기)
+15. [Spring Boot 백엔드 API에 Todo 업데이트 및 생성 REST API 추가하기](#15단계---spring-boot-백엔드-api에-todo-업데이트-및-생성-rest-api-추가하기)
+16. [React 프론트엔드에 업데이트 기능 추가하기](#16단계---react-프론트엔드에-업데이트-기능-추가하기)
 
 ---
 
@@ -881,5 +883,49 @@ public class TodoResource {
     //...(생략)
 }
 ```
+
+---
+
+## 16단계 - React 프론트엔드에 업데이트 기능 추가하기
+
+#### API 호출 등록
+```js
+export const updateTodoApi = (username, id, todo) => apiClient.put(`/users/${username}/todos/${id}`, todo)
+```
+- todo 파라미터 포함.
+
+#### TodoDetail form의 onSubmit에서 API 사용하기
+```jsx
+  function onSubmit(values) {
+  const todo = {
+    id: id,
+    username: username,
+    description: values.description,
+    targetDate: values.targetDate,
+    done: false
+  }
+  updateTodoApi(username, id, todo)
+}
+```
+- 백엔드에서 이미 id, username, done에 대한 처리를 해놓았기에 'values'만 넣어줘도 괜찮지만 일반적인 구현법으로 작성하였다.
+
+#### 수정 완료 후 Todo 리스트로 리다이렉트 시키기
+```jsx
+function onSubmit(values) {
+  const todo = {
+    id: id,
+    username: username,
+    description: values.description,
+    targetDate: values.targetDate,
+    done: false
+  }
+  updateTodoApi(username, id, todo)
+  .then((response) => {
+    navigate('/todos')
+  })
+  .catch((error) => console.log(error))
+}
+```
+- 'then' 체이닝을 통해 성공했을 경우에만 이동하도록 설정할 수 있다.
 
 ---
