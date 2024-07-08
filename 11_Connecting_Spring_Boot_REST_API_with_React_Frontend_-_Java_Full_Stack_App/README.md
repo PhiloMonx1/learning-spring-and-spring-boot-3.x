@@ -7,6 +7,7 @@
 4. [React에서 Spring Boot Hello World Bean과 패스 변수 REST API 호출하기](#4단계---react에서-spring-boot-hello-world-bean과-패스-변수-rest-api-호출하기)
 5. [Spring Boot REST API 호출 코드를 별도의 모듈에 리팩터링하기](#5단계---spring-boot-rest-api-호출-코드를-별도의-모듈에-리팩터링하기)
 6. [Spring Boot REST API에서 Axios를 사용하는 최적의 방식](#6단계---spring-boot-rest-api에서-axios를-사용하는-최적의-방식)
+7. [Retrieve Todos Spring Boot REST API GET 메서드 만들기](#7단계---retrieve-todos-spring-boot-rest-api-get-메서드-만들기)
 
 ---
 
@@ -183,7 +184,7 @@ public class RestfulWebServicesApplication {
     - allowedOrigins() : 허용 출처, 클라이언트 도메인:포트 명시적 허용
       - 여러 출처 허용 가능: ex) allowedOrigins("http://localhost:3000", "https://example.com")
 
----\
+---
 
 ## 4단계 - React에서 Spring Boot Hello World Bean과 패스 변수 REST API 호출하기
 
@@ -272,5 +273,107 @@ export const retrieveHelloWorldPathVariable = (username) => apiClient.get(`/hell
 ```
 - 중복해서 발생하는 서버도메인을 해당 방식으로 개선할 수 있다.
   - 베이스 URL 설정과 함께 선언한 `apiClient`를 통해 api요청을 한다.
+
+---
+
+## 7단계 - Retrieve Todos Spring Boot REST API GET 메서드 만들기
+
+#### TodoResource 구현
+```java
+@RestController
+public class TodoResource {
+	private TodoService todoService;
+
+	public TodoResource(TodoService todoService) {
+		this.todoService = todoService;
+	}
+
+	@GetMapping("/users/{username}/todos")
+	public List<Todo> retrieveTodos(@PathVariable String username) {
+		return todoService.findByUsername(username);
+	}
+}
+```
+- TodoService를 포함하는 생성자로 TodoService에 접근할 수 있게된다. (스프링 컨텍스트가 Bean의 의존성 주입을 책임짐)
+- '@GetMapping("/users/{username}/todos")' API 명세로 작성.
+
+#### 추가 학습 : 'Controller' vs 'Resource'
+- 왜 Controller가 아닌 Resource 일까?
+  - Controller : 일반적인 MVC (Model-View-Controller) 패턴에서 주로 사용
+  - Resource : RESTful API 설계에서 더 자주 사용
+    - "리소스"라는 개념은 REST 아키텍처의 핵심 요소 중 하나이기 때문
+      - 리소스 : 네트워크 상에서 고유하게 식별 가능한 모든 종류의 객체, 문서, 또는 서비스를 나타내는 개념적 언어.
+    - Resource라는 용어는 REST의 핵심 개념을 더 잘 반영하며 클래스가 리소스에 대한 CRUD 작업을 처리한다는 것을 명확히 나타낼 수 있다.
+    - 결과적으로는 두 용어 모두 잘 사용하며 팀 컨벤션에 따라 선택된다. `@RestController` 어노테이션을 통해 REST API의 명확성을 가져갈 수 있다.
+
+
+#### 추가 학습 : 리소스 지향 아키텍처 & Uniform Interface 원칙
+```java
+@RestController
+public class ShoppingController {
+
+  @PostMapping("/addItemToCart")
+  public void addItemToCart(@RequestParam Long userId, @RequestParam Long itemId, @RequestParam int quantity) {
+    // 장바구니에 상품 추가 로직
+  }
+
+  @PostMapping("/removeItemFromCart")
+  public void removeItemFromCart(@RequestParam Long userId, @RequestParam Long itemId) {
+    // 장바구니에서 상품 제거 로직
+  }
+
+  @GetMapping("/getCartItems")
+  public List<CartItem> getCartItems(@RequestParam Long userId) {
+    // 사용자의 장바구니 아이템 목록 조회 로직
+  }
+
+  @PostMapping("/placeOrder")
+  public OrderConfirmation placeOrder(@RequestParam Long userId) {
+    // 주문 처리 로직
+  }
+
+  @GetMapping("/getOrderHistory")
+  public List<Order> getOrderHistory(@RequestParam Long userId) {
+    // 사용자의 주문 내역 조회 로직
+  }
+
+  @PostMapping("/cancelOrder")
+  public void cancelOrder(@RequestParam Long orderId) {
+    // 주문 취소 로직
+  }
+}
+```
+해당 코드는 리소스 지향 아키텍처 및 Uniform Interface 원칙을 따르지 않은 코드이다. 문제점을 살펴보자.
+1. 엔드포인트가 마치 메서드 이름 처럼 동작을 나타내는 동사형 문법으로 서술되어 있다.
+  - ROA를 어긴 것
+2. HTTP 메서드가 제한 사용되어 있다.
+  - ex) `@PostMapping("/removeItemFromCart")` : DELETE 메서드 대신 POST 메서드를 사용하고 엔드포인트로 remove 동작을 함을 알리고 있다.
+  - Uniform Interface 원칙을 어긴 것
+- 결과적으로 '리소스 지향 아키텍처' & 'Uniform Interface 원칙'을 어긴 API이다.
+
+#### 추가 학습 : 리소스 지향 아키텍처(ROA, Resource-Oriented Architecture)
+```java
+// 기존
+@PostMapping("/addItemToCart")
+
+// 리소스 지향 아키텍처
+@PostMapping("/carts/{userId}/items")
+```
+- 리소스를 중심으로 엔드포인트를 작성하면 추가적인 해석 없이 일관된 형태의 엔드포인트를 제공할 수 있다.
+
+#### 추가 학습 : Uniform Interface 원칙
+일관된 인터페이스를 사용해서 API의 사용성, 확장성, 플랫폼 독립성을 보장하는 설계 원칙
+- HTTP 메소드를 통한 자원 조작 : GET, POST, PUT, DELETE 등의 HTTP 메소드를 사용하여 리소스에 대한 CRUD 작업을 수행해야 함
+- 자기 서술적 메시지 : 요청과 응답은 자신을 설명할 수 있는 정보를 포함해야
+  - ex) HTTP 메소드, HTTP 상태 코드, 헤더 정보, URL, 응답 본문, 하이퍼미디어 링크, 에러 메시지, 버전 정보
+- HATEOAS : 응답에 관련 리소스의 링크를 포함해야 함
+- 클라이언트-서버 분리 : 클라이언트와 서버는 독립적으로 발전할 수 있어야 함
+- 상태 없음 (Stateless) : 각 요청은 독립적이며, 서버는 클라이언트의 상태를 저장하지 않아야 함 (서버와 클라이언트의 결합도를 낮추어 서버의 확장성이 향상된다.)
+  - 각 API 요청은 필요한 모든 정보를 포함해야 한다.
+  - 서버는 이전 요청의 컨텍스트를 저장하거나 사용하지 않는다.
+  - 클라이언트는 매 요청마다 인증 정보를 포함해야 한다.
+  - 서버는 클라이언트의 세션 상태를 저장하지 않는다.
+  - JWT 등의 토큰 기반 인증을 사용하는 것으로 구현할 수 있다.
+    - 완전한 무상태성은 실제 애플리케이션에서 달성하기 어려울 수 있으며, 인증, 권한 부여 등에서는 일정 수준의 상태 유지가 필요할 수 있다.
 
 ---
