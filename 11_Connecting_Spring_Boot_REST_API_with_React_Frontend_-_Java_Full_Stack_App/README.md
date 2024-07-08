@@ -18,6 +18,7 @@
 15. [Spring Boot 백엔드 API에 Todo 업데이트 및 생성 REST API 추가하기](#15단계---spring-boot-백엔드-api에-todo-업데이트-및-생성-rest-api-추가하기)
 16. [React 프론트엔드에 업데이트 기능 추가하기](#16단계---react-프론트엔드에-업데이트-기능-추가하기)
 17. [React 프론트엔드에 새로운 Todo 생성 기능 추가하기](#17단계---react-프론트엔드에-새로운-todo-생성-기능-추가하기)
+18. [Spring Security로 Spring Boot REST API 보호하기](#18단계---spring-security로-spring-boot-rest-api-보호하기)
 
 ---
 
@@ -998,5 +999,47 @@ function validate(values){
   }
   return errors;
 }
+```
+
+---
+
+## 18단계 - Spring Security로 Spring Boot REST API 보호하기
+
+#### Spring Security 추가
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+```
+- 백엔드 프로젝트 'pom.xml'에 Spring Security 라이브러리 추가
+
+#### Spring Security 기본 계정 정보 변경하기
+```properties
+spring.security.user.name=eh13
+spring.security.user.password=950127
+```
+
+#### Security 필터 체인 설정
+```java
+@Configuration
+public class BasicAuthenticationSecurityConfiguration {
+
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		return http
+				.authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+				.httpBasic(Customizer.withDefaults())
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.csrf(csrf -> csrf.disable())
+				.build();
+	}
+}
+
+```
+- authorizeHttpRequests : HTTP 요청에 대한 권한 부여 규칙 설정 (모든 요청 인증 필요)
+- httpBasic : HTTP 기본 인증 활성화 (기본 설정 사용 : 브라우저 팝업창으로 인증 요구함)
+- sessionManagement : 세션 관리 정책 설정 (STATELESS : 무상태 - 서버에서 세션 생성하지 않음)
+- csrf : CSRF(Cross-Site Request Forgery) 보호를 설정 (비활성화)
 
 ---

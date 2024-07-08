@@ -1,0 +1,4 @@
+logging.level.org.springframework=info
+
+spring.security.user.name=eh13
+spring.security.user.password=950127
