@@ -24,6 +24,7 @@
 21. [React 앱에 로그인할 때 기본 인증 서비스 호출하기](#21단계---react-앱에-로그인할-때-기본-인증-서비스-호출하기)
 22. [async와 await를 사용하여 기본 인증 API 호출하기](#22단계---async와-await를-사용하여-기본-인증-api-호출하기)
 23. [AuthContext에 기본 인증 토큰 설정하기](#23단계---authcontext에-기본-인증-토큰-설정하기)
+24. [인증 헤더를 추가하기 위해 Axios 인터셉터 설정하기](#24단계---인증-헤더를-추가하기-위해-axios-인터셉터-설정하기)
 
 ---
 
@@ -1226,5 +1227,32 @@ function callHelloWorldPathVariable() {
   .finally(() => console.log("finally"))
 }
 ```
+
+---
+
+## 24단계 - 인증 헤더를 추가하기 위해 Axios 인터셉터 설정하기
+
+#### 공통 ApiClient 생성
+```js
+import axios from "axios";
+
+export const apiClient = axios.create({
+  baseURL: 'http://localhost:8080'
+});
+```
+- 다른 ApiService에서는 `import {apiClient} from "../api/ApiClient";`를 통해 공통 ApiClient를 사용할 수 있다.
+
+#### 공통 ApiClient 헤더에 토큰 담기 실습
+```jsx
+apiClient.interceptors.request.use(
+(config) => {
+  config.headers.Authorization = basicToken
+  return config
+})
+```
+- `AuthContext::login()` 함수의 성공 부분에 해당 코드를 추가한다.
+- interceptors : 요청과 응답을 가로채서 처리하기 위한 기능
+  - 요청이 전송되기 전이나 응답이 받아지기 전에 요청/응답을 수정하거나 추가적인 로직을 실행할 수 있다.
+  - 헤더 추가, 요청 데이터 변환, 로깅 등의 작업을 처리할 수 있게 해준다.
 
 ---
