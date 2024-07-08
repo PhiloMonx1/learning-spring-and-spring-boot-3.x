@@ -17,6 +17,7 @@
 14. [Formik을 이용하여 Todo React 컴포넌트에 검증 추가하기](#14단계---formik을-이용하여-todo-react-컴포넌트에-검증-추가하기)
 15. [Spring Boot 백엔드 API에 Todo 업데이트 및 생성 REST API 추가하기](#15단계---spring-boot-백엔드-api에-todo-업데이트-및-생성-rest-api-추가하기)
 16. [React 프론트엔드에 업데이트 기능 추가하기](#16단계---react-프론트엔드에-업데이트-기능-추가하기)
+17. [React 프론트엔드에 새로운 Todo 생성 기능 추가하기](#17단계---react-프론트엔드에-새로운-todo-생성-기능-추가하기)
 
 ---
 
@@ -927,5 +928,75 @@ function onSubmit(values) {
 }
 ```
 - 'then' 체이닝을 통해 성공했을 경우에만 이동하도록 설정할 수 있다.
+
+---
+
+## 17단계 - React 프론트엔드에 새로운 Todo 생성 기능 추가하기
+
+#### 구현 실습
+```jsx
+//ListTodos.jsx
+function addNewTodo(){
+  navigate(`/todo/-1`);
+}
+
+//TodoDetail.jsx
+function retrieveTodo() {
+  if(id != -1){
+    retrieveTodoApi(username, id)
+    .then((response) => {
+      setDescription(response.data.description)
+      setTargetDate(response.data.targetDate)
+    })
+    .catch((error) => console.log(error))
+  }
+}
+
+function onSubmit(values) {
+  const todo = {
+    id: id,
+    username: username,
+    description: values.description,
+    targetDate: values.targetDate,
+    done: false
+  }
+
+  if(id == -1){
+    createTodoApi(username, todo)
+    .then((response) => {
+      navigate('/todos')
+    })
+    .catch((error) => console.log(error))
+  }else {
+    updateTodoApi(username, id, todo)
+    .then((response) => {
+      navigate('/todos')
+    })
+    .catch((error) => console.log(error))
+  }
+}
+```
+- addNewTodo() 함수는 /todo/-1 로 리다이렉트 한다. (버튼에 연결됨)
+- 만약 todo의 id가 -1 일 경우 수정 대신 신규 생성 로직을 수행한다.
+
+#### 날짜 밸리데이션
+```jsx
+import moment from "moment";
+
+function validate(values){
+  let errors = {
+
+  };
+  if(values.description.length < 5){
+    errors.description = '할 일은 5글자 이상 작성해 주십시오.';
+  }
+  if(values.targetDate == ''){
+    errors.targetDate = '목표 일자를 입력해주세요';
+  }
+  if(!moment(values.targetDate).isAfter()){
+    errors.targetDate = '목표 일자는 현재 날짜보다 과거일 수 없습니다.'
+  }
+  return errors;
+}
 
 ---

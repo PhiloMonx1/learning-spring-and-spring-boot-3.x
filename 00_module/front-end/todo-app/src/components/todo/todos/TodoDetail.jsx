@@ -1,8 +1,9 @@
 import {useNavigate, useParams} from "react-router-dom";
-import {retrieveTodoApi, updateTodoApi} from "../api/TodoApiService";
+import {createTodoApi, retrieveTodoApi, updateTodoApi} from "../api/TodoApiService";
 import {useAuth} from "../security/AuthContext";
 import {useEffect, useState} from "react";
 import {Formik, Form, Field, ErrorMessage} from "formik";
+import moment from "moment";
 
 export default function TodoDetail() {
   const authContext = useAuth();
@@ -14,12 +15,14 @@ export default function TodoDetail() {
   const [targetDate, setTargetDate] = useState('');
 
   function retrieveTodo() {
-    retrieveTodoApi(username, id)
-    .then((response) => {
-      setDescription(response.data.description)
-      setTargetDate(response.data.targetDate)
-    })
-    .catch((error) => console.log(error))
+    if(id != -1){
+      retrieveTodoApi(username, id)
+      .then((response) => {
+        setDescription(response.data.description)
+        setTargetDate(response.data.targetDate)
+      })
+      .catch((error) => console.log(error))
+    }
   }
 
   function onSubmit(values) {
@@ -30,11 +33,20 @@ export default function TodoDetail() {
       targetDate: values.targetDate,
       done: false
     }
-    updateTodoApi(username, id, todo)
-    .then((response) => {
-      navigate('/todos')
-    })
-    .catch((error) => console.log(error))
+
+    if(id == -1){
+      createTodoApi(username, todo)
+      .then((response) => {
+        navigate('/todos')
+      })
+      .catch((error) => console.log(error))
+    }else {
+      updateTodoApi(username, id, todo)
+      .then((response) => {
+        navigate('/todos')
+      })
+      .catch((error) => console.log(error))
+    }
   }
 
   function validate(values){
@@ -46,6 +58,9 @@ export default function TodoDetail() {
     }
     if(values.targetDate == ''){
       errors.targetDate = '목표 일자를 입력해주세요';
+    }
+    if(!moment(values.targetDate).isAfter()){
+      errors.targetDate = '목표 일자는 현재 날짜보다 과거일 수 없습니다.'
     }
     return errors;
   }
