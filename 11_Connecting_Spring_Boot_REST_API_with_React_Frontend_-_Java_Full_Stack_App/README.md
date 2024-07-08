@@ -25,6 +25,7 @@
 22. [async와 await를 사용하여 기본 인증 API 호출하기](#22단계---async와-await를-사용하여-기본-인증-api-호출하기)
 23. [AuthContext에 기본 인증 토큰 설정하기](#23단계---authcontext에-기본-인증-토큰-설정하기)
 24. [인증 헤더를 추가하기 위해 Axios 인터셉터 설정하기](#24단계---인증-헤더를-추가하기-위해-axios-인터셉터-설정하기)
+25. [JWT 및 Spring Security 시작하기](#25단계---jwt-및-spring-security-시작하기)
 
 ---
 
@@ -63,7 +64,20 @@
   - ![img_1.png](image/IntelliJ-module-setting-2.png)
 - '적용' 혹은 '확인'을 누른 후 모듈을 불러올 때까지 기다린다.
 
-3. 프로젝트 실행
+3. **중요!** Spring Boot 버전 변경
+    ```xml
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.0.0-M4</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    ```
+    - pom.xml을 보면 Spring Boot 버전이 '3.0.0-M4' 인것을 확인할 수 있다.
+    - 해당 버전은 정식 릴리즈 버전이 아닌 마일스톤 버전으로 나중에 JWT를 구현하는 단계에서 이슈가 발생한다.
+    - 최신 버전을 변경 후 Maven을 다시 불러오는 것을 추천한다. (필자는 3.3.1 버전 사용)
+    
+4. 프로젝트 실행
 모듈 불러오기가 끝난 후 'RestfulWebServicesApplication' 애플리케이션을 실행하고, ['/hello-world'](http://localhost:8080/hello-world) GET API를 확인한다.
 
 ---
@@ -1100,7 +1114,7 @@ public class BasicAuthenticationSecurityConfiguration {
 		return http
 				.authorizeHttpRequests(
 						auth -> auth
-						.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+						.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 						.anyRequest().authenticated()
 				)
 				.httpBasic(Customizer.withDefaults())
@@ -1110,11 +1124,12 @@ public class BasicAuthenticationSecurityConfiguration {
 	}
 }
 ```
-- `.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()` 코드가 설정 부분이다.
-  - .antMatchers : 특정 패턴의 요청에 대한 접근 권한을 설정
+- `.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()` 코드가 설정 부분이다.
+  - .requestMatchers : 특정 패턴의 요청에 대한 접근 권한을 설정
     - 첫 번째 파라미터 : HTTP 메서드가 OPTIONS 인 경우
     - 두 번째 파라미터 : 모든 엔드포인트
   - .permitAll() : 접근을 허용함
+- Spring Boot 버전이 '3.0.0-M4' 라면 `requestMatchers` 대신 `antMatchers`을 사용해야 한다.
 
 ---
 
@@ -1254,5 +1269,65 @@ apiClient.interceptors.request.use(
 - interceptors : 요청과 응답을 가로채서 처리하기 위한 기능
   - 요청이 전송되기 전이나 응답이 받아지기 전에 요청/응답을 수정하거나 추가적인 로직을 실행할 수 있다.
   - 헤더 추가, 요청 데이터 변환, 로깅 등의 작업을 처리할 수 있게 해준다.
+
+---
+
+## 25단계 - JWT 및 Spring Security 시작하기
+
+#### Basic 토큰의 단점
+- 만료 기한이 없다.
+- 사용자 세부정보를 토큰에 담을 수 없다.
+- Base64 인코딩 방식으로 쉽게 디코딩도 가능하다.
+
+결론적으로 Basic 토큰은 프로덕션 환경에 적합하지 않다.
+
+#### JWT(Json Web Token)
+토큰을 만드는 표준 시스템 정의
+- 사용자 세부정보 및 인증을 담는 것이 가능
+- 해싱 알고리즘 사용
+- 만료 시간 설정 가능
+
+#### 라이브러리 추가 (JWT 관련)
+```xml
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+</dependency>
+```
+- JWT 토큰을 검증하고 인증된 사용자에게 리소스에 대한 액세스 권한을 부여하기 위해 사용
+
+#### **중요!** 강의 코드 트러블슈팅
+해당 단계는
+[강의 코드](https://github.com/in28minutes/master-spring-and-spring-boot/blob/main/13-full-stack/99-reuse/02-spring-security-jwt.md)를 제공한다.
+
+그러나 강의 코드를 그대로 적용하면 `JwtSecurityConfig` 파일에서 이슈가 발생한다.
+
+- 프로젝트 seed 파일의 Spring Boot 버전이 '3.0.0-M4'이다.
+- 제공된 코드의 `JwtSecurityConfig`에는 `requestMatchers`가 사용되는데 '3.0.0-M4' 버전에서는 `requestMatchers` 대신 `antMatchers`을 사용해야 한다.
+  - 그러나 `antMatchers`로 바꿔도 JWT 인증이 정상적으로 동작하지 않는다.
+
+해결 방법
+1. Spirng Boot 버전을 최신 버전으로 업그레이드 한다. (필자는 3.3.1 버전 사용)
+2. `JwtSecurityConfig::securityFilterChain()`을 아래 코드로 변경한다.
+    ```java
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, HandlerMappingIntrospector introspector) throws Exception {
+        return httpSecurity
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(new AntPathRequestMatcher("/authenticate")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/h2-console/*")).permitAll() // h2-console is a servlet and NOT recommended for a production
+                        .requestMatchers(new AntPathRequestMatcher("/**", "OPTIONS")).permitAll()
+                        .anyRequest()
+                        .authenticated())
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.
+                        sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
+                .httpBasic(Customizer.withDefaults())
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()))
+                .build();
+    }
+    ```
+3. 강의 실습을 진행한다.
 
 ---
