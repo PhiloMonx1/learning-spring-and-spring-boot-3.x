@@ -23,6 +23,7 @@
 20. [모든 OPTIONS 요청을 허용하도록 Spring Security 설정하기](#20단계---모든-options-요청을-허용하도록-spring-security-설정하기)
 21. [React 앱에 로그인할 때 기본 인증 서비스 호출하기](#21단계---react-앱에-로그인할-때-기본-인증-서비스-호출하기)
 22. [async와 await를 사용하여 기본 인증 API 호출하기](#22단계---async와-await를-사용하여-기본-인증-api-호출하기)
+23. [AuthContext에 기본 인증 토큰 설정하기](#23단계---authcontext에-기본-인증-토큰-설정하기)
 
 ---
 
@@ -1201,5 +1202,29 @@ async function login(username, password) {
 const [token, setToken] = useState(null)
 ```
 useState() 선언하고 API 요청이 성공적으로 완료 시 setToken()를 사용해서 token을 담을 수 있다.
+
+---
+
+## 23단계 - AuthContext에 기본 인증 토큰 설정하기
+
+#### 실습
+```js
+//HelloWorldApiService.js
+export const retrieveHelloWorldPathVariable
+    = (username, token) => apiClient.get(`/hello-world/path-variable/${username}`,{
+      headers: {
+        Authorization: token
+      }
+    })
+
+//Welcome.jsx
+const authContext = useAuth();
+function callHelloWorldPathVariable() {
+  retrieveHelloWorldPathVariable(params.username, authContext.token)
+  .then ((response) => successfulResponse(response))
+  .catch((error) => failedResponse(error))
+  .finally(() => console.log("finally"))
+}
+```
 
 ---
