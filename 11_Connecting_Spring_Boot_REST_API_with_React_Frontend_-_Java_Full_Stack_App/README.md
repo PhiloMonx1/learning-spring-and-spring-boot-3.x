@@ -8,6 +8,7 @@
 5. [Spring Boot REST API 호출 코드를 별도의 모듈에 리팩터링하기](#5단계---spring-boot-rest-api-호출-코드를-별도의-모듈에-리팩터링하기)
 6. [Spring Boot REST API에서 Axios를 사용하는 최적의 방식](#6단계---spring-boot-rest-api에서-axios를-사용하는-최적의-방식)
 7. [Retrieve Todos Spring Boot REST API GET 메서드 만들기](#7단계---retrieve-todos-spring-boot-rest-api-get-메서드-만들기)
+8. [React 앱에서 Spring Boot REST API로부터 Todo 표시하기](#8단계---react-앱에서-spring-boot-rest-api로부터-todo-표시하기)
 
 ---
 
@@ -375,5 +376,176 @@ public class ShoppingController {
   - 서버는 클라이언트의 세션 상태를 저장하지 않는다.
   - JWT 등의 토큰 기반 인증을 사용하는 것으로 구현할 수 있다.
     - 완전한 무상태성은 실제 애플리케이션에서 달성하기 어려울 수 있으며, 인증, 권한 부여 등에서는 일정 수준의 상태 유지가 필요할 수 있다.
+
+---
+
+## 8단계 - React 앱에서 Spring Boot REST API로부터 Todo 표시하기
+
+#### TodoApiService 추가 및 API 호출
+```js
+//TodoApiService.js
+import axios from "axios";
+
+const apiClient = axios.create({
+  baseURL: 'http://localhost:8080'
+});
+
+export const retrieveAllTodosForUsername = (username) => apiClient.get(`/users/${username}/todos`)
+```
+
+#### ListTodos 컴포넌트에서 Todos 노출하기
+```jsx
+const [todos, setTodos] = useState([]);
+
+function refreshTodos() {
+  retrieveAllTodosForUsername('eh13')
+  .then ((response) => setTodos(response.data))
+  .catch((error) => console.log(error))
+  .finally(() => console.log("finally"))
+}
+
+useEffect(
+        () => refreshTodos(), []
+)
+```
+- `then ((response) => setTodos(response.data))` 으로 인해 useState에 API 응답 값이 저장된다.
+- 컴포넌트 내에서 사용시 기존 `{todo.targetDate.toDateString()}`를 `{todo.targetDate.toString()}`으로 변경해야 한다.
+
+#### useEffect
+React의 함수형 컴포넌트에서 부수 효과(side effects)를 다루기 위한 Hook
+```jsx
+useEffect(
+        () => refreshTodos(), []
+)
+```
+- 컴포넌트가 렌더링 된 후에 useEffect() 내의 로직이 실행된다.
+  - 첫 번째 렌더링을 포함하여 매 렌더링 후에 기본적으로 실행됨
+- API 호출, 이벤트 리스너 등록/해제, DOM 조작 등 부수 효과를 처리한다.
+- 인자
+  - 첫 번째 인자 : 실행할 부수 효과 로직
+  - 두 번째 인자 : 지정된 값들이 변경될 때만 useEffect가 실행 (배열로 전달)
+    - 빈 배열([])을 전달하면 컴포넌트가 마운트될 때만 실행
+    - 배열을 생략하면 매 렌더링마다 실행
+
+#### 부록(1) : apiClient 분리하기
+```js
+const apiClient = axios.create({
+  baseURL: 'http://localhost:8080'
+});
+```
+해당 코드가 클라이언트의 'ApiService.js' 파일마다 중복으로 발생한다. 'UserApiService.js'가 추가되면 역시 중복으로 발생할 것이다.
+
+```js
+const todoApiClient = axios.create({
+  baseURL: 'http://localhost:8080/todos'
+});
+
+const userApiClient = axios.create({
+  baseURL: 'http://localhost:8080/users'
+});
+```
+이와 같은 방법으로 작성하는 것은 어떨까?
+- 모듈화되어 있어 리소스별로 다른 설정이 필요한 경우 유연하게 대처할 수 있다.
+- 보다 명확하게 정의되어 있어 코드의 가독성이 높아진다.
+
+이 경우 `/users/${username}/todos` API는 'userApiClient'에 속해야 한다.
+
+#### 부록(2) : 'TodoResource'가 아닌 'UserResource'
+```java
+@RestController
+public class TodoResource {
+	private TodoService todoService;
+
+	public TodoResource(TodoService todoService) {
+		this.todoService = todoService;
+	}
+
+	@GetMapping("/users/{username}/todos")
+	public List<Todo> retrieveTodos(@PathVariable String username) {
+		return todoService.findByUsername(username);
+	}
+}
+``` 
+- '/users/{username}/todos' API는 `TodoResource` 가 아닌 `UserResource`의 책임으로 변경하는 것이 고려될 수 있다. (이 경우 메서드 명도 보다 구체적으로 변경되어야 한다.)
+  - /users 로 시작하는 엔드포인트 특성상 User 리소스가 중심이 되는 것으로 여겨지기 때문
+  - Axios의 BaseURL 처럼 스프링 부트에도 각 컨트롤러의 Base 엔드포인트를 설정하는 기능이 있는데 이 경우 TodoResource는 "/v1/todos" 등으로 설정이 될 것이기 때문
+
+#### 부록(3) : 무엇이 RESTful한 API 인가?
+그런데 문제가 있다. 클라이언트 모듈상으로 Todo에 대한 리소스는 Todo 컴포넌트에 속한다. 그러나 API 호출 클라이언트는 User 클라이언트이다.
+
+그럼 '/users/{username}/todos' 대신 '/todos/users/{username}'로 엔드포인트를 변경하는 것은 어떨까? 컨트롤러를 변경할 필요도 없고, 프론트엔드에서도 컴포넌트와 알맞은 것 같다.
+
+하지만 아래 서술할 이유로 인해 권장되지 않는 방법이다.
+- 리소스 계층 구조 및 관계의 명확성 : User:Todo 는 1:N 관계로 Todo가 User에 속하는 계층 구조를 나타내는 것이 좋다.
+  - '/todos/users/{username}' : Todo에 속한 User 라는 해석이 가능할 수 있다.
+- 일관성 : 다른 사용자 관련 엔드포인트와 일관된 구조를 유지할 필요가 있다.
+  - '/todos/users/{username}' : 
+    - 도메인이 더 생겨남에 따라 일관된 엔드포인트 작성이 힘들어 질 수 있다.
+    - 일반적으로 RESTful API에서는 리소스를 먼저 명시하고 그 뒤에 식별자나 하위 리소스를 배치하는데, 해당 엔드포인트는 이러한 관행을 무시하는 것으로 보일 수 있다.
+- 확장성 : 필요에 따라 /users/{id}/todos/{todo_id}와 같이 특정 할 일 항목에 접근하는 엔드포인트로 자연스럽게 확장 가능해야 한다.
+
+#### 부록(4) : 중첩 리소스 모델(Nested Resource Model) - 리소스 간의 계층 구조 명시하기
+만약 Todo 말고, Comment, Follower 등의 User와 연결되는 신규 도메인이 더 추가될 경우엔 어떻게 해야 할까?
+```
+'/users/{username}/todos'
+'/users/{username}/comment'
+'/users/{username}/follower'
+```
+이와 같은 방식을 '중첩 리소스 모델'이라고 할 수 있다. 
+- 리소스간의 계층 구조를 명확하게 표현
+- 소유 관계 직관적 표현 
+- 직관적인 URL 구조 (읽기 쉬운 URL)
+
+그러나 이 경우 `UserResource`가 방대해지며. 클라이언트 역시 동일한 문제를 겪을 것이다. 
+추가로
+- URI 복잡성 증가
+- 확장성 제한
+- 성능 문제
+
+등의 문제들도 발생할 수 있다. 
+
+#### 부록(5) : 평면 리소스 모델(Flat Resource Model) - 리소스 중심 설계 강화하기 
+```
+'/todos?username={username}'
+'/comment?username={username}'
+'/follower?username={username}'
+```
+이와 같은 방식으로 파람을 사용해서 `UserResource`의 책임을 각 리소스별로 분담하는 것이 가능하다.
+- 각 리소스를 독립적인 엔티티로 취급한다.
+- 더 유연하고 확장 가능한 API 설계가 가능하다.
+- 복잡한 애플리케이션의 경우 더 적절하다.
+
+하지만 평면 리소스 모델의 단점도 명확히 존재한다.
+- 복잡한 관계 표현의 어려움 : 깊은 중첩 관계를 가진 데이터 구조를 표현하기 어려움
+- 쿼리 파라미터가 복잡해질 경우 나타나는 문제
+  - URL 가독성 저하
+  - 캐싱 전략 난이도 상승
+  - 서버 측 복잡성 증가
+  - 보안 이슈
+  - 성능 이슈
+
+#### 부록(6) : 중첩 리소스 모델 vs 평면 리소스 모델
+어떤 방식을 선택하는 것이 좋을까? "둘 다 많이 사용되기는 하지만 일반적으로 '중첩 리소스 모델'이 좀 더 RESTful 하다"는 의견이 많았다.
+1. 명확한 리소스 계층 구조 표현
+   - URL을 통해 리소스 계층 및 API의 응답을 예측하는 것이 가능하다.
+2. 리소스 중심 URI
+   - 쿼리 파라미터를 사용하는 설계는 일반적으로 리소스 중심 URI로 간주되지 않는다. (리소스 경로를 통한 URL이 더 권장된다.)
+   - 쿼리 파라미터의 경우 주로 '필터링'에 사용된다는 것을 인지할 필요가 있다.
+
+- 리소스 간의 관계가 중요하고, 계층 구조를 명확히 표현하고자 한다면 '중첩 리소스 모델'이 적합하다.
+- 리소스에 대한 다양한 필터링이 필요하고, 유연성을 높이고자 한다면 '평면 리소스 모델'이 적합할 수 있다.
+
+두 패턴 모두 각각의 장단점을 가지고 있다.
+
+경우에 따라 '평면 리소스 모델'이 리소스 중심적인 RESTful의 원칙에 더 부합하다는 설명을 듣기도 했다.
+
+#### 부록(7) : 중요한 것은 '클라이언트'와의 소통이다.
+UX(User Experience)라는 용어가 있다. '사용자 경험'을 의미하는 것으로 유저 편의성 등을 나타내고, 고객과 직접적으로 맞닿아 있는 프론트엔드 개발자에게는 필수 덕목으로 여겨진다. (백엔드 개발자 역시 UX를 중요하게 고려해야 한다.) 
+백엔드 개발자에게 있어서 가장 앞선 단계의 클라이언트(고객)는 프론트엔드 개발자라는 점을 항상 기억해야 한다. 
+즉, 백엔드 설계에 있어서 '프론트엔드 개발자의 편의성' 역시 중요한 고려 사항이라는 것이다. 
+평면 리소스 모델의 경우 리액트를 사용하는 프론트엔드 개발자가 보다 리소스 모델 별로 컴포넌트를 설계하기에 더 원활할 수 있다. 그러니 경우에 따라서는 평면 리소스 모델을 선택하는 것을 고려할 수 있는 것이다. 
+패턴의 정답은 없기 때문에 설계를 할 때 협업하는 팀과의 충분한 소통을 통해 내부의 명확한 컨벤션과 규칙을 만들고, 이를 일관되게 지키는 것이 중요하다.
+
+API 설계는 상황과 요구사항에 따라 유연하게 접근해야 하며, 절대적인 RESTful API를 개념적으로만 추구하기 보다는 서비스 관점에서 다양한 의견을 조합하여 설계하는 것이 중요하다는 결론을 내린다.
 
 ---
