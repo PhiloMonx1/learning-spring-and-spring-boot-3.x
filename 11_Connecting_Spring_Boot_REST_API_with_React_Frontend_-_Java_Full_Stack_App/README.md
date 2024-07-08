@@ -13,6 +13,7 @@
 10. [React 프론트엔드에 삭제 기능 추가하기](#10단계---react-프론트엔드에-삭제-기능-추가하기)
 11. [username을 React 인증 컨텍스트에 설정하기](#11단계---username을-react-인증-컨텍스트에-설정하기)
 12. [Todo 페이지를 표시하기 위한 Todo React 컴포넌트 만들기](#12단계---todo-페이지를-표시하기-위한-todo-react-컴포넌트-만들기)
+13. [Todo React 컴포넌트를 표시하기 위해 Formik 및 Moment 라이브러리 추가하기](#13단계---todo-react-컴포넌트를-표시하기-위해-formik-및-moment-라이브러리-추가하기)
 
 ---
 
@@ -744,4 +745,55 @@ function deleteTodo(id) {
     }
     ```
     - `updateTodo()`를 버튼의 onClick 함수로 지정하여 사용할 수 있다.
+---
+
+## 13단계 - Todo React 컴포넌트를 표시하기 위해 Formik 및 Moment 라이브러리 추가하기
+
+#### npm 라이브러리 설치
+- [formik](https://www.npmjs.com/package/formik) : 폼(form) 구현을 간소화, 관리 및 유효성 검사 지원 라이브러리
+- [moment](https://www.npmjs.com/package/moment) : 날짜 관련 라이브러리 (주의 : 현재 레거시 프로젝트이며, 유지 관리 모드에 있음)
+  - 강의에서는 'moment'를 사용했지만 더 이상 개발이 되지 않는 라이브러리이다.
+  - Luxon, Day.js, date-fns, js-Joda 등의 라이브러리로 대체하는 것이 좋다.
+
+#### formik 사용해서 form 작성
+```jsx
+import {Formik, Form, Field} from "formik";
+
+export default function TodoDetail() {
+  //...(생략)
+  function onSubmit(values) {
+    console.log(values)
+  }
+  
+  //...(생략)
+  return (
+      <div className="container">
+        <h1>TODO 상세</h1>
+        <Formik initialValues={{description, targetDate}} enableReinitialize={true} onSubmit={onSubmit}>
+          {
+            (props) => (
+              <Form>
+                <fieldset className="form-group">
+                  <label>할 일</label>
+                  <Field className="form-control" type="text" name="description"/>
+                </fieldset>
+                <fieldset className="form-group">
+                  <label>목표 일자</label>
+                  <Field className="form-control" type="date" name="targetDate"/>
+                </fieldset>
+                <div>
+                  <button className="btn btn-success m-5" type="submit">저장</button>
+                </div>
+              </Form>
+            )
+          }
+        </Formik>
+      </div>
+  )
+}
+```
+- initialValues : 초기값 설정
+- enableReinitialize : initialValues가 변경될 때마다 폼의 상태를 재설정
+- onSubmit : form이 제출되었을 때 실행될 함수 지정
+
 ---
