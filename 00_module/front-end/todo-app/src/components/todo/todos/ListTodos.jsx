@@ -1,8 +1,10 @@
 import {useEffect, useState} from "react";
 import {retrieveAllTodosForUsernameApi, deleteTodoApi} from "../api/TodoApiService";
 import {useAuth} from "../security/AuthContext";
+import {useNavigate} from "react-router-dom";
 
 export default function ListTodosComponent() {
+  const navigate = useNavigate();
   const [todos, setTodos] = useState([]);
   const [message, setMessage] = useState("");
   const authContext = useAuth();
@@ -24,6 +26,10 @@ export default function ListTodosComponent() {
     )
   }
 
+  function updateTodo(id){
+    navigate(`/todo/${id}`);
+  }
+
   useEffect(
       () => refreshTodos(), []
   )
@@ -40,6 +46,7 @@ export default function ListTodosComponent() {
               <th>완료 여부</th>
               <th>목표 일자</th>
               <th>삭제</th>
+              <th>편집</th>
             </tr>
             </thead>
             <tbody>
@@ -49,8 +56,8 @@ export default function ListTodosComponent() {
                     <td>{todo.description}</td>
                     <td>{todo.done.toString()}</td>
                     <td>{todo.targetDate.toString()}</td>
-                    <td><button className="btn btn-warning" onClick={() => deleteTodo(todo.id)}>삭제</button>
-                    </td>
+                    <td><button className="btn btn-warning" onClick={() => deleteTodo(todo.id)}>삭제</button></td>
+                    <td><button className="btn btn-success" onClick={() => updateTodo(todo.id)}>편집</button></td>
                   </tr>
               ))
             }

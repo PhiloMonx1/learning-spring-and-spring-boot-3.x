@@ -1,14 +1,15 @@
 import './TodoApp.css';
-import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 
 import HeaderComponent from "./common/Header";
 import FooterComponent from "./common/Footer";
 import WelcomeComponent from "./pages/Welcome";
 import ListTodosComponent from "./todos/ListTodos";
+import TodoComponent from "./todos/TodoDetail";
 import NotFoundErrorComponent from "./pages/NotFoundPage";
 import LogoutComponent from "./auth/Logout";
 import LoginComponent from "./auth/Login";
-import AuthProvider, {useAuth} from "./security/AuthContext";
+import AuthProvider from "./security/AuthContext";
 import AuthenticatedRoute from "./security/AuthenticatedRoute";
 
 export default function TodoApp() {
@@ -29,6 +30,11 @@ export default function TodoApp() {
             <Route path="/todos" element={
               <AuthenticatedRoute>
                 <ListTodosComponent />
+              </AuthenticatedRoute>
+            } />
+            <Route path="/todo/:id" element={
+              <AuthenticatedRoute>
+                <TodoComponent />
               </AuthenticatedRoute>
             } />
             <Route path="/logout" element={

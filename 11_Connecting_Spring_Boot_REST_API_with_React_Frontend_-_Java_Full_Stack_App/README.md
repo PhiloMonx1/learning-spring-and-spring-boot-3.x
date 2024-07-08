@@ -12,6 +12,7 @@
 9. [Todo를 받고 삭제하는 Spring Boot REST API 메서드 만들기](#9단계---todo를-받고-삭제하는-spring-boot-rest-api-메서드-만들기)
 10. [React 프론트엔드에 삭제 기능 추가하기](#10단계---react-프론트엔드에-삭제-기능-추가하기)
 11. [username을 React 인증 컨텍스트에 설정하기](#11단계---username을-react-인증-컨텍스트에-설정하기)
+12. [Todo 페이지를 표시하기 위한 Todo React 컴포넌트 만들기](#12단계---todo-페이지를-표시하기-위한-todo-react-컴포넌트-만들기)
 
 ---
 
@@ -679,4 +680,68 @@ function deleteTodo(id) {
 }
 ```
 
+---
+
+## 12단계 - Todo 페이지를 표시하기 위한 Todo React 컴포넌트 만들기
+
+#### 구현 실습
+1. api 호출
+    ```js
+    //TodoApiService.js 
+    
+    export const retrieveTodoApi = (username, id) => apiClient.get(`/users/${username}/todos/${id}`)
+    ```
+2. 'TodoDetail' 컴포넌트 추가
+    ```jsx
+    export default function TodoDetail() {
+      const authContext = useAuth();
+      const username = authContext.username;
+      const {id} = useParams();
+    
+      const [description, setDescription] = useState('');
+    
+      function retrieveTodo() {
+        retrieveTodoApi(username, id)
+        .then((response) => {
+          setDescription(response.data.description)
+        })
+        .catch((error) => console.log(error))
+      }
+    
+      useEffect(
+              () => retrieveTodo(),[id]
+      )
+    
+      return (
+              <div className="container">
+                <h1>TODO 상세</h1>
+                <div>
+                  목표 : {description}
+                </div>
+              </div>
+      )
+    }
+    ```
+    - `() => retrieveTodo(),[id]` : id가 변경될 때마다 `retrieveTodo()` 실행
+3. Route 등록
+    ```jsx
+    //TodoApp.jsx
+   
+    import TodoComponent from "./todos/TodoDetail";
+    //...(생략)
+    <Route path="/todo/:id" element={
+      <AuthenticatedRoute>
+        <TodoComponent />
+      </AuthenticatedRoute>
+    } />
+    ```
+4. 네비게이트 연결
+    ```jsx
+    //ListTodos.jsx
+    
+    function updateTodo(id){
+      navigate(`/todo/${id}`);
+    }
+    ```
+    - `updateTodo()`를 버튼의 onClick 함수로 지정하여 사용할 수 있다.
 ---
