@@ -10,6 +10,7 @@
 ---
 
 ## 1단계 - JUnit과 단위 테스트는 무엇인가
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/2bd1bc12c21b3c5201574f0eb5b1e5298afa9c0e)
 
 #### 통합 테스트(시스템 테스트)
 애플리케이션을 빌드, 배포 후 테스트 팀이 유저 입장에서 테스트를 하는 방식
@@ -23,6 +24,7 @@
 ---
 
 ## 2단계 - 첫 번째 JUnit 프로젝트 성공하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/1d0266dd2174c000f09866a50e19f9fe318f6361)
 
 #### 프로젝트 세팅
 강의에서 이클립스 IDE를 사용해서 프로젝트 세팅을 진행한다. 해당 노트에서는 인텔리제이로 강의 프로젝트 세팅 환경을 구성할 것이다.
@@ -91,6 +93,7 @@ class MyMathTest {
 ---
 
 ## 3단계 - 첫 코드에서 첫 단위 테스트 수행하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/de24e4d7770b2a0d1ce527d85a83a263cb2e25fb)
 
 #### 테스트 코드 리팩토링
 ```java
@@ -134,6 +137,7 @@ class MyMathTest {
 ---
 
 ## 4단계 - Assert 메서드 알아보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/0c92c19656bab03fc1cce66b2d259d429e1e1675)
 
 #### 실습
 ```java
@@ -172,6 +176,7 @@ class MyAssertTest {
 ---
 
 ## 5단계 - 몇 가지 중요한 JUnit 어노테이션 살펴보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/a5e99fe85373b35edb1f5cdaae2cdab8bd08108f)
 
 #### 실습
 ```java
