@@ -5,6 +5,7 @@
 2. [첫 번째 JUnit 프로젝트 성공하기](#2단계---첫-번째-junit-프로젝트-성공하기)
 3. [첫 코드에서 첫 단위 테스트 수행하기](#3단계---첫-코드에서-첫-단위-테스트-수행하기)
 4. [Assert 메서드 알아보기](#4단계---assert-메서드-알아보기)
+5. [몇 가지 중요한 JUnit 어노테이션 살펴보기](#5단계---몇-가지-중요한-junit-어노테이션-살펴보기)
 
 ---
 
@@ -167,5 +168,72 @@ class MyAssertTest {
 - assertTimeout(duration, executable) : 주어진 시간 내에 실행이 완료되는지 확인.
 - assertNotEquals(unexpected, actual) : 두 값이 다른지 확인.
 - assertAll(executables...) : 여러 assertion을 그룹화하여 모든 assertion을 실행.
+
+---
+
+## 5단계 - 몇 가지 중요한 JUnit 어노테이션 살펴보기
+
+#### 실습
+```java
+class MyBeforeAfterTest {
+
+	@BeforeAll
+	static void beforeAll() {
+		System.out.println("BeforeAll");
+	}
+
+	@BeforeEach
+	void beforeEach() {
+		System.out.println("BeforeEach");
+	}
+
+	@Test
+	void test1() {
+		System.out.println("test");
+	}
+
+	@Test
+	void test2() {
+		System.out.println("test");
+	}
+
+	@Test
+	void test3() {
+		System.out.println("test");
+	}
+
+	@AfterEach
+	void afterEach() {
+		System.out.println("AfterEach");
+	}
+
+	@AfterAll
+	static void afterAll() {
+		System.out.println("AfterAll");
+	}
+}
+```
+- 결과 값
+    ```
+    BeforeAll
+    BeforeEach
+    test
+    AfterEach
+    BeforeEach
+    test
+    AfterEach
+    BeforeEach
+    test
+    AfterEach
+    AfterAll
+    ```
+
+#### 어노테이션 설명
+- @BeforeEach: 각 테스트가 실행되기 전에 실행될 로직 설정
+- @AfterEach: 각 테스트가 종료된 후에 실행될 로직 설정
+- @BeforeAll: 모든 테스트가 실행되기 전에 한 번만 실행될 로직 설정
+  - static으로 선언되어야 함
+- @AfterAll: 모든 테스트가 종료된 후에 한 번만 실행될 로직 설정
+  - static으로 선언되어야 함
 
 ---
