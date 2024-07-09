@@ -1712,5 +1712,6 @@ JwtDecoder jwtDecoder() throws JOSEException {
 - 강의 코드는 실제 프로덕트에서 사용할 수 없는 부분이 있으니 주의가 필요하다. ex) UserDetailsService 하드 코딩
 - JWT는 만료시간을 짧게 설정하고, 리프레시 토큰을 추가하는 운영법도 고려할 수 있다.
 - JWT는 내부 클레임이 노출되기 쉽기 때문에 클레임에 예민한 정보를 담아서는 안된다.
+- JWT에 담은 클레임을 활용할 수 있다. [챕터 12 ReadME 4단계](../12_Connecting_Java_Full_Stack_Application(Spring_Boot_&_React)_with_JPA_&_Hibernate/README.md#부록--jwt에서-username-추출해서-사용하기)
 
 ---

@@ -2,6 +2,8 @@ package com.in28minutes.rest.webservices.restfulwebservices.todo;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,25 +14,27 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class TodoResource {
-	private TodoService todoService;
+	private TodoRepository todoRepository;
 
-	public TodoResource(TodoService todoService) {
-		this.todoService = todoService;
+	public TodoResource(TodoRepository todoRepository) {
+		this.todoRepository = todoRepository;
 	}
 
 	@GetMapping("/users/{username}/todos")
 	public List<Todo> retrieveTodos(@PathVariable String username) {
-		return todoService.findByUsername(username);
+		return todoRepository.findByUsername(username);
 	}
 
 	@GetMapping("/users/{username}/todos/{id}")
 	public Todo retrieveTodo(@PathVariable String username, @PathVariable int id) {
-		return todoService.findById(id);
+		return todoRepository.findById(id).get();
 	}
 
 	@PostMapping("/users/{username}/todos")
-	public Todo addTodo(@PathVariable String username, @RequestBody Todo todo) {
-		return todoService.addTodo(username, todo.getDescription(), todo.getTargetDate(), false);
+	public Todo addTodo(@PathVariable String username, @RequestBody Todo todo, @AuthenticationPrincipal Jwt jwt) {
+		todo.setId(null);
+		todo.setUsername(jwt.getSubject());
+		return todoRepository.save(todo);
 	}
 
 	@PutMapping("/users/{username}/todos/{id}")
@@ -38,13 +42,13 @@ public class TodoResource {
 		todo.setId(id);
 		todo.setUsername(username);
 		todo.setDone(false);
-		todoService.updateTodo(todo);
+		todoRepository.save(todo);
 		return ResponseEntity.noContent().build();
 	}
 
 	@DeleteMapping("/users/{username}/todos/{id}")
 	public ResponseEntity<Void> deleteTodo(@PathVariable String username, @PathVariable int id) {
-		todoService.deleteById(id);
+		todoRepository.deleteById(id);
 
 		return ResponseEntity.noContent().build();
 	}
