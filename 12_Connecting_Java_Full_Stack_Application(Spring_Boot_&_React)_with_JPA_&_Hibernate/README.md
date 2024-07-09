@@ -10,6 +10,7 @@
 ---
 
 ## 1단계 - 풀 스택 React와 JPA 및 Hibernate를 사용한 Spring Boot
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/02a17514abe7f53ff64ba9204d7029b99ec6e330)
 
 #### 라이브러리 추가
 - jpa
@@ -39,6 +40,7 @@ spring.datasource.url=jdbc:h2:mem:testdb
 ---
 
 ## 2단계 - 풀 스택 React와 JPA 및 Hibernate를 사용한 Spring Boot - 테이블 준비하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/f4055383043b248101dab41f84153f9be160c4a8)
 
 #### Todo 엔티티 생성 
 1. 클래스에 @Entity 어노테이션 부여
@@ -67,6 +69,7 @@ values (10003, 'Spring 배우기', false, CURRENT_DATE(), 'eh13');
 ---
 
 ##  3단계 - 풀 스택 React와 JPA 및 Hibernate를 사용한 Spring Boot - Todo CRUD
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/3b396c8de156dbd12802594880ed96f08c96f7d0)
 
 #### Todo 레포지토리 생성
 ```java
@@ -132,6 +135,7 @@ public class TodoResource {
 ---
 
 ## 4단계 - 풀 스택 React와 JPA 및 Hibernate를 사용한 Spring Boot - 새로운 Todo 추가하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/17216d5dcb019c573f006747381358fb2086c8f9)
 
 #### 신규 Todo 생성 시 Todo 객체의 id
 신규 Todo 생성 시 신규 Todo의 id는 어떻게 처리해야 할까?
@@ -216,6 +220,7 @@ public class JwtSecurityConfig {
 ---
 
 ## 5단계 - 풀 스택 React와 JPA 및 Hibernate를 사용한 Spring Boot - MySql 연결하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/39ea881f8394697b96db88150ecebd9002c36c60)
 
 #### MySQL 연결하기 
 강의에서는 이전 강의를 참고하라는 내용과 함께 간단하게 설명하고 있다. 해당 노트에서도 [이전 노트 링크](../06_Build_Java_Web_Application_with_Spring_Framework,_Spring_Boot_and_Hibernate/README.md#41단계---todo-앱을-mysql-데이터베이스에-연결하기)와 함께 application.properties 설정만 명시하도록 하겠다.
