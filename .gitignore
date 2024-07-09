@@ -4,3 +4,6 @@
 /00_module/myfirstwebapp/src/main/resources/application.properties
 /00_module/01-rest-api-starting-code/target/
 application.properties
+/00_module/junit-in-5-steps/.idea/
+/out/
+/lib/
