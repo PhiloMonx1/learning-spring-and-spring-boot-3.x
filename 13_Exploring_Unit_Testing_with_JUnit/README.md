@@ -4,6 +4,7 @@
 1. [JUnit과 단위 테스트는 무엇인가](#1단계---junit과-단위-테스트는-무엇인가)
 2. [첫 번째 JUnit 프로젝트 성공하기](#2단계---첫-번째-junit-프로젝트-성공하기)
 3. [첫 코드에서 첫 단위 테스트 수행하기](#3단계---첫-코드에서-첫-단위-테스트-수행하기)
+4. [Assert 메서드 알아보기](#4단계---assert-메서드-알아보기)
 
 ---
 
@@ -128,5 +129,43 @@ class MyMathTest {
 8. 테스트 데이터는 명확하고 의미 있게 설정해야 한다.
 9. 테스트 케이스는 리소스 낭비가 없어야 한다.
    - 예를 들어 1~9 까지의 숫자 범위의 테스트의 경우 1~9까지를 모두 테스트 하는 것이 아닌 0, 1, 9, 10 을 테스트 하는 것이 좋다.
+
+---
+
+## 4단계 - Assert 메서드 알아보기
+
+#### 실습
+```java
+class MyAssertTest {
+
+	List<String> todos = Arrays.asList("AWS", "도커", "데브옵스");
+
+	@Test
+	void test() {
+		boolean test = todos.contains("도커");
+		assertTrue(test);
+
+		boolean test2 = todos.contains("파이썬");
+		assertFalse(test2);
+	}
+}
+```
+- assertEquals 대신 다양한 assert를 사용할 수 있다.
+
+#### 대표적인 assert의 종류
+- assertEquals(expected, actual) : 두 값이 동일한지 확인.
+- assertTrue(condition) : 조건이 참인지 확인.
+- assertFalse(condition) : 조건이 거짓인지 확인.
+- assertNull(object) : 객체가 null인지 확인.
+- assertNotNull(object) : 객체가 null이 아닌지 확인.
+- assertSame(expected, actual) : 두 객체가 동일한 객체인지 확인합니다 (참조 비교).
+- assertNotSame(expected, actual) : 두 객체가 서로 다른 객체인지 확인.
+- assertArrayEquals(expectedArray, actualArray) : 두 배열의 내용이 동일한지 확인.
+- assertThrows(expectedType, executable) : 특정 예외가 발생하는지 확인.
+- assertDoesNotThrow(executable) : 예외가 발생하지 않는지 확인.
+- assertIterableEquals(expected, actual) : 두 Iterable의 내용이 동일한지 확인.
+- assertTimeout(duration, executable) : 주어진 시간 내에 실행이 완료되는지 확인.
+- assertNotEquals(unexpected, actual) : 두 값이 다른지 확인.
+- assertAll(executables...) : 여러 assertion을 그룹화하여 모든 assertion을 실행.
 
 ---
