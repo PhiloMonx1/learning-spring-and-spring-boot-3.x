@@ -5,6 +5,7 @@
 2. [풀 스택 React와 JPA 및 Hibernate를 사용한 Spring Boot - 테이블 준비하기](#2단계---풀-스택-react와-jpa-및-hibernate를-사용한-spring-boot---테이블-준비하기)
 3. [풀 스택 React와 JPA 및 Hibernate를 사용한 Spring Boot - Todo CRUD](#3단계---풀-스택-react와-jpa-및-hibernate를-사용한-spring-boot---todo-crud)
 4. [풀 스택 React와 JPA 및 Hibernate를 사용한 Spring Boot - 새로운 Todo 추가하기](#4단계---풀-스택-react와-jpa-및-hibernate를-사용한-spring-boot---새로운-todo-추가하기)
+5. [풀 스택 React와 JPA 및 Hibernate를 사용한 Spring Boot - MySql 연결하기](#5단계---풀-스택-react와-jpa-및-hibernate를-사용한-spring-boot---mysql-연결하기)
 
 ---
 
@@ -211,5 +212,39 @@ public class JwtSecurityConfig {
     - SCOPE_ 가 포함된 권한을 따로 분리해서 토큰으로부터 온 권한을 별도 처리할 수 있다.
 - JwtAuthenticationConverter : JWT를 Spring Security의 Authentication 객체로 변환하는 역할을 하는 컴포넌트 컨버터
   - setJwtGrantedAuthoritiesConverter : 앞서 설정한 grantedAuthoritiesConverter 객체를 사용해서 JWT을 Authentication 객체로 변환한다.
+
+---
+
+## 5단계 - 풀 스택 React와 JPA 및 Hibernate를 사용한 Spring Boot - MySql 연결하기
+
+#### MySQL 연결하기 
+강의에서는 이전 강의를 참고하라는 내용과 함께 간단하게 설명하고 있다. 해당 노트에서도 [이전 노트 링크](../06_Build_Java_Web_Application_with_Spring_Framework,_Spring_Boot_and_Hibernate/README.md#41단계---todo-앱을-mysql-데이터베이스에-연결하기)와 함께 application.properties 설정만 명시하도록 하겠다.
+
+#### 라이브러리 설치
+```xml
+<dependency>
+	<groupId>com.mysql</groupId>
+	<artifactId>mysql-connector-j</artifactId>
+</dependency>
+```
+- 기존 h2 라이브러리는 삭제한다.
+
+#### 도커 명령어
+```
+docker run --detach --env MYSQL_ROOT_PASSWORD=dummypassword --env MYSQL_USER=todos-user --env MYSQL_PASSWORD=dummytodos --env MYSQL_DATABASE=todos --name mysql --publish 3306:3306 mysql:8-oracle
+```
+
+#### application.properties 설정
+```properties
+#spring.datasource.url=jdbc:h2:mem:testdb
+#spring.jpa.defer-datasource-initialization=true
+
+spring.datasource.url=jdbc:mysql://localhost:3306/todos
+spring.datasource.username=todos-user
+spring.datasource.password=dummytodos
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+
+spring.jpa.hibernate.ddl-auto=update
+```
 
 ---
