@@ -5,6 +5,7 @@
 1. [Spring Boot 프로젝트 설정하기](#1단계---spring-boot-프로젝트-설정하기)
 2. [Stub의 문제점 이해하기](#2단계---stub의-문제점-이해하기)
 3. [Mock을 이용해 첫 Mockito 테스트 작성하기](#3단계---mock을-이용해-첫-mockito-테스트-작성하기)
+4. [Mockito 어노테이션(@Mock, @InjectMocks)을 이용헤 테스트 단순화하기](#4단계---mockito-어노테이션mock-injectmocks을-이용헤-테스트-단순화하기)
 
 ---
 
@@ -144,5 +145,43 @@ class SomeBusinessImplMockTest {
 ```
 - when : Mock 객체의 retrieveAllData() 메서드가 호출될 때 
 - thenReturn : {25, 15, 5} 배열을 반환하도록 설정
+
+---
+
+## 4단계 - Mockito 어노테이션(@Mock, @InjectMocks)을 이용헤 테스트 단순화하기
+
+#### Mockito 확장 어노테이션 사용해서 테스트코드 리팩토링
+```java
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+//...(생략)
+@ExtendWith(MockitoExtension.class)
+class SomeBusinessImplMockTest {
+
+	@Mock
+	private DataService dataServiceMock;
+
+	@InjectMocks
+	private SomeBusinessImpl businessImpl;
+
+	@Test
+	void findTheGreatestFromAllData_basicScenario() {
+		when(dataServiceMock.retrieveAllData()).thenReturn(new int[]{25, 15, 5});
+		assertEquals(25, businessImpl.findTheGreatestFromAllData());
+	}
+
+	@Test
+	void findTheGreatestFromAllData_withOneValue() {
+		when(dataServiceMock.retrieveAllData()).thenReturn(new int[]{5});
+		assertEquals(5, businessImpl.findTheGreatestFromAllData());
+	}
+}
+```
+- @ExtendWith(MockitoExtension.class) : Mockito 확장 기능을 활성화 한다.
+- @Mock : 주입되어야 하는 의존성 필드에 부여하면 해당 필드의 Mock 객체를 자동으로 생성한다. 
+  - 인터페이스에 부여하는 것이 가능하다.
+- @InjectMocks : 주입받아야 하는 필드에 부여하면 자동으로 @Mock 어노테이션에 의해 생성된 Mock 객체를 주입한다.
+- 각 단위 테스트 내에서 Mock 구현체와 SomeBusinessImpl를 선언할 필요가 없어졌다.
 
 ---
