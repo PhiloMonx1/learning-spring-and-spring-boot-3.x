@@ -2,6 +2,8 @@ package com.in28minutes.rest.webservices.restfulwebservices.todo;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +31,9 @@ public class TodoResource {
 	}
 
 	@PostMapping("/users/{username}/todos")
-	public Todo addTodo(@PathVariable String username, @RequestBody Todo todo) {
+	public Todo addTodo(@PathVariable String username, @RequestBody Todo todo, @AuthenticationPrincipal Jwt jwt) {
+		todo.setId(null);
+		todo.setUsername(jwt.getSubject());
 		return todoRepository.save(todo);
 	}
 
