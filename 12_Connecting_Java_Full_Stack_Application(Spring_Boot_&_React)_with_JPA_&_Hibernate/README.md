@@ -2,6 +2,7 @@
 
 ## 목록
 1. [풀 스택 React와 JPA 및 Hibernate를 사용한 Spring Boot](#1단계---풀-스택-react와-jpa-및-hibernate를-사용한-spring-boot)
+2. [풀 스택 React와 JPA 및 Hibernate를 사용한 Spring Boot - 테이블 준비하기](#2단계---풀-스택-react와-jpa-및-hibernate를-사용한-spring-boot---테이블-준비하기)
 
 ---
 
@@ -31,5 +32,33 @@ spring.datasource.url=jdbc:h2:mem:testdb
 #### h2 콘솔
 ['/h2-console/'](http://localhost:8080/h2-console/) 접근
 - JwtSecurityConfig의 필터체인에서 '/h2-console/*' 엔드포인트의 권한을 열어주었기에 인증 없이 접근이 가능하다.
+
+---
+
+## 2단계 - 풀 스택 React와 JPA 및 Hibernate를 사용한 Spring Boot - 테이블 준비하기
+
+#### Todo 엔티티 생성 
+1. 클래스에 @Entity 어노테이션 부여
+2. id 필드에 @Id, @GeneratedValue 어노테이션 부여
+3. 기본 생성자 생성
+
+이 세 가지는 필수이다.
+
+#### 시작 데이터 삽입
+```properties
+spring.jpa.defer-datasource-initialization=true
+```
+- properties에 해당 설정을 해주어야 한다.
+```sql
+insert into todo(id, description, done, target_date, username)
+values (10001, 'JPA 배우기', false, CURRENT_DATE(), 'eh13');
+
+insert into todo(id, description, done, target_date, username)
+values (10002, 'SQL 배우기', false, CURRENT_DATE(), 'eh13');
+
+insert into todo(id, description, done, target_date, username)
+values (10003, 'Spring 배우기', false, CURRENT_DATE(), 'eh13');
+```
+- src/resources/data.sql
 
 ---
