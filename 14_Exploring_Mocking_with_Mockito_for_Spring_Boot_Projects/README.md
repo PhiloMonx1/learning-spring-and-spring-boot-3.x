@@ -4,6 +4,7 @@
 0. [섹션 소개: Mockito 사용 5단계](#0단계---챕터-소개-mockito-사용-5단계)
 1. [Spring Boot 프로젝트 설정하기](#1단계---spring-boot-프로젝트-설정하기)
 2. [Stub의 문제점 이해하기](#2단계---stub의-문제점-이해하기)
+3. [Mock을 이용해 첫 Mockito 테스트 작성하기](#3단계---mock을-이용해-첫-mockito-테스트-작성하기)
 
 ---
 
@@ -118,5 +119,30 @@ class DataServiceStub implements DataService {
   - 추가된 메서드를 실제로 사용하지 않는다고 하더라도 인터페이스의 메서드는 반드시 구현해야 하기 때문에 구현이 강제된다.
 - 다양한 시나리오 케이스를 테스트하기가 어렵다
   - { 25, 15, 5 } 말고 다른 시나리오를 테스트 하기 위해 새로운 Stub를 추가해야 한다.
+
+---
+
+## 3단계 - Mock을 이용해 첫 Mockito 테스트 작성하기
+
+#### Mock 사용해서 단위테스트 작성
+```java
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+//...(생략)
+class SomeBusinessImplMockTest {
+
+	@Test
+	void findTheGreatestFromAllData_basicScenario() {
+		DataService dataServiceMock = mock(DataService.class);
+		when(dataServiceMock.retrieveAllData()).thenReturn(new int[]{25, 15, 5});
+
+		SomeBusinessImpl businessImpl = new SomeBusinessImpl(dataServiceMock);
+		int result = businessImpl.findTheGreatestFromAllData();
+		assertEquals(25, result);
+	}
+}
+```
+- when : Mock 객체의 retrieveAllData() 메서드가 호출될 때 
+- thenReturn : {25, 15, 5} 배열을 반환하도록 설정
 
 ---

@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-class SomeBusinessImplTest {
+class SomeBusinessImplStubTest {
 
 	@Test
 	void findTheGreatestFromAllData_basicScenario() {
