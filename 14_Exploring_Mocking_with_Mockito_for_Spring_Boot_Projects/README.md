@@ -6,6 +6,7 @@
 2. [Stub의 문제점 이해하기](#2단계---stub의-문제점-이해하기)
 3. [Mock을 이용해 첫 Mockito 테스트 작성하기](#3단계---mock을-이용해-첫-mockito-테스트-작성하기)
 4. [Mockito 어노테이션(@Mock, @InjectMocks)을 이용헤 테스트 단순화하기](#4단계---mockito-어노테이션mock-injectmocks을-이용헤-테스트-단순화하기)
+5. [인터페이스 모킹을 통해 Mock 더 자세히 알아보기](#5단계---list-인터페이스-모킹을-통해-mock-더-자세히-알아보기)
 
 ---
 
@@ -183,5 +184,67 @@ class SomeBusinessImplMockTest {
   - 인터페이스에 부여하는 것이 가능하다.
 - @InjectMocks : 주입받아야 하는 필드에 부여하면 자동으로 @Mock 어노테이션에 의해 생성된 Mock 객체를 주입한다.
 - 각 단위 테스트 내에서 Mock 구현체와 SomeBusinessImpl를 선언할 필요가 없어졌다.
+
+---
+
+## 5단계 - List 인터페이스 모킹을 통해 Mock 더 자세히 알아보기
+
+#### 다양한 Mocking 실습
+```java
+@SpringBootTest
+public class ListTest {
+
+	@Test
+	void simpleTest() {
+		List listMock = mock(List.class);
+		when(listMock.size()).thenReturn(3);
+
+		assertEquals(3, listMock.size());
+		assertEquals(3, listMock.size());
+		assertEquals(3, listMock.size());
+	}
+
+	@Test
+	void multipleReturns() {
+		List listMock = mock(List.class);
+		when(listMock.size()).thenReturn(1).thenReturn(2).thenReturn(5);
+
+		assertEquals(1, listMock.size());
+		assertEquals(2, listMock.size());
+		assertEquals(5, listMock.size());
+		assertEquals(5, listMock.size());
+		assertEquals(5, listMock.size());
+	}
+
+	@Test
+	void specificParameters() {
+		List listMock = mock(List.class);
+		when(listMock.get(0)).thenReturn("SomeString");
+
+		assertEquals("SomeString", listMock.get(0));
+		assertEquals(null, listMock.get(1));
+	}
+
+	@Test
+	void genericParameters() {
+		List listMock = mock(List.class);
+		when(listMock.get(Mockito.anyInt())).thenReturn("SomeOtherString");
+
+		assertEquals("SomeOtherString", listMock.get(0));
+		assertEquals("SomeOtherString", listMock.get(231));
+		assertEquals("SomeOtherString", listMock.get(5444));
+	}
+}
+```
+다음 테스트 코드는 모두 성공 케이스이다. 하나씩 살펴보자
+- simpleTest : 한 번 설정된 when/thenReturn 은 여러 번 요청해도 동일한 값을 리턴한다.
+- multipleReturns : thenReturn() 은 여러 개를 체인으로 사용할 수 있다.
+  - thenReturn() 체인 횟수 만큼의 assert 로직에 대응한다. 
+  - 마지막 thenReturn() 이후의 호출에 대해서는 마지막에 지정된 값이 계속 반환된다
+- specificParameters : 파라미터를 설정하는 것이 가능하다.
+  - 특정 인덱스에 대한 반환 값을 설정할 수 있으며, 설정되지 않은 인덱스에 대해서는 null을 반환한다.
+- genericParameters : 특정 파라미터가 아닌 파라미터의 범위를 설정하는 것이 가능하다.
+  - 코드에서는 Mockito.anyInt()를 사용하여 모든 정수 인덱스에 대해 동일한 반환 값을 설정했다.
+    - anyBoolean(), anyChar(), anyByte(), any() 등 다양한 범위를 제공한다.
 
 ---
