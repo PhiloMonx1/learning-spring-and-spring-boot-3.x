@@ -27,6 +27,7 @@
 24. [인증 헤더를 추가하기 위해 Axios 인터셉터 설정하기](#24단계---인증-헤더를-추가하기-위해-axios-인터셉터-설정하기)
 25. [JWT 및 Spring Security 시작하기](#25단계---jwt-및-spring-security-시작하기)
 26. [Spring Security JWT REST API와 React 프론트엔드 통합하기](#26단계---spring-security-jwt-rest-api와-react-프론트엔드-통합하기)
+27. [JWT 인증 및 Spring Boot 문제 해결하기](#27단계---jwt-인증-및-spring-boot-문제-해결하기)
 
 ---
 
@@ -1372,5 +1373,318 @@ export const executeJwtAuthenticationService = (username, password) => apiClient
 
 }
 ```
+
+---
+
+## 27단계 - JWT 인증 및 Spring Boot 문제 해결하기
+
+강의 내용은 JWT 실습에 있어 문제를 겪는 학습자를 위한 간단한 가이드가 포함되어 있으며 이전 단계를 충실하게 수행했다면 필요하지 않은 내용이다.
+
+나는 JWT 관련 로직에 대한 설명으로 해당 단계 학습 노트를 대체하고자 한다.
+
+#### 파일구성
+컨트롤러(JwtAuthenticationController), 서비스(JwtTokenService), 설정(JwtSecurityConfig), DTO(JwtTokenRequest, JwtTokenResponse) 으로 구성되어 있다.
+
+- JwtTokenRequest, JwtTokenResponse
+  - DTO의 역할을 수행하며, [Java record](../01_Getting_Started_with_Java_Spring_Framework/README.md#레코드-record)로 구현되어 있다.
+  - JwtTokenRequest : 토큰 구성에 필요한 username, password를 필드로 가진다.
+  - JwtTokenResponse : 토큰을 필드로 가진다.
+
+- JwtAuthenticationController
+  - JWT 발급(POST '/authenticate') REST API를 담당하는 컨트롤러  
+    - JwtTokenRequest(username, password)를 받아서, JwtTokenResponse(token)을 반환하는 API
+  - AuthenticationManager : Spring Security에서 제공하는 사용자 인증 처리를 위한 인터페이스
+    - 다양한 인증 제공자(AuthenticationProvider)를 사용하여 인증을 수행함.
+
+- JwtTokenService
+  - JwtEncoder : Spring Security OAuth2 라이브러리에서 제공하는 JWT 생성을 위한 인터페이스
+  - generateToken() : Authentication 인증 객체를 받아서 토큰을 생성하는 메서드
+
+- JwtSecurityConfig
+  - JWT 토큰 로직에 필요한 각종 설정을 담당
+    - securityFilterChain 설정, 토큰 서명 및 검증 등의 설정이 포함되어 있음
+
+#### 컨트롤러 : JwtAuthenticationController 내부 코드 살펴보기
+```java
+Authentication authenticationToken =
+        new UsernamePasswordAuthenticationToken(
+                jwtTokenRequest.username(),
+                jwtTokenRequest.password());
+```
+- jwtTokenRequest의 username과 password를 기반으로 `Authentication` 객체를 만든다. 
+  - UsernamePasswordAuthenticationToken 객체는 Authentication를 상속하고 있다.
+  - 여기서는 username, password를 검증하지 않는다. 그냥 주어진 정보로 Authentication 객체를 만들 뿐이다.
+    - 해당 상태의 Authentication 객체는 단순히 사용자 입력 정보를 캡슐화 할 뿐, 인증이 된 상태가 아니다. (isAuthenticated() 메서드 호출 시 false 반환.)
+
+```java
+Authentication authentication =
+        authenticationManager.authenticate(authenticationToken);
+```
+- 앞서 생성한 Authentication 객체를 AuthenticationManager의 authenticate() 메서드로 인증하는 과정을 수행한다.
+- AuthenticationManager는 원래 인터페이스 이지만, 의존성이 주입될 때 JwtSecurityConfig에서 Bean으로 등록한 AuthenticationManager의 구현체(ProviderManager)가 주입된다.
+  ```java
+  //JwtSecurityConfig
+  @Bean
+  public AuthenticationManager authenticationManager(UserDetailsService userDetailsService) {
+      DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+      authenticationProvider.setUserDetailsService(userDetailsService);
+      return new ProviderManager(authenticationProvider);
+  }
+  ```
+   - 결과적으로 주입되는 것은 `ProviderManager` 이다. 즉, ProviderManager의 authenticate() 메서드를 사용하게 된다.
+
+```java
+String token = tokenService.generateToken(authentication);
+```
+- TokenService의 generateToken() 메서드로 인증 객체를 기반으로 토큰을 생성한다. 
+
+#### 서비스 : JwtTokenService 내부 코드 살펴보기
+```java
+String scope = authentication
+        .getAuthorities()
+        .stream()
+        .map(GrantedAuthority::getAuthority)
+        .collect(Collectors.joining(" "));
+```
+- 컨트롤러를 통해 제공된 인증 객체(Authentication)에서 권한 목록을 가져와 스트림을 통해 모든 권한을 문자열로 추출한다.
+  - sout을 통해 콘솔에 scope를 출력하면 'ROLE_USER'가 노출된다. 
+
+```java
+JwtClaimsSet claims = JwtClaimsSet.builder()
+        .issuer("self")
+        .issuedAt(Instant.now())
+        .expiresAt(Instant.now().plus(90, ChronoUnit.MINUTES))
+        .subject(authentication.getName())
+        .claim("scope", scope)
+        .build();
+```
+- JWT의 클레임을 설정하는 로직
+  - 클레임(claims) : 토큰에 포함될 정보를 의미한다.
+  - issuer : 발행자
+  - issuedAt : 발행 시간
+  - expiresAt : 만료 시간
+  - subject : 식별자 
+    - 고유한 값으로 설정해야 하며, 일반적으로 User의 id 등으로 설정한다.
+    - 해당 식별자를 통해 토큰 소유자를 판단할 수 있어야 한다.
+  - claim : 커스텀 키-밸류 쌍을 넣을 수 있다.
+
+```java
+return this.jwtEncoder
+        .encode(JwtEncoderParameters.from(claims))
+        .getTokenValue();
+```
+- 앞서 작성한 claims으로 토큰을 생성하고, 토큰을 문자열로 리턴.
+- jwtEncoder : 컨트롤러의 `AuthenticationManager`와 마찬가지로 JwtSecurityConfig 에서 등록한 Bean이 의존성 주입에 사용된다.
+  ```java
+  //JwtSecurityConfig
+  @Bean
+  JwtEncoder jwtEncoder(JWKSource<SecurityContext> jwkSource) {
+      return new NimbusJwtEncoder(jwkSource);
+  }
+  ```
+  - 결과적으로는 `NimbusJwtEncoder` 구현체의 `encode()` 메서드가 실제로 동작한다.
+    - NimbusJwtEncoder : Spring Security OAuth2에서 제공하는 jwtEncoder의 구현체 (일반적으로 권장됨)
+    - JWKSource<SecurityContext> : JWT 서명에 사용되는 암호화 키를 제공하는 소스
+      - JWKSource 또한 JwtSecurityConfig에서 구현체를 Bean으로 등록하고 있다.
+        ```java
+        @Bean
+        public JWKSource<SecurityContext> jwkSource() {
+            JWKSet jwkSet = new JWKSet(rsaKey());
+            return (((jwkSelector, securityContext)
+                    -> jwkSelector.select(jwkSet)));
+        }
+        ```
+        - NimbusJwtEncoder의 encode()를 사용할 때 JWKSet를 통해 토큰에 '서명'을 하게 된다.
+        - 토큰 서명 : 토큰의 내용이 변경되지 않았음을 보장하며 내용을 암호화 하지는 않는다.
+        - 서명 암호화 키 : JWKSet는 서명을 위한 암호화 키를 제공하는데, 이는 가짜 서명을 방지하기 위함이다.
+
+#### 설정 파일 : JwtSecurityConfig
+```java
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
+```
+- 클래스에 부여된 어노테이션이다.
+  - @Configuration : 해당 클래스가 Spring 설정 클래스임을 명시하는 어노테이션 (Bean 등록 역시 Spring 설정 중 한 부분이다.)
+    - 하나 이상의 @Bean 메서드를 포함할 수 있으며, Spring IoC 컨테이너에 의해 Bean 정의의 소스로 처리된다.
+  - @EnableWebSecurity : Spring Security를 활성화한다.
+    - Spring Security의 기본 설정을 오버라이드 해서 커스텀 설정으로 보안 정책을 정의할 것임을 Spring에게 알리는 목적이다.
+  - @EnableMethodSecurity : 메서드 수준의 보안을 활성화 한다.
+    - Java 메서드를 의미하며, 특정 메서드의 보안(특정 권한만 메서드 실행 가능)을 설정할 수 있다.
+    - API 역시 컨트롤러의 메서드이기 때문에 JWT 사용자 권한에 따라 API 접근을 커스텀할 수 있다. 
+
+```java
+@Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+  return httpSecurity
+          .authorizeHttpRequests(auth -> auth
+                  .requestMatchers(new AntPathRequestMatcher("/authenticate")).permitAll()
+                  .requestMatchers(new AntPathRequestMatcher("/h2-console/*"))
+                  .permitAll() // h2-console is a servlet and NOT recommended for a production
+                  .requestMatchers(new AntPathRequestMatcher("/**", "OPTIONS")).permitAll()
+                  .anyRequest()
+                  .authenticated())
+          .csrf(AbstractHttpConfigurer::disable)
+          .sessionManagement(session -> session.
+                  sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+          .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
+          .httpBasic(Customizer.withDefaults())
+          .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()))
+          .build();
+}
+```
+SecurityFilterChain을 커스터마이즈하여 Spring Security의 기본 설정을 오버라이드
+- authorizeHttpRequests : 요청에 대한 접근 가능 여부 설정
+  - '/authenticate' 엔드포인트 '/h2-console/'로 시작하는 모든 엔드포인트, 모든 OPTIONS HTTP 메서드 요청은 인증이 필요 없으며, 나머지 요청은 전부 인증이 필요하다.
+  - 서비스 API 중에서는 JWT 발급을 담당하는 '/authenticate' API 만 오픈해서 인증된 사용자만 서비스 API에 접근할 수 있도록 하고 있다.
+- csrf : csrf 보안 설정을 비활성화 했다.
+  - JWT 인증 방식으로 대체 가능하며, 세션을 저장하지 않기 때문에 비활성화 하는 것이 적절하다.
+  - 특정 클라이언트에게만 열어주는 방식으로 사용하는 것이 더 안전하다.
+- sessionManagement : 세션을 저장하지 않는 것으로 설정했다.
+  - JWT를 매 요청마다 전송하기 때문에 필요한 정보가 있다면 세션에 저장하는 대신 JWT에 포함하는 것이 더 적절하다.
+- oauth2ResourceServer : JWT를 사용하는 OAuth2 리소스 서버를 구성한다. (Spring Security OAuth2에서 제공)
+  - 리소스 서버 : 보호된 리소스(예: 사용자 데이터, API 엔드포인트)를 호스팅하는 서버
+  - OAuth2 리소스 서버는 '서블릿 필터' 처럼 요청이 API에 전달되기 전에 요청에 포함된 토큰을 검증하는 로직을 수행한다.
+- httpBasic : Basic 인증을 활성화한다.
+- headers : 헤더 설정, X-Frame-Options 헤더에 대해 같은 출처만 허용한다. (동일한 ip와 포트에서만 허용 h2-콘솔 대응)
+
+```java
+@Bean
+public AuthenticationManager authenticationManager(UserDetailsService userDetailsService) {
+    DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+    authenticationProvider.setUserDetailsService(userDetailsService);
+    return new ProviderManager(authenticationProvider);
+}
+```
+- 컨트롤러에서 사용하는 `AuthenticationManager` 구현체 Bean 등록 메서드
+- UserDetailsService : 사용자 정보 (데이터 베이스 등에서 사용자 정보를 가져오는 역할을 수행한다.)
+- DaoAuthenticationProvider : 인증 처리를 위한 프로바이더 구현체, 사용자 이름과 비밀번호를 기반으로 동작한다. (AbstractUserDetailsAuthenticationProvider 인터페이스를 상속함) 
+  - setUserDetailsService() : 제공된 사용자 정보를 바탕으로 인증 정책을 설정한다.
+- `return new ProviderManager(authenticationProvider)` : 사용자 정보를 바탕으로 생성된 인증 정책을 가지고 실제 검증을 진행하는 클래스.
+
+결과적으로 해당 Bean은 실제 사용자 정보를 기반으로 인증 정책을 생성한다. <br>
+해당 인증 정책은 '사용자 이름'과 '비밀번호'를 기반으로 인증을 진행하며, 실제 사용자 정보는 파라미터로 들어오는 userDetailsService에 담겨 있다. <br>
+이후 컨트롤러에서는 해당 Bean이 주입되면서 ProviderManager의 authenticate() 메서드를 사용해서 <br>
+요청 데이터의 username과 password와 ProviderManager 인스턴스의 userDetailsService의 사용자 정보가 일치하는지 검증한다. <br>
+
+```java
+@Bean
+public UserDetailsService userDetailsService() {
+    UserDetails user = User.withUsername("eh13")
+            .password("{noop}950127")
+            .authorities("read")
+            .roles("USER")
+            .build();
+
+    return new InMemoryUserDetailsManager(user);
+}
+```
+- 인증 로직이 발생할 때 AuthenticationManager Bean에 인자로 넘겨지는 사용자 정보
+  - DB 연결을 하지 않고 하드코딩으로 사용자 정보를 설정했다.
+- 빌더를 통해 사용자 정보를 설정한다.
+  - withUsername : 해당 사용자의 이름 (비밀번호와 함께 인증에 사용됨)
+  - password : 해당 사용자의 비밀번호 (이름과 함께 인증에 사용됨)
+    - {noop} : 비밀번호 인코딩(암호화)를 하지 않음을 의미한다.
+  - authorities : 해당 사용자의 권한 (여러 개 설정 가능)
+    - 직접적으로 특정 작업이나 리소스에 대한 접근 권한을 정의한다.
+    - 정의한 권한은 사용자가 관련 로직을 작성하지 않는 이상 임의로 사용자의 행동을 제한하는 것은 아니다.
+  - roles : 해당 사용자의 역할 (여러 개 설정 가능)
+    - "ROLE_" 접두사가 자동으로 추가된다. ex) ROLE_USER
+    - 내부적으로 `.authorities("ROLE_USER")`로 변환된다.
+    - !주의! authorities, roles는 코드와 같이 설정한 후 별도의 권한 처리 로직을 작성하지 않으면 실제 보안 효과가 없으며 그냥 이름 붙이기에 불과하다. 
+      - Spring Security에서 권한에 기반한 별도 동작을 사전 정의하지 않으며 개발자의 몫이다.
+- InMemoryUserDetailsManager : 인메모리용 사용자 정보 관리 클래스이다.
+  - `UserDetailsManager`를 상속하며, `UserDetailsManager`는 `UserDetailsService`를 상속한다.
+
+```java
+@Bean
+public JWKSource<SecurityContext> jwkSource() {
+    JWKSet jwkSet = new JWKSet(rsaKey());
+    return (((jwkSelector, securityContext)
+            -> jwkSelector.select(jwkSet)));
+}
+```
+- JWT 서명에 필요한 암호키(JSON Web Key)를 설정하는 Bean 등록 메서드
+  - JWKSource(JSON Web Key Source) : JWK를 제공하는 소스로, 보안 컨텍스트(SecurityContext)와 함께 사용됨
+  - JWKSet : 여러 JWK를 포함하는 객체
+    - `rsaKey()` 메서드(RSA 키 쌍을 생성)를 사용해서 JWKSet의 인스턴스를 생성 
+      - rsaKey 메서드도 같은 파일 내에 정의되어 있으며 후술할 것이다.
+  - return문 : JWKSource가 인터페이스이므로 익명 구현체를 람다식으로 리턴한다.
+    ```java
+    JWKSource<SecurityContext> jwkSource = (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
+    ```
+    - 해당 코드와 동일하다.
+    ```java
+    JWKSource<SecurityContext> jwkSource = new JWKSource<SecurityContext>() {
+        @Override
+        public List<JWK> get(JWKSelector jwkSelector, SecurityContext securityContext) throws KeySourceException {
+            return jwkSelector.select(jwkSet);
+        }
+    };
+    ```
+    - 코드를 더 풀면 이렇게 작성할 수 있다.
+
+```java
+@Bean
+public RSAKey rsaKey() {
+
+    KeyPair keyPair = keyPair();
+
+    return new RSAKey
+            .Builder((RSAPublicKey) keyPair.getPublic())
+            .privateKey((RSAPrivateKey) keyPair.getPrivate())
+            .keyID(UUID.randomUUID().toString())
+            .build();
+}
+
+@Bean
+public KeyPair keyPair() {
+    try {
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+        keyPairGenerator.initialize(2048);
+        return keyPairGenerator.generateKeyPair();
+    } catch (Exception e) {
+        throw new IllegalStateException(
+                "Unable to generate an RSA Key Pair", e);
+    }
+}
+```
+- RSAKey : RSA알고리즘을 사용하는 키 객체 (개인키, 공개키 둘 다 존재함)
+  - 내부에서 keyPair를 사용하고 있으며 공개키와 개인키, keyID를 객체에 담아서 빌드하고 있다.
+  - 공개키는 JWT 서명 검증에, 개인키는 서명 생성에 사용된다.
+    - 개인키는 서명을 작성, 수정할 수 있는 권한을 가지며, 공개키는 검증할 권한만을 가진다. 서명의 불변성과 신뢰성을 위해 키를 분리한다.
+  - 고유한 키를 식별하기 위해서 UUID를 포함한다.
+- KeyPair : 공개키와 개인키 쌍을 생성하는 Bean 등록 메서드
+  - KeyPairGenerator를 설정해서 리턴한다.
+    - getInstance("RSA") : 생성할 키를 RSA 키로 정한다.
+    - initialize(2048) : 생성할 키의 크기를 2048bit로 정한다. (보안 강도 설정)
+    - generateKeyPair() : 설정된 값으로 실제 키를 생성한다. (생성된 키는 RSAKey의 개인키, 공개키로 사용됨)
+
+결론적으로 rsaKey() 메서드는 keyPair() 메서드에서 생성된 키 쌍(공개키-개인키 쌍)을 사용하여 RSAKey 객체를 생성하는 로직이다.
+
+```java
+@Bean
+JwtEncoder jwtEncoder(JWKSource<SecurityContext> jwkSource) {
+    return new NimbusJwtEncoder(jwkSource);
+}
+
+@Bean
+JwtDecoder jwtDecoder() throws JOSEException {
+    return NimbusJwtDecoder
+            .withPublicKey(rsaKey().toRSAPublicKey())
+            .build();
+}
+```
+- JWT 인코딩, 디코딩 담당 Bean 등록 메서드
+- 각각 일반적으로 사용되는 구현체를 사용해서 로직을 수행하고 있다.
+- JwtEncoder의 경우 상기한 JWKSource를 파라미터로 받아서 사용하고 있다. (토큰 인코딩 중 서명을 포함할 때 JWKSource에 포함된 `rsaKey()`의 개인키를 사용해서 서명을 작성)
+- JwtDecoder에서는 withPublicKey() 메서드를 통해 토큰의 서명을 검증한다. JWKSource에 담긴 것과 동일한 `rsaKey()`의 공개 키가 검증 과정에서 쓰인다.
+  - JwtDecoder는 다른 코드에서 사용되는 것을 볼 수 없는데 필터체인에 의해 등록된 OAuth2 리소스 서버 동작에 자동 의존성 주입이 되어서 토큰 검증에 기여한다.
+
+#### JWT 노트 회고
+- JWT 구현에 있어 jjwt 와 같은 라이브러리를 사용하는 것도 고려할 수 있다.
+- 강의 코드는 실제 프로덕트에서 사용할 수 없는 부분이 있으니 주의가 필요하다. ex) UserDetailsService 하드 코딩
+- JWT는 만료시간을 짧게 설정하고, 리프레시 토큰을 추가하는 운영법도 고려할 수 있다.
+- JWT는 내부 클레임이 노출되기 쉽기 때문에 클레임에 예민한 정보를 담아서는 안된다.
 
 ---

@@ -31,7 +31,6 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
 @EnableWebSecurity
@@ -39,7 +38,7 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 public class JwtSecurityConfig {
 
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, HandlerMappingIntrospector introspector) throws Exception {
+	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 		return httpSecurity
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers(new AntPathRequestMatcher("/authenticate")).permitAll()
@@ -57,9 +56,8 @@ public class JwtSecurityConfig {
 	}
 
 	@Bean
-	public AuthenticationManager authenticationManager(
-			UserDetailsService userDetailsService) {
-		var authenticationProvider = new DaoAuthenticationProvider();
+	public AuthenticationManager authenticationManager(UserDetailsService userDetailsService) {
+		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
 		authenticationProvider.setUserDetailsService(userDetailsService);
 		return new ProviderManager(authenticationProvider);
 	}
@@ -109,7 +107,7 @@ public class JwtSecurityConfig {
 	@Bean
 	public KeyPair keyPair() {
 		try {
-			var keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
 			keyPairGenerator.initialize(2048);
 			return keyPairGenerator.generateKeyPair();
 		} catch (Exception e) {
