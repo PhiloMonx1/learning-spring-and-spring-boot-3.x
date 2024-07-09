@@ -3,6 +3,7 @@
 ## 목록
 0. [섹션 소개: Mockito 사용 5단계](#0단계---챕터-소개-mockito-사용-5단계)
 1. [Spring Boot 프로젝트 설정하기](#1단계---spring-boot-프로젝트-설정하기)
+2. [Stub의 문제점 이해하기](#2단계---stub의-문제점-이해하기)
 
 ---
 
@@ -85,5 +86,37 @@ Spring 프레임워크의 핵심 설계 철학 중 하나로 특정 기술에 �
 - 일관성: 다양한 기술에 대해 일관된 프로그래밍 모델 제공
 
 코드 재사용성이 늘어나고 클래스간의 의존도를 낮추어 변경 및 확장에 유연하게 대처할 수 있다.
+
+---
+
+## 2단계 - Stub의 문제점 이해하기
+
+#### Stub 사용해서 단위테스트 작성
+```java
+class MockitoDemoApplicationTest {
+
+	@Test
+	void findTheGreatestFromAllData_basicScenario() {
+		DataService dataServiceStub = new DataServiceStub();
+		SomeBusinessImpl businessImpl = new SomeBusinessImpl(dataServiceStub);
+		int result = businessImpl.findTheGreatestFromAllData();
+		assertEquals(25, result);
+	}
+}
+
+class DataServiceStub implements DataService {
+
+	@Override
+	public int[] retrieveAllData() {
+		return new int[] { 25, 15, 5 };
+	}
+}
+```
+
+#### Stub의 문제점
+- `DataService` 인터페이스에 신규 메서드가 추가될 때마다 `DataServiceStub` 구현체에서도 메서드를 구현해야 한다.
+  - 추가된 메서드를 실제로 사용하지 않는다고 하더라도 인터페이스의 메서드는 반드시 구현해야 하기 때문에 구현이 강제된다.
+- 다양한 시나리오 케이스를 테스트하기가 어렵다
+  - { 25, 15, 5 } 말고 다른 시나리오를 테스트 하기 위해 새로운 Stub를 추가해야 한다.
 
 ---
