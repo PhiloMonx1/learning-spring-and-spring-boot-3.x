@@ -1,41 +1,74 @@
+import {useEffect, useState} from "react";
+import {retrieveAllTodosForUsernameApi, deleteTodoApi} from "../api/TodoApiService";
+import {useAuth} from "../security/AuthContext";
+import {useNavigate} from "react-router-dom";
+
 export default function ListTodosComponent() {
-  const today = new Date();
-  const targetDate = new Date(today.getFullYear()+12, today.getMonth(), today.getDay());
+  const navigate = useNavigate();
+  const [todos, setTodos] = useState([]);
+  const [message, setMessage] = useState("");
+  const authContext = useAuth();
+  const username = authContext.username;
 
-  const todos = [
-    {id: 1, description: 'AWS 배우기', done: false, targetDate: targetDate},
-    {id: 2, description: 'Spring Boot 배우기', done: false, targetDate: targetDate},
-    {id: 3, description: 'React 배우기', done: false, targetDate: targetDate},
-  ]
+  function refreshTodos() {
+    retrieveAllTodosForUsernameApi(username)
+    .then((response) => setTodos(response.data))
+    .catch((error) => console.log(error))
+  }
 
+  function deleteTodo(id) {
+    deleteTodoApi(username, id)
+    .then(
+        () => {
+          refreshTodos();
+          setMessage(`삭제가 완료되었습니다.`)
+        }
+    )
+  }
+
+  function updateTodo(id){
+    navigate(`/todo/${id}`);
+  }
+
+  function addNewTodo(){
+    navigate(`/todo/-1`);
+  }
+
+  useEffect(
+      () => refreshTodos(), []
+  )
 
   return (
       <div className="container">
         <h1>나의 TODO 리스트</h1>
+        {message && <div className="alert alert-success">{message}</div>}
         <div>
           <table className="table">
             <thead>
             <tr>
-              <th>id</th>
               <th>할 일</th>
               <th>완료 여부</th>
               <th>목표 일자</th>
+              <th>삭제</th>
+              <th>편집</th>
             </tr>
             </thead>
             <tbody>
             {
               todos.map((todo) => (
                   <tr key={todo.id}>
-                    <td>{todo.id}</td>
                     <td>{todo.description}</td>
                     <td>{todo.done.toString()}</td>
-                    <td>{todo.targetDate.toDateString()}</td>
+                    <td>{todo.targetDate.toString()}</td>
+                    <td><button className="btn btn-warning" onClick={() => deleteTodo(todo.id)}>삭제</button></td>
+                    <td><button className="btn btn-success" onClick={() => updateTodo(todo.id)}>편집</button></td>
                   </tr>
               ))
             }
             </tbody>
           </table>
         </div>
+        <div className="btn btn-success m-3" onClick={addNewTodo}>추가</div>
       </div>
   );
 }

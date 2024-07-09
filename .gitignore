@@ -2,3 +2,5 @@
 /00_module/learn-spring-framework/src/main/resources/application.properties
 /00_module/learn-spring-boot/src/main/resources/application.properties
 /00_module/myfirstwebapp/src/main/resources/application.properties
+/00_module/01-rest-api-starting-code/target/
+application.properties

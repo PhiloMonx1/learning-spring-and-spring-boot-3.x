@@ -1,7 +1,27 @@
 import {Link, useParams} from "react-router-dom";
+import {useState} from "react";
+import {retrieveHelloWorldPathVariable} from "../api/HelloWorldApiService";
 
 export default function WelcomeComponent() {
   const params = useParams()
+  const [message, setMessage] = useState(null)
+
+  function callHelloWorldPathVariable() {
+    retrieveHelloWorldPathVariable(params.username)
+    .then ((response) => successfulResponse(response))
+    .catch((error) => failedResponse(error))
+    .finally(() => console.log("finally"))
+  }
+
+  function successfulResponse(response) {
+    console.log(response)
+    setMessage(response.data.message)
+  }
+
+  function failedResponse(error) {
+    console.log(error)
+  }
+
 
   return (
       <div className="WelcomeComponent">
@@ -12,6 +32,10 @@ export default function WelcomeComponent() {
         <div>
           <Link to="/todos">Todo리스트</Link>
         </div>
+        <div>
+          <button className="btn btn-success m-5" onClick={callHelloWorldPathVariable}>Hello World GET 요청</button>
+        </div>
+        <div className="text-info">{message}</div>
       </div>
   );
 }
