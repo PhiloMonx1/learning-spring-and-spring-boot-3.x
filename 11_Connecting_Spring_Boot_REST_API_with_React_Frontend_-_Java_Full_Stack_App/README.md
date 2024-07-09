@@ -32,6 +32,7 @@
 ---
 
 ## 1단계 - React 풀 스택 애플리케이션을 위해 Todo REST API 프로젝트 설정하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/9ec8fb3ee5f72eff52515380ef34027c32475b06)
 
 챕터 목표 : 기존 Spring Boot로 제작한 백엔드 애플리케이션을 재활용해서 풀 스택 애플리케이션을 만들 것이다.
 
@@ -85,6 +86,7 @@
 ---
 
 ## 2단계 - React Hello World 컴포넌트에서 Spring Boot Hello World REST API 호출하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/e31844cd6bfa23830037e5259236e627c238bc80)
 
 #### Axios
 브라우저와 Node.js에서 사용할 수 있는 Promise 기반의 HTTP 클라이언트 라이브러리
@@ -128,7 +130,7 @@ function failedResponse(error) {
 ---
 
 ## 3단계 - Spring Boot REST API에 대해 CORS 요청 활성화하기
-
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/705f51ba5e583e7ccf6dd1416036f46332cb3af4)
 
 2단계를 진행 후 실제 브라우저에서 API 요청을 보내면 
 ```
@@ -220,6 +222,7 @@ public class RestfulWebServicesApplication {
 ---
 
 ## 4단계 - React에서 Spring Boot Hello World Bean과 패스 변수 REST API 호출하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/aa3b627b41c5f774e25ac96387d1c09224157cde)
 
 ####
 ```jsx
@@ -258,6 +261,7 @@ export default function WelcomeComponent() {
 ---
 
 ## 5단계 - Spring Boot REST API 호출 코드를 별도의 모듈에 리팩터링하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/c55c60d7e7505ee5206ab9e026a8ce58906fc4ac)
 
 #### HelloWolrdBean API 리팩토링
 ```js
@@ -286,6 +290,7 @@ export const retrieveHelloWorldBean = () => axios.get('http://localhost:8080/hel
 ---
 
 ## 6단계 - Spring Boot REST API에서 Axios를 사용하는 최적의 방식
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/38a6c45c695e2469deafd77e72aa8236c1ae6c05)
 
 #### Axios에서 API 패스변수 처리하기
 ```
@@ -310,6 +315,7 @@ export const retrieveHelloWorldPathVariable = (username) => apiClient.get(`/hell
 ---
 
 ## 7단계 - Retrieve Todos Spring Boot REST API GET 메서드 만들기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/dc98a079d7d5e2c73ea9e8b9151a5bfc55bc8b8c)
 
 #### TodoResource 구현
 ```java
@@ -412,6 +418,7 @@ public class ShoppingController {
 ---
 
 ## 8단계 - React 앱에서 Spring Boot REST API로부터 Todo 표시하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/16d227c0e2cfa607b18d85f17b934a927db4d3bf)
 
 #### TodoApiService 추가 및 API 호출
 ```js
@@ -583,6 +590,7 @@ API 설계는 상황과 요구사항에 따라 유연하게 접근해야 하며,
 ---
 
 ## 9단계 - Todo를 받고 삭제하는 Spring Boot REST API 메서드 만들기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/d2924d297ced38f6e7b64fac71848fc0c17fbb07)
 
 #### 구현 실습
 ```java
@@ -607,6 +615,7 @@ public class TodoResource {
 ---
 
 ## 10단계 - React 프론트엔드에 삭제 기능 추가하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/79983a03b58ee93038e62fd1d87a7f25dda99f95)
 
 #### Todo 삭제 구현
 ```jsx
@@ -657,6 +666,7 @@ function deleteTodo(id) {
 ---
 
 ## 11단계 - username을 React 인증 컨텍스트에 설정하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/fcb259c5826693e22feb4573348a6000f28fae59)
 
 #### 구현 실습
 ```js
@@ -711,6 +721,7 @@ function deleteTodo(id) {
 ---
 
 ## 12단계 - Todo 페이지를 표시하기 위한 Todo React 컴포넌트 만들기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/de013e953050cefd7f1cb3c72bc207c39d2baa2e)
 
 #### 구현 실습
 1. api 호출
@@ -775,6 +786,7 @@ function deleteTodo(id) {
 ---
 
 ## 13단계 - Todo React 컴포넌트를 표시하기 위해 Formik 및 Moment 라이브러리 추가하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/1d1a2bfe513dd4eb66dacf8ab4240538b52a1943)
 
 #### npm 라이브러리 설치
 - [formik](https://www.npmjs.com/package/formik) : 폼(form) 구현을 간소화, 관리 및 유효성 검사 지원 라이브러리
@@ -826,6 +838,7 @@ export default function TodoDetail() {
 ---
 
 ## 14단계 - Formik을 이용하여 Todo React 컴포넌트에 검증 추가하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/41a8e5b86d76263278a432a7cc4db11d370d2c85)
 
 #### 밸리데이션 실습
 ```jsx
@@ -883,6 +896,7 @@ function validate(values){
 ---
 
 ## 15단계 - Spring Boot 백엔드 API에 Todo 업데이트 및 생성 REST API 추가하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/eedd0e9c1d6a268fb9d33454a135417190ccf78b)
 
 #### 실습
 ```java
@@ -911,6 +925,7 @@ public class TodoResource {
 ---
 
 ## 16단계 - React 프론트엔드에 업데이트 기능 추가하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/09e30718af62653a2a031a2f74256b2931f1d11f)
 
 #### API 호출 등록
 ```js
@@ -955,6 +970,7 @@ function onSubmit(values) {
 ---
 
 ## 17단계 - React 프론트엔드에 새로운 Todo 생성 기능 추가하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/3af1106fa0de6ba150c37823f2be303c283cc84b)
 
 #### 구현 실습
 ```jsx
@@ -1026,6 +1042,7 @@ function validate(values){
 ---
 
 ## 18단계 - Spring Security로 Spring Boot REST API 보호하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/3e11cbfd08f9a59c5ef5f854ebbc6964094fa4a5)
 
 #### Spring Security 추가
 ```xml
@@ -1067,6 +1084,7 @@ public class BasicAuthenticationSecurityConfiguration {
 ---
 
 ## 19단계 - Spring Boot REST API 호출을 위해 React에 인증 헤더 추가하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/424d6c6804b31c1a557c706366f81689153e87ef)
 
 #### API 요청에 인증 헤더 추가하기
 ```js
@@ -1102,6 +1120,7 @@ CORS(Cross-Origin Resource Sharing) 정책에 따라 브라우저가 자동으�
 ---
 
 ## 20단계 - 모든 OPTIONS 요청을 허용하도록 Spring Security 설정하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/6500c42f8c1f2d4080ca7039cf0e8e6ea8d42efe)
 
 #### OPTIONS HTTP 메서드
 주어진 URL 또는 서버에 대해 허용된 통신 옵션을 요청하는 HTTP 메서드 대표적으로 'Preflight request'가 있다.
@@ -1136,6 +1155,7 @@ public class BasicAuthenticationSecurityConfiguration {
 ---
 
 ## 21단계 - React 앱에 로그인할 때 기본 인증 서비스 호출하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/4eef4ae75c8d27e8fb65f754e0ad6faece34126c)
 
 #### AuthContext::login() 개선
 1. 백엔드 API 추가
@@ -1173,6 +1193,7 @@ public class BasicAuthenticationSecurityConfiguration {
 ---
 
 ## 22단계 - async와 await를 사용하여 기본 인증 API 호출하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/d3eb973f6939d41f33f4e721f4cf50b8f6734ba7)
 
 ```js
 async function login(username, password) {
@@ -1224,6 +1245,7 @@ useState() 선언하고 API 요청이 성공적으로 완료 시 setToken()를 �
 ---
 
 ## 23단계 - AuthContext에 기본 인증 토큰 설정하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/a33be9a904617b051287315db60a1661a101c631)
 
 #### 실습
 ```js
@@ -1248,6 +1270,7 @@ function callHelloWorldPathVariable() {
 ---
 
 ## 24단계 - 인증 헤더를 추가하기 위해 Axios 인터셉터 설정하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/7b54de82b766a4b60ef33dc223fec0d8a1c990ca)
 
 #### 공통 ApiClient 생성
 ```js
@@ -1275,6 +1298,7 @@ apiClient.interceptors.request.use(
 ---
 
 ## 25단계 - JWT 및 Spring Security 시작하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/b63905775bd714264c4af6e88413ab6197efa58a)
 
 #### Basic 토큰의 단점
 - 만료 기한이 없다.
@@ -1335,6 +1359,7 @@ apiClient.interceptors.request.use(
 ---
 
 ## 26단계 - Spring Security JWT REST API와 React 프론트엔드 통합하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/01bafb74918bb9ccebfc0d5cf4f74a4c2312e47b)
 
 #### jwt 토큰 생성 API 호출부 등록
 ```js
@@ -1377,6 +1402,7 @@ export const executeJwtAuthenticationService = (username, password) => apiClient
 ---
 
 ## 27단계 - JWT 인증 및 Spring Boot 문제 해결하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/3201c2c81973dd4044a29d1b2261f9f56a42a2fe)
 
 강의 내용은 JWT 실습에 있어 문제를 겪는 학습자를 위한 간단한 가이드가 포함되어 있으며 이전 단계를 충실하게 수행했다면 필요하지 않은 내용이다.
 
