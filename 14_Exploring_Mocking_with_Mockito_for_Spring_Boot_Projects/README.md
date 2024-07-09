@@ -11,6 +11,7 @@
 ---
 
 ## 0단계 - 챕터 소개: Mockito 사용 5단계
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/a3711763379dc7e607b6b1a9f39fb78ef68a73da)
 
 #### Mocking
 테스트를 위해 실제 객체 대신 가짜 객체를 사용하는 기법, Mocking을 사용하면 복잡한 의존성을 가진 객체도 쉽게 테스트할 수 있다.
@@ -31,6 +32,7 @@
 ---
 
 ## 1단계 - Spring Boot 프로젝트 설정하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/520025d7c93374f90bd921472c0f77f0e75acd1b)
 
 #### 프로젝트 생성
 ![Spring-initializer.png](image/Spring-initializer.png)
@@ -93,6 +95,7 @@ Spring 프레임워크의 핵심 설계 철학 중 하나로 특정 기술에 �
 ---
 
 ## 2단계 - Stub의 문제점 이해하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/cdaa0b986c52e05584faed9dae2cc94d2a5c754b)
 
 #### Stub 사용해서 단위테스트 작성
 ```java
@@ -125,6 +128,7 @@ class DataServiceStub implements DataService {
 ---
 
 ## 3단계 - Mock을 이용해 첫 Mockito 테스트 작성하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/75c83a7f1a429d1d4c0fb84d042bde4a636dedb5)
 
 #### Mock 사용해서 단위테스트 작성
 ```java
@@ -150,6 +154,7 @@ class SomeBusinessImplMockTest {
 ---
 
 ## 4단계 - Mockito 어노테이션(@Mock, @InjectMocks)을 이용헤 테스트 단순화하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/c39edd22eb9e3d841570e5789e731f3fb4f19159)
 
 #### Mockito 확장 어노테이션 사용해서 테스트코드 리팩토링
 ```java
@@ -188,6 +193,7 @@ class SomeBusinessImplMockTest {
 ---
 
 ## 5단계 - List 인터페이스 모킹을 통해 Mock 더 자세히 알아보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/cfa1d47235376fb7328a78c50494ffff1a18b639)
 
 #### 다양한 Mocking 실습
 ```java
