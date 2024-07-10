@@ -4,6 +4,7 @@
 0. [Spring Security 시작하기](#0단계---spring-security-시작하기)
 1. [보안의 기초 이해하기](#1단계---보안의-기초-이해하기)
 2. [보안의 원칙 이해하기](#2단계---보안의-원칙-이해하기)
+3. [Spring Security 시작하기](#3단계---spring-security-시작하기)
 
 ---
 
@@ -75,5 +76,21 @@ ex) '사용자 A, B, X' 는 '데이터를 읽는 것'만 가능하고, '사용�
         - 보안 메커니즘의 설계는 공개되어 검토될 수 있어야 한다.
         - 여러 보안 전문가들이 협업하여 검토하고 보완할 수 있도록 하는 것이 유리하다.
     - ex) JWT : [jwt.io](https://jwt.io/) 에서 토큰의 페이로드를 보는 것이 가능하다.
+
+---
+
+## 3단계 - Spring Security 시작하기
+
+#### Spring MVC 작동 방식
+![Request -> Dispatcher Servlet -> Controller(s)](image/MVC_Works.png)
+- Spring 웹 애플리케이션으로 오는 모든 요청은 '디스패처 서블릿'에서 처리한다.
+
+#### Spring Security 작동 방식
+![Request -> Spring Security -> Dispatcher Servlet -> Controller(s)](image/Security_Works.png) 
+- 중간 레이어(Spring Security )가 추가 된다.
+  - 디스패처 서블릿 전에 Spring Security가 요청을 인터셉트한다.
+- Spring Security에 설정된 필터 체인이 요청을 처리한다.
+  - 이 과정에서 인증과 권한 부여가 동작한다.
+  - 인증, 권한 확인이 완료되면 디스패처 서블릿으로 요청을 전송한다.
 
 ---
