@@ -5,6 +5,7 @@
 1. [보안의 기초 이해하기](#1단계---보안의-기초-이해하기)
 2. [보안의 원칙 이해하기](#2단계---보안의-원칙-이해하기)
 3. [Spring Security 시작하기](#3단계---spring-security-시작하기)
+4. [Spring Security 기본 설정 살펴보기](#4단계---spring-security-기본-설정-살펴보기)
 
 ---
 
@@ -92,5 +93,25 @@ ex) '사용자 A, B, X' 는 '데이터를 읽는 것'만 가능하고, '사용�
 - Spring Security에 설정된 필터 체인이 요청을 처리한다.
   - 이 과정에서 인증과 권한 부여가 동작한다.
   - 인증, 권한 확인이 완료되면 디스패처 서블릿으로 요청을 전송한다.
+
+---
+
+## 4단계 - Spring Security 기본 설정 살펴보기
+
+#### Spring Security Filter Chain
+요청이 들어왔을 때 Spring Security가 실행 시키는 일련의 필터 처리 과정
+- 인증 : 요청자가 적절한 사용자인지 확인한다. ex) BasicAuthenticationFilter
+- 권한 확인 : 요청자가 요청에 필요한 적절한 권한을 가지고 있는 확인한다. ex) AuthorizationFilter
+  - URL 패턴을 통해 판단하기 때문에 해당 API의 서비스 로직을 알지 못해도 처리가 가능하다.
+- 보안 관련 베스트 프랙티스
+  - CORS(Cross-Origin Resource Sharing) 설정 ex) CorsFilter
+  - CSRF(Cross-Site Request Forgery) 설정 ex) CsrfFilter
+  - Login Page, Logout Page 설정 (기본 제공되며 커스텀 가능)
+  - Http 응답에 대한 다양한 예외 처리 ex) ExceptionTranslationFilter
+
+필터는 특정한 순서대로 실행하며 심층적으로 동작한다.
+- ex) 기본 필터(CORS, CSRF) -> 인증 -> 권한 확인 -> 디스패처 서블릿
+
+필터체인에서 애플리케이션 전역의 보안 설정을 담당하여 서비스 로직에서는 보안 설정 코드를 신경 쓸 필요 없이 관심사를 분리할 수 있다. (AOP)
 
 ---
