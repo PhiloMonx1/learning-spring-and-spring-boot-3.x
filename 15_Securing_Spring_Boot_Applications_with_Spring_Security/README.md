@@ -115,3 +115,16 @@ ex) '사용자 A, B, X' 는 '데이터를 읽는 것'만 가능하고, '사용�
 필터체인에서 애플리케이션 전역의 보안 설정을 담당하여 서비스 로직에서는 보안 설정 코드를 신경 쓸 필요 없이 관심사를 분리할 수 있다. (AOP)
 
 ---
+
+
+## 5단계 - Spring Security용 Spring Boot 프로젝트 생성하기
+
+#### 프로젝트 생성
+![Spring initializer 세팅](image/Spring-initializer.png)
+- [Spring initializer](https://start.spring.io/) 를 통해 프로젝트를 생성한다.
+- 빌드 도구를 'Gradle - Groovy'로 설정한다.
+- 라이브러리 목록
+    - Spring Web
+    - Spring Security
+
+---
