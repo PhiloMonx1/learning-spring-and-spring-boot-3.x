@@ -8,6 +8,7 @@
 4. [Spring Security 기본 설정 살펴보기](#4단계---spring-security-기본-설정-살펴보기)
 5. [Spring Security용 Spring Boot 프로젝트 생성하기](#5단계---spring-security용-spring-boot-프로젝트-생성하기)
 6. [Spring Security 살펴보기 - 폼 인증](#6단계---spring-security-살펴보기---폼-인증)
+7. [Spring Security 살펴보기 - 기본 인증](#7단계---spring-security-살펴보기---기본-인증)
 
 ---
 
@@ -164,5 +165,20 @@ public class HelloWorldResource {
   - 해당 세션 쿠키는 요청과 함께 전송된다.
   - '/logout' 을 통해 로그아웃을 진행하면 서버 측에서 현재 사용자의 세션을 무효화한다. (세션 정보 삭제를 의미함)
     - Spring Security의 SecurityContext(ex : SecurityContextHolder)에서 현재 인증 정보가 제거된다.
+
+---
+
+## 7단계 - Spring Security 살펴보기 - 기본 인증
+
+#### Basic 인증 기법
+- 사용자가 입력한 자격 증명 정보를 Base 64 인코딩해서 전달한다.
+  - 헤더 'Authorization' Key, 'Basic {Base 64 인코딩 자격증명}' Value 형태로 요청과 함께 전송된다.
+
+#### Basic 인증의 문제점
+![password](image/password.png)
+![base64 디코드](image/base64decode.png)
+- Base 64 문자열은 디코드가 쉽다.
+- 만료기간이 없다.
+- 사용자 액세스 권한이나 역할에 관한 정보가 없다.
 
 ---
