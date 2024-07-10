@@ -6,6 +6,8 @@
 2. [보안의 원칙 이해하기](#2단계---보안의-원칙-이해하기)
 3. [Spring Security 시작하기](#3단계---spring-security-시작하기)
 4. [Spring Security 기본 설정 살펴보기](#4단계---spring-security-기본-설정-살펴보기)
+5. [Spring Security용 Spring Boot 프로젝트 생성하기](#5단계---spring-security용-spring-boot-프로젝트-생성하기)
+6. [Spring Security 살펴보기 - 폼 인증](#6단계---spring-security-살펴보기---폼-인증)
 
 ---
 
@@ -116,7 +118,6 @@ ex) '사용자 A, B, X' 는 '데이터를 읽는 것'만 가능하고, '사용�
 
 ---
 
-
 ## 5단계 - Spring Security용 Spring Boot 프로젝트 생성하기
 
 #### 프로젝트 생성
@@ -124,7 +125,44 @@ ex) '사용자 A, B, X' 는 '데이터를 읽는 것'만 가능하고, '사용�
 - [Spring initializer](https://start.spring.io/) 를 통해 프로젝트를 생성한다.
 - 빌드 도구를 'Gradle - Groovy'로 설정한다.
 - 라이브러리 목록
-    - Spring Web
-    - Spring Security
+  - Spring Web
+  - Spring Security
+
+---
+
+## 6단계 - Spring Security 살펴보기 - 폼 인증
+
+#### Spring Security 기본 로그인
+```java
+@RestController
+public class HelloWorldResource {
+
+	@GetMapping("/login")
+	public String hello() {
+		return "Hello World";
+	}
+}
+```
+'/login' 엔드포인트로 접근하면 "Hello world"를 출력하는 간단한 GET API이다.
+
+![Spring Security 기본 로그인](image/SpringSecurity_BasicLogin.png)
+- api로 접근 시 선언된 메서드가 아닌 Spring Security의 기본 로그인 Form이 노출된다.
+- 심지어 존재하지 않는 URL 엔드포인트를 입력해도 해당 로그인 페이지로 리다이렉트 되는 것을 볼 수 있다.
+  - API 사용자는 인증이 되기 전에는 엔드포인트가 유효한지 조차 볼 수 없다.
+  - 실제 서비스 로직에 도달하기 전에 Spring Security 필터 체인이 인증을 확인을 수행하기 때문이다.
+  - 'Complete Mediation - 완전 매개' 보안 윈칙을 지키는 것이다.
+
+#### Form 기반 인증
+로그인 `<form>`에 자격 증명을 입력한 후 제출하면 자격증명을 확인하고 인증하는 방식
+- Spring Security 의 디폴트 인증 방식
+- 작동 원리
+  - Spring Security 기본적으로 '/login', '/logout' 페이지를 제공한다.
+  - 로그인 시 해당 사용자에 대해 쿠키가 생성된다. ex) JSESSIONID : BCC81C00DD10079468F3BF57594595B6
+    - Spring Security의 AuthenticationFilter(ex : UsernamePasswordAuthenticationFilter)가 이 요청을 가로챈다.
+    - 입력된 자격 증명을 바탕으로 Authentication 객체를 생성하고, 이 때 AuthenticationManager(AuthenticationProvider) 등이 일한다.
+    - 인증이 성공되면 해당 Authentication 객체는 SecurityContext에 저장되고, SecurityContextPersistenceFilter를 사용해서 HTTP 세션에 저장한다.
+  - 해당 세션 쿠키는 요청과 함께 전송된다.
+  - '/logout' 을 통해 로그아웃을 진행하면 서버 측에서 현재 사용자의 세션을 무효화한다. (세션 정보 삭제를 의미함)
+    - Spring Security의 SecurityContext(ex : SecurityContextHolder)에서 현재 인증 정보가 제거된다.
 
 ---
