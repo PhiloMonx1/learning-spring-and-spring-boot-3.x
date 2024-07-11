@@ -10,6 +10,7 @@
 6. [Spring Security 살펴보기 - 폼 인증](#6단계---spring-security-살펴보기---폼-인증)
 7. [Spring Security 살펴보기 - 기본 인증](#7단계---spring-security-살펴보기---기본-인증)
 8. [Spring Security 살펴보기 - 크로스 사이트 요청 위조](#8단계---spring-security-살펴보기---크로스-사이트-요청-위조)
+9. [Spring Security 살펴보기 - REST API에서의 CSRF](#9단계---spring-security-살펴보기---rest-api에서의-csrf)
 
 ---
 
@@ -220,5 +221,41 @@ public class HelloWorldResource {
    - 중요 동작의 경우 사용자에게 비밀번호를 다시 묻는 방식으로도 일부 방지가 가능하다. ex) 사용자 정보 변경 시 패스워드를 한 번 더 입력 등
 
 이러한 방법들을 구현할 때 성능과 사용자 경험에 미치는 영향도 고려해야 한다. 모든 방식을 사용하면 보안이 높아지지만, 그만큼 시스템 부하 및 사용자의 불편함도 증가할 수 있다.
+
+---
+
+## 9단계 - Spring Security 살펴보기 - REST API에서의 CSRF
+
+#### Spring Security의 기본 CSRF 방어 방식
+Spring Security는 CSRF 토큰을 사용한 방어 방식을 기본 값으로 수행한다.
+![Spring Security 로그아웃 페이지 HTML](image/logout.png)
+- Spring의 기본 로그아웃이 from으로 구현되어 있다. 
+- 로그아웃 form 내부에 hidden input 필드로 CSRF 토큰이 삽입되어 있다.
+  - Spring에서 CSRF 토큰을 자동으로 생성해 추가한 것이다.
+  - GET 메서드 API에서는 CSRF 토큰을 확인하지 않으나 POST, PUT의 경우 자동으로 확인한다.
+    - 직접 작성한 API 역시 POST, PUT 메서드를 사용한다면 CSRF 토큰 검증을 수행하므로, 토큰 없이 요청 시 401에러를 노출하게 된다.
+
+#### CSRF 토큰 생성 실습
+```java
+@RestController
+public class SpringSecurityPlayResource {
+
+	@GetMapping("/csrf-token")
+	public CsrfToken retrieveCsrfToken(HttpServletRequest request) {
+		return (CsrfToken) request.getAttribute("_csrf");
+	}
+}
+```
+- HttpServletRequest : 현재 요청의 정보를 받을 수 있다.
+- getAttribute("_csrf") : '_csrf'라는 이름의 요청 속성을 지정한다.
+  - 서버 측에서 요청 객체에 추가하는 데이터이며, 클라이언트가 직접 설정하거나 접근할 수는 없다.
+- 주의 : API로 CSRF를 직접 노출시키는 것은 지양해야 한다.
+  - 해당 코드는 Spring Security의 모든 요청에는 자동으로 CSRF 토큰이 포함되는 것을 보여주기 위함이다.
+    - Attribute에 토큰이 포함되는 것은 서버 측에서 처리하는 것으로 실제 토큰을 사용해서 요청을 성공시키기 위해선 헤더에 담아야 한다.
+  - Spring Security는 자동으로 폼 기반 제출에 CSRF 토큰을 포함시킨다.
+    - RESTful API를 사용하는 경우, 일반적으로 다른 방식(예: 세션 기반 인증 대신 토큰 기반 인증 사용)으로 CSRF 공격을 방지한다.
+
+![csrf 토큰 노출](image/csrf-token.png)
+- 'X-CSRF-TOKEN'를 Key로, 노출된 토큰을 Value로 헤더에 추가해서 요청을 보내면 요청이 통과된다.
 
 ---
