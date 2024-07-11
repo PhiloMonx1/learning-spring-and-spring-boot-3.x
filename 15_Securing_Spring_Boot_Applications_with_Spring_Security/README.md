@@ -14,6 +14,7 @@
 10. [CSRF를 사용하지 않도록 Spring Security 설정 생성하기](#10단계---csrf를-사용하지-않도록-spring-security-설정-생성하기)
 11. [Spring Security 살펴보기 - CORS 시작하기](#11단계---spring-security-살펴보기---cors-시작하기)
 12. [Spring Security 살펴보기 - 메모리에 사용자 자격증명 저장하기](#12단계---spring-security-살펴보기---메모리에-사용자-자격증명-저장하기)
+13. [Spring Security 살펴보기 - JDBC를 사용해 사용자 자격증명 저장하기](#13단계---spring-security-살펴보기---jdbc를-사용해-사용자-자격증명-저장하기)
 
 ---
 
@@ -438,4 +439,116 @@ public class BasicAuthSecurityConfiguration {
   - InMemoryUserDetailsManager : 인메모리에 사용자 자격 증명 객체를 저장
 - 별도의 필터 체인 등록 없이 Spring이 UserDetailsService를 의존성 주입하여 Spring Security가 사용 가능하다.
 
+---
+
+## 13단계 - Spring Security 살펴보기 - JDBC를 사용해 사용자 자격증명 저장하기
+
+#### 라이브러리 설치
+```gradle
+implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+implementation 'com.h2database:h2'
+```
+- jdbc : DB 연결 및 관리를 도와주는 라이브러리
+- h2 : 인메모리 데이터베이스
+
+#### H2 콘솔 접근하기
+1. application.properties 파일 설정
+    ```properties
+    spring.h2.console.enabled=true
+    spring.datasource.url=jdbc:h2:mem:testdb
+    spring.datasource.driverClassName=org.h2.Driver
+    spring.datasource.username=sa
+    spring.datasource.password=
+    ```
+2. securityFilterChain 설정
+    ```java
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
+                //...(기존 설정)
+                .headers(headers -> headers
+                        .addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsMode.SAMEORIGIN)))
+                .build();
+    }
+    ```
+    - h2 콘솔이 XFrame으로 구성되어 있으므로 동일 출처에 대한 XFrame 헤더를 허용했다.
+
+'/h2-console' 엔드포인트에서 접근이 가능하다.
+
+#### JDBC 기본 User 스키마 ([JdbcDaoImpl](https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/core/userdetails/jdbc/JdbcDaoImpl.html))
+```java
+package org.springframework.security.core.userdetails.jdbc;
+
+public class JdbcDaoImpl extends JdbcDaoSupport implements UserDetailsService, MessageSourceAware {
+
+	public static final String DEFAULT_USER_SCHEMA_DDL_LOCATION = "org/springframework/security/core/userdetails/jdbc/users.ddl";
+	//...(생략)
+}
+```
+- Spring Security에서 JDBC를 통한 사용자 인증을 구현할 때 사용되는 기본 클래스
+- UserDetailsService 인터페이스를 구현하여 데이터베이스에서 사용자 정보를 조회하는 기능 제공
+- 내부에 'DEFAULT_USER_SCHEMA_DDL_LOCATION'가 정의되어 있다.
+  - users.ddl 내용
+      ```sql
+      create table users(username varchar_ignorecase(50) not null primary key,password varchar_ignorecase(500) not null,enabled boolean not null);
+      create table authorities (username varchar_ignorecase(50) not null,authority varchar_ignorecase(50) not null,constraint fk_authorities_users foreign key(username) references users(username));
+      create unique index ix_auth_username on authorities (username,authority);
+      ```
+      - Spring Security의 Basic 인증에 필요한 테이블을 생성하는 SQL 쿼리문 (Spring Security의 기본 값이다.)
+      - 구조
+        - users 테이블: 사용자 정보
+          - 컬럼 : username, password, enabled 
+        - authorities 테이블: 사용자의 권한 정보
+          - 컬럼 : username(FK), authority
+
+#### JDBC 기본 User 스키마 사용하기
+```java
+public class BasicAuthSecurityConfiguration {
+    //...(생략)
+	@Bean
+	public DataSource dataSource() {
+		return new EmbeddedDatabaseBuilder()
+				.setType(EmbeddedDatabaseType.H2)
+				.addScript(JdbcDaoImpl.DEFAULT_USER_SCHEMA_DDL_LOCATION)
+				.build();
+	}
+}
+```
+- DataSource : 데이터베이스 연결을 위한 표준 인터페이스. 커넥션 풀링, 트랜잭션 관리 등의 기능을 제공한다.
+  - Spring Data JPA도 내부적으로 사용한다.
+  - 대부분의 경우 개발자가 DataSource를 명시적으로 설정하지 않아도 Spring Boot가 자동으로 적절한 DataSource를 구성하여 사용한다.
+- EmbeddedDatabaseBuilder : 메모리 기반의 임베디드 데이터베이스용 빌더
+
+실제 개발에서는 User 엔티티를 선언해서 스프링이 자동으로 DataSource를 사용해서 테이블을 구성한다.
+
+#### JDBC 기본 User 스키마에 UserDetails 데이터 삽입하기
+```java
+public class BasicAuthSecurityConfiguration {
+	//...(생략)
+	@Bean
+	public UserDetailsService userDetailsService(DataSource dataSource) {
+		UserDetails user = User.withUsername("user")
+				.password("{noop}password")
+				.roles("USER")
+				.build();
+
+		UserDetails admin = User.withUsername("admin")
+				.password("{noop}admin")
+				.roles("ADMIN")
+				.build();
+
+		JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(dataSource);
+		userDetailsManager.createUser(user);
+		userDetailsManager.createUser(admin);
+
+		return userDetailsManager;
+	}
+	// dataSource() 메서드
+}
+```
+- 기존 userDetailsManager를 인메모리에서 JDBC로 변경한다. 
+- 부록
+  - 기존 UserDetails를 사용할 때 withDefaultPasswordEncoder() 메서드를 사용했었다. 해당 메서드는 패스워드 암호화를 진행한다.
+    - 즉, {noop}를 붙이면 평문으로 패스워드를 저장하는 옵션을 무시하고 "{noop}admin" 문자열을 암호화한다.
+  
 ---
