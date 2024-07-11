@@ -11,6 +11,7 @@
 7. [Spring Security 살펴보기 - 기본 인증](#7단계---spring-security-살펴보기---기본-인증)
 8. [Spring Security 살펴보기 - 크로스 사이트 요청 위조](#8단계---spring-security-살펴보기---크로스-사이트-요청-위조)
 9. [Spring Security 살펴보기 - REST API에서의 CSRF](#9단계---spring-security-살펴보기---rest-api에서의-csrf)
+10. [CSRF를 사용하지 않도록 Spring Security 설정 생성하기](#10단계---csrf를-사용하지-않도록-spring-security-설정-생성하기)
 
 ---
 
@@ -257,5 +258,46 @@ public class SpringSecurityPlayResource {
 
 ![csrf 토큰 노출](image/csrf-token.png)
 - 'X-CSRF-TOKEN'를 Key로, 노출된 토큰을 Value로 헤더에 추가해서 요청을 보내면 요청이 통과된다.
+
+---
+
+## 10단계 - CSRF를 사용하지 않도록 Spring Security 설정 생성하기
+
+#### SameSite 쿠키
+```properties
+server.servlet.session.cookie.same-site=strict
+```
+- 세션 쿠키(예: JSESSIONID)는 오직 동일 사이트(same-site) 요청에서만 전송됨.
+  - 클라이언트와 서버가 분리된 REST API 아키텍처에는 사용되지 않는다.
+  - 프로토콜, 도메인(ip), 포트 번호 중 하나라도 다른 경우 다른 사이트(cross-site)이기 때문이다.
+
+#### CSRF 해제하기
+세션 상태를 관리하지 않는 REST API의 경우 CSRF 사용을 해제하는 것이 일반적이다.
+```java
+@Configuration
+public class BasicAuthSecurityConfiguration {
+
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+            return http
+                    .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+		            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+		            .httpBasic(Customizer.withDefaults())
+				    .csrf(csrf -> csrf.disable())
+                    .build();
+        }
+    }
+```
+- SecurityFilterChain 타입의 Bean을 선언해서 자동으로 해당 Bean을 스프링이 의존성 주입하도록 만들 수 있다.
+  - org.springframework.boot.autoconfigure.security.servlet 패키지의 SpringBootWebSecurityConfiguration 클래스에 Spring Security의 기본 필터체인이 정의되어 있다.
+- `csrf(csrf -> csrf.disable())` 해당 코드로 csrf 보안을 비활성화 할 수 있다.
+  - authorizeHttpRequests : 요청 처리에 대한 설정
+    - 모든 요청에 인증이 필요하도록 설정함
+  - sessionManagement : 세션 관리 정책에 대한 설정
+    - 세션을 저장하지 않는 것으로 설정함
+  - httpBasic : Basic 인증 활성화
+    - 폼 로그인을 사용하지 않고 팝업창으로 인증한다. (로그아웃 페이지도 동작하지 않는다.)
+    - 별도 인증 수단이 없기 때문에 활성화 하지 않으면 인증 자체가 불가하다.
+      - authorizeHttpRequests 에서 모든 요청에 인증을 받기로 했기 때문.
 
 ---
