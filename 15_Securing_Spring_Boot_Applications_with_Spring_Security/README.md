@@ -19,6 +19,7 @@
 15. [Spring Security 살펴보기 - Bcrypt 인코딩 암호 저장하기](#15단계---spring-security-살펴보기---bcrypt-인코딩-암호-저장하기)
 16. [JWT 인증 시작하기](#16단계---jwt-인증-시작하기)
 17. [Spring Security와 Spring Boot로 JWT 인증 설정하기 - 1](#17단계---spring-security와-spring-boot로-jwt-인증-설정하기---1)
+18. [Spring Security와 Spring Boot로 JWT 인증 설정하기 - 2](#18단계---spring-security와-spring-boot로-jwt-인증-설정하기---2)
 
 ---
 
@@ -744,5 +745,112 @@ implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-ser
     Consider defining a bean of type 'org.springframework.security.oauth2.jwt.JwtDecoder' in your configuration.
     ```
     - 서버를 실행하면 실패한다. 원인을 로그에서 확인해보면 securityFilterChain의 현 설정에서는 JwtDecoder를 요구하는데 찾을 수 없다는 의미이다.
+
+---
+
+## 18단계 - Spring Security와 Spring Boot로 JWT 인증 설정하기 - 2
+
+#### 개요
+JWT 인증 설정 과정에서
+1. 키 쌍(공개키, 개인키) 생성
+2. RSA 키 객체 생성 (키 쌍을 담는 객체)
+3. JSON Web Key 소스 생성 (JWT 서명)
+4. 인코딩, 디코딩 설정
+5. ...
+해당 내용을 언급했다. 지난 단계에서는 'JwtDecoder'가 존재하지 않는 문제를 겪었는데, 이는 4번 과정에 해당하며 앞선 과정을 모두 거쳐야 해결이 가능하다.
+
+#### 키 쌍 생성
+```java
+public class JwtSecurityConfiguration {
+    //...(생략)
+	@Bean
+	public KeyPair keyPair() {
+		try {
+			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+			keyPairGenerator.initialize(2048);
+			return keyPairGenerator.generateKeyPair();
+		} catch (Exception exception) {
+			throw new RuntimeException(exception);
+		}
+	}
+}
+```
+- `java.security` 패키지의 KeyPairGenerator 클래스 사용
+- RSA를 사용해서 Key 생성
+- initialize() : 키의 크기 지정 (높을 수록 보안이 철저하다.)
+
+#### RSA 키 객체 생성
+```java
+import com.nimbusds.jose.jwk.RSAKey;
+//...(생략)
+public class JwtSecurityConfiguration {
+    //...(생략)
+    @Bean
+    public RSAKey rsaKey(KeyPair keyPair) {
+	    return new RSAKey.Builder((RSAPublicKey) keyPair.getPublic())
+			    .privateKey(keyPair.getPrivate())
+			    .keyID(UUID.randomUUID().toString())
+			    .build();
+    }
+}
+```
+- nimbusds 라이브러리의 `RSAKey`를 사용해야 한다. (nimbusds 라이브러리는 oauth2-resource-server 스타터에 포함되어 있다.)
+- RSAKey 빝더를 사용해 공개키와 개인키를 설정한다. (공개키는 형변환 필요)
+- 키가 생성될 때마다 고유한 ID를 가지도록 `UUID`를 사용했다.
+
+#### JWKSource 생성
+```java
+//...(생략)
+public class JwtSecurityConfiguration {
+    //...(생략)
+    @Bean
+    public JWKSource jwkSource(RSAKey rsaKey) {
+	    JWKSet jwkSet = new JWKSet(rsaKey);
+	    return new JWKSource() {
+		    @Override
+		    public List<JWK> get(JWKSelector jwkSelector, SecurityContext context) {
+			    return jwkSelector.select(jwkSet);
+		    }
+	    };
+    }
+}
+```
+- 사용된 클래스 모두 nimbusds 라이브러리에서 제공한다.
+- `RSAKey`를 받는 `JWKSet`을 정의한 후 `JWKSource`에 JWKSet을 부여해야 한다.
+  - JWKSet은 여러 개의 JWK를 설정할 수 있다.
+- JWKSource는 인터페이스로 get() 메서드를 오버라이딩 해야 구현체로 사용할 수 있다.
+- 람다 표현식으로 JWKSource 개선하기
+    ```java
+    //...(생략)
+    public class JwtSecurityConfiguration {
+        //...(생략)
+        @Bean
+        public JWKSource<SecurityContext> jwkSource(RSAKey rsaKey) {
+            JWKSet jwkSet = new JWKSet(rsaKey);
+            return (jwkSelector, context) -> jwkSelector.select(jwkSet);
+        }
+    }
+    ```
+    - JWKSource의 구현 메서드가 단 하나(get())이기 때문에 사용가능한 방법이다.
+      - JWKSource의 get() 메서드는 `JWKSelector` 타입과 제너릭한 타입의 `context`를 파라미터로 받는다.
+        - `context` 경우 제너릭 타입이기 때문에 어떤 타입을 사용할지 명시해주어야 한다. (`<SecurityContext>`를 통해 명시함.)
+      - JWKSource의 get() 메서드는 `List<JWK>` 타입을 리턴한다. 
+        - JWKSelector의 select() 메서드는 `JWKSet`를 인자로 받아서 `List<JWK>` 타입을 리턴한다.
+    - 결론적으로 람다 방식으로 JWKSource의 구현 메서드의 조건을 충족시켜서 내부에서 SecurityContext를 사용하는 JWKSource를 리턴하는 @Bean 등록 메서드를 정의한 것이다.
+
+#### JwtDecoder 생성
+```java
+//...(생략)
+public class JwtSecurityConfiguration {
+    //...(생략)
+	@Bean
+	public JwtDecoder jwtDecoder(RSAKey rsaKey) throws JOSEException {
+		return NimbusJwtDecoder.withPublicKey(rsaKey.toRSAPublicKey()).build();
+	}
+}
+```
+- NimbusJwtDecoder 를 사용해서 디코딩한다.
+- toRSAPublicKey() 공개만 사용해서 디코딩한다.
+- 해당 Bean은 다른 코드에서 직접 호출하지 않을 것이기에 예외를 던지기로 했다.
 
 ---
