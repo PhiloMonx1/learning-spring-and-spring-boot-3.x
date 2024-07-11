@@ -16,6 +16,7 @@
 12. [Spring Security 살펴보기 - 메모리에 사용자 자격증명 저장하기](#12단계---spring-security-살펴보기---메모리에-사용자-자격증명-저장하기)
 13. [Spring Security 살펴보기 - JDBC를 사용해 사용자 자격증명 저장하기](#13단계---spring-security-살펴보기---jdbc를-사용해-사용자-자격증명-저장하기)
 14. [인코딩, 해싱, 암호화 이해하기](#14단계---인코딩-해싱-암호화-이해하기)
+15. [Spring Security 살펴보기 - Bcrypt 인코딩 암호 저장하기](#15단계---spring-security-살펴보기---bcrypt-인코딩-암호-저장하기)
 
 ---
 
@@ -575,5 +576,64 @@ public class BasicAuthSecurityConfiguration {
 Key나 Password를 사용해 데이터를 인코딩하는 과정 ex) RSA
 - 암호화 때와 동일한 Key나 Password를 사용해 복호화할 수 있다.
 - 데이터 보호를 목적으로 사용한다.
+
+---
+
+## 15단계 - Spring Security 살펴보기 - Bcrypt 인코딩 암호 저장하기
+
+#### SHA-256 해싱 알고리즘의 문제점
+- 시스템의 발전으로 연산 속도가 빨라져 무차별 대입 공격(brute-force attack)에 취약하다.
+- 패스워드 등의 탈취가 예민한 정보에 대해서는 단독으로 사용하지 않는 것이 안전하다.
+  - 비밀번호 해싱에 사용할 경우, 반드시 솔트(salt)를 추가하고 여러 번 반복하는 등의 추가 보안 조치가 필요하다.
+    - 솔트(salt) : 해시 함수에 추가되는 랜덤한 데이터 (난독화를 더 복잡하게 만든다.)
+
+#### Spring Security에서 권장하는 패스워드 저장 방법
+1초를 워크 팩터로 적용해 적응형 단방향 함수를 사용
+- 단방향 함수 : 한 방향으로 동작하는 함수, 데이터를 해싱할 순 있지만 해싱된 결과물을 다시 데이터로 복구할 수는 없다.
+  - ex) bcrypt, scrypt, argon2
+- 워크 팩터 : 시스템에서 패스워드를 확인하는 데 걸리는 시간 (패스워드를 해싱하고 해싱된 데이터를 저장된 값과 비교하는 데 걸리는 시간)
+  - 워크 팩터가 너무 빠르면 무차별 대입 공격(brute-force attack)에 취약해지고, 너무 느리면 사용자 경험이 떨어지기 때문에 1초 정도의 시간을 제안하는 것이다.
+
+#### PasswordEncoder
+단방향 패스워드 변환을 수행하는 Spring Security의 인터페이스 이름은 인코더이지만 내부적으로 해싱을 수행한다.
+- 추천 구현체 : BCryptPasswordEncoder
+  - 비밀번호 해싱에 특화되어 설계되었다.
+  - 솔트를 자동으로 생성하고 적용
+  - 적절한 수준의 워크 팩터를 가지고 있음.
+    - 워크 팩터 커스텀 가능
+
+#### BCryptPasswordEncoder 사용해서 패스워드 해싱 실습
+```java
+public class BasicAuthSecurityConfiguration {
+	//...(생략)
+	@Bean
+	public UserDetailsService userDetailsService(DataSource dataSource) {
+		UserDetails user = User.withUsername("user")
+				.password("password")
+				.passwordEncoder(passwordEncoder()::encode)
+				.roles("USER")
+				.build();
+
+		UserDetails admin = User.withUsername("admin")
+				.password("admin")
+				.passwordEncoder(passwordEncoder()::encode)
+				.roles("ADMIN")
+				.build();
+
+		JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(dataSource);
+		userDetailsManager.createUser(user);
+		userDetailsManager.createUser(admin);
+
+		return userDetailsManager;
+	}
+    //...(생략)
+	@Bean
+	public BCryptPasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+}
+```
+- BCryptPasswordEncoder 타입의 Bean 메서드를 선언한다.
+- UserDetails 에서 passwordEncoder() 메서드를 사용해서 패스워드 해싱을 진행할 수 있다.
 
 ---
