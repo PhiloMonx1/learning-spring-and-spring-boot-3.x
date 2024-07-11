@@ -13,6 +13,7 @@
 9. [Spring Security 살펴보기 - REST API에서의 CSRF](#9단계---spring-security-살펴보기---rest-api에서의-csrf)
 10. [CSRF를 사용하지 않도록 Spring Security 설정 생성하기](#10단계---csrf를-사용하지-않도록-spring-security-설정-생성하기)
 11. [Spring Security 살펴보기 - CORS 시작하기](#11단계---spring-security-살펴보기---cors-시작하기)
+12. [Spring Security 살펴보기 - 메모리에 사용자 자격증명 저장하기](#12단계---spring-security-살펴보기---메모리에-사용자-자격증명-저장하기)
 
 ---
 
@@ -382,5 +383,59 @@ public class BasicAuthSecurityConfiguration {
 - UrlBasedCorsConfigurationSource : URL 기반 CORS 설정 소스
   - CORS 설정을 적용할 엔드포인트를 지정한다.
   - `/**` 보다 `/users/**` 처럼 세분화 된 엔드포인트가 우선 순위가 더 높다.
+
+---
+
+## 12단계 - Spring Security 살펴보기 - 메모리에 사용자 자격증명 저장하기
+
+#### Basic 인증 자격 증명(ID,PW) 커스텀하기
+```properties
+spring.security.user.name=eh13
+spring.security.user.password=950127
+```
+해당 설정을 통해 Spring Security의 Basic 인증의 자격증명을 커스텀할 수 있다.
+- 인메모리에 저장된다.
+
+#### 사용자 자격 증명을 저장하는 방법
+- 인메모리 : 프로덕트 환경에서는 권장되지 않는다.
+- 데이터베이스
+- LDAP(Lightweight Directory Access Protocol) : 경량 디렉터리 액세스 프로토콜
+  - 인증 및 디렉터리 관리를 위한 특수 목적 데이터베이스
+  - 주로 사용자 정보, 조직 구조 등의 디렉터리 서비스에 특화되어 있으며 빠른 읽기와 검색 작업에 최적화 되어 있다.
+
+#### UserDetailsService
+Spring Security에서 사용자의 정보를 로드하는 핵심 인터페이스, 일종의 자격증명 매커니즘이다.
+- 데이터 베이스의 User(회원) 테이블 처럼 인메모리에 User 자격 증명(ID/PW) 및 회원의 정보를 저장할 수 있다.
+- 실제 운영 환경에서는 데이터 베이스의 회원 정보를 UserDetailsService에 담아 Spring Security에 제공하는 방식으로 사용한다. 
+
+####
+```java
+@Configuration
+public class BasicAuthSecurityConfiguration {
+    //...생략
+	@Bean
+	public UserDetailsService userDetailsService() {
+		UserDetails user = User.withDefaultPasswordEncoder()
+				.username("user")
+				.password("{noop}password")
+				.roles("USER")
+				.build();
+
+		UserDetails admin = User.withDefaultPasswordEncoder()
+				.username("admin")
+				.password("{noop}admin")
+				.roles("USER", "ADMIN")
+				.build();
+
+		return new InMemoryUserDetailsManager(user, admin);
+	}
+}
+```
+- 코드 설명
+  - UserDetails : 사용자 자격 증명 객체
+  - roles : 사용자 역할
+  - {noop} : 인코딩을 하지 않을 것이라는 의미 (패스워드는 기본적으로 암호화 인코딩을 진행한다)
+  - InMemoryUserDetailsManager : 인메모리에 사용자 자격 증명 객체를 저장
+- 별도의 필터 체인 등록 없이 Spring이 UserDetailsService를 의존성 주입하여 Spring Security가 사용 가능하다.
 
 ---
