@@ -18,6 +18,7 @@
 14. [인코딩, 해싱, 암호화 이해하기](#14단계---인코딩-해싱-암호화-이해하기)
 15. [Spring Security 살펴보기 - Bcrypt 인코딩 암호 저장하기](#15단계---spring-security-살펴보기---bcrypt-인코딩-암호-저장하기)
 16. [JWT 인증 시작하기](#16단계---jwt-인증-시작하기)
+17. [Spring Security와 Spring Boot로 JWT 인증 설정하기 - 1](#17단계---spring-security와-spring-boot로-jwt-인증-설정하기---1)
 
 ---
 
@@ -677,5 +678,71 @@ JWT를 디코드, 검증, 생성할 수 있는 사이트
 4. 요청 헤더에 JWT 포함해서 요청
 5. 서버에서 확인 (공개키를 사용해서 디코딩)
 6. 인증
+
+---
+
+## 17단계 - Spring Security와 Spring Boot로 JWT 인증 설정하기 - 1
+
+#### JWT 인증 설정 과정
+Spring Boot의 OAuth2 리소스 서버를 이용해서 JWT 설정을 적용할 것이며, 다음의 과정으로 진행된다.
+1. 키 쌍(공개키, 개인키) 생성
+2. RSA 키 객체 생성 (키 쌍을 담는 객체)
+3. JSON Web Key 소스 생성 (JWT 서명)
+4. 인코딩, 디코딩 설정
+5. ...
+
+#### 라이브러리 추가
+```
+implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+```
+- oauth2-resource-server
+  - 인증, 권한 확인을 처리하는 서블릿 필터 Spring Security의 필터 체인에 통합되어 작동한다.
+    - OAuth2 프로토콜에 표준화되어 있는 방식으로 동작한다.
+      - OAuth2: 사용자 인증과 리소스 접근 권한 부여를 위한 프로토콜
+    - JWT 토큰의 유효성을 자동으로 검증하고, 스코프를 추출해서 권한을 Spring Security에 자동 매핑한다.
+
+#### JwtSecurityConfiguration : JWT 설정 파일 생성
+1. 먼저 `BasicAuthSecurityConfiguration`를 복제 후 기존 파일을 삭제한다. 
+   - 코드 비교가 필요하다면 `@Configuration` 어노테이션을 주석처리 하는 것으로도 내부 Bean이 등록되지 않기에 애플리케이션에서 무시된다.
+2. 복제본의 이름을 `JwtSecurityConfiguration`로 설정하겠다.
+3. 필터 체인으로 oauth2ResourceServer 설정
+    ```java
+    @Configuration
+    public class JwtSecurityConfiguration {
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+            return http
+                    .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                    .sessionManagement(session -> session
+                            .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                    .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
+                    .httpBasic(Customizer.withDefaults())
+                    .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                    .csrf(csrf -> csrf.disable())
+                    .headers(headers -> headers
+                            .addHeaderWriter(
+                                    new XFrameOptionsHeaderWriter(XFrameOptionsMode.SAMEORIGIN)))
+                    .build();
+        }
+    }
+    ```
+    - `.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))` 라인을 추가한다.
+    - JWT 구현을 마치고 Basic 인증이 필요 없어지면 `.httpBasic(Customizer.withDefaults())`를 삭제해도 된다.
+4. 서버 실행
+    ```
+    ***************************
+    APPLICATION FAILED TO START
+    ***************************
+    
+    Description:
+    
+    Method securityFilterChain in com.in28minutes.learn_spring_security.jwt.JwtSecurityConfiguration required a bean of type 'org.springframework.security.oauth2.jwt.JwtDecoder' that could not be found.
+    
+    
+    Action:
+    
+    Consider defining a bean of type 'org.springframework.security.oauth2.jwt.JwtDecoder' in your configuration.
+    ```
+    - 서버를 실행하면 실패한다. 원인을 로그에서 확인해보면 securityFilterChain의 현 설정에서는 JwtDecoder를 요구하는데 찾을 수 없다는 의미이다.
 
 ---

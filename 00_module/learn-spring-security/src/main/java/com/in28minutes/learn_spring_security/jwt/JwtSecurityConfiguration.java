@@ -1,4 +1,4 @@
-package com.in28minutes.learn_spring_security;
+package com.in28minutes.learn_spring_security.jwt;
 
 import java.util.Arrays;
 import javax.sql.DataSource;
@@ -23,7 +23,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
-public class BasicAuthSecurityConfiguration {
+public class JwtSecurityConfiguration {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -31,6 +31,7 @@ public class BasicAuthSecurityConfiguration {
 				.authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
 				.sessionManagement(session -> session
 						.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
 				.httpBasic(Customizer.withDefaults())
 				.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 				.csrf(csrf -> csrf.disable())
@@ -49,28 +50,6 @@ public class BasicAuthSecurityConfiguration {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
-	}
-
-	@Bean
-	public UserDetailsService userDetailsService(DataSource dataSource) {
-		UserDetails user = User.withUsername("user")
-				.password("password")
-				.passwordEncoder(passwordEncoder()::encode)
-				.roles("USER")
-				.build();
-
-		UserDetails admin = User.withUsername("admin")
-				.password("admin")
-				.passwordEncoder(passwordEncoder()::encode)
-				.roles("ADMIN")
-				.build();
-
-
-		JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(dataSource);
-		userDetailsManager.createUser(user);
-		userDetailsManager.createUser(admin);
-
-		return userDetailsManager;
 	}
 
 	@Bean
