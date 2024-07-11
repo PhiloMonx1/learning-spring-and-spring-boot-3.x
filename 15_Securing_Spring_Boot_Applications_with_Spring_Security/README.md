@@ -12,6 +12,7 @@
 8. [Spring Security 살펴보기 - 크로스 사이트 요청 위조](#8단계---spring-security-살펴보기---크로스-사이트-요청-위조)
 9. [Spring Security 살펴보기 - REST API에서의 CSRF](#9단계---spring-security-살펴보기---rest-api에서의-csrf)
 10. [CSRF를 사용하지 않도록 Spring Security 설정 생성하기](#10단계---csrf를-사용하지-않도록-spring-security-설정-생성하기)
+11. [Spring Security 살펴보기 - CORS 시작하기](#11단계---spring-security-살펴보기---cors-시작하기)
 
 ---
 
@@ -299,5 +300,87 @@ public class BasicAuthSecurityConfiguration {
     - 폼 로그인을 사용하지 않고 팝업창으로 인증한다. (로그아웃 페이지도 동작하지 않는다.)
     - 별도 인증 수단이 없기 때문에 활성화 하지 않으면 인증 자체가 불가하다.
       - authorizeHttpRequests 에서 모든 요청에 인증을 받기로 했기 때문.
+
+---
+
+## 11단계 - Spring Security 살펴보기 - CORS 시작하기
+
+#### CORS (Cross-Origin Resource Sharing)
+웹 브라우저에서 다른 출처의 리소스에 접근할 수 있도록 하는 보안 메커니즘
+- 다른 출처
+  - 프로토콜, 도메인(ip), 포트 중 하나라도 다르면 다른 출처이다.
+- 브라우저는 기본적으로 보안상의 이유로 다른 출처로의 요청을 차단한다.
+
+#### CORS 설정법
+- 글로벌 설정
+  - WebMvcConfigurer를 사용해서 설정한다.
+  - 예시
+    ```java
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            public void addCorsMappings (CorsRegistry registry) { 
+                    registry.addMapping("/**") 
+                            .allowedMethods ("*")
+                            .allowedOrigins("http://localhost:3000");
+            }
+        };
+    }
+    ```
+- 컨트롤러별 로컬 설정
+  - 특정 컨트롤러나 메서드에 어노테이션을 부여해서 설정한다.
+  - 예시
+    ```java
+    @RestController
+    @CrossOrigin(origins = "http://localhost:3000")
+    public class MyController {
+        // ...
+    }
+    ```
+
+#### Spring Security 필터체인으로 CORS 설정
+Spring Security를 사용하는 경우 가장 권장되는 방법이다.
+```java
+@Configuration
+public class BasicAuthSecurityConfiguration {
+
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		return http
+				.authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.httpBasic(Customizer.withDefaults())
+				.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+				.csrf(csrf -> csrf.disable())
+				.build();
+	}
+
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration usersConfig = new CorsConfiguration();
+		usersConfig.setAllowedOrigins(Arrays.asList("https://admin.myapp.com"));
+		usersConfig.setAllowedMethods(Arrays.asList("GET", "POST"));
+		usersConfig.setAllowedHeaders(Arrays.asList("Authorization"));
+		usersConfig.setExposedHeaders(Arrays.asList("X-Total-Count"));
+
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+		configuration.setAllowedHeaders(Arrays.asList("*"));
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/users/**", usersConfig);
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
+	}
+}
+```
+- CorsConfiguration : CORS 설정을 위한 객체
+  - setAllowedOrigins : 허용되는 출처
+  - setAllowedMethods : 허용되는 메서드
+  - setAllowedHeaders : 허용되는 헤더
+- UrlBasedCorsConfigurationSource : URL 기반 CORS 설정 소스
+  - CORS 설정을 적용할 엔드포인트를 지정한다.
+  - `/**` 보다 `/users/**` 처럼 세분화 된 엔드포인트가 우선 순위가 더 높다.
 
 ---
