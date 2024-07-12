@@ -20,6 +20,7 @@
 16. [JWT 인증 시작하기](#16단계---jwt-인증-시작하기)
 17. [Spring Security와 Spring Boot로 JWT 인증 설정하기 - 1](#17단계---spring-security와-spring-boot로-jwt-인증-설정하기---1)
 18. [Spring Security와 Spring Boot로 JWT 인증 설정하기 - 2](#18단계---spring-security와-spring-boot로-jwt-인증-설정하기---2)
+19. [Spring Security와 Spring Boot로 JWT 리소스 설정하기 - 1](#19단계---spring-security와-spring-boot로-jwt-리소스-설정하기---1)
 
 ---
 
@@ -852,5 +853,73 @@ public class JwtSecurityConfiguration {
 - NimbusJwtDecoder 를 사용해서 디코딩한다.
 - toRSAPublicKey() 공개만 사용해서 디코딩한다.
 - 해당 Bean은 다른 코드에서 직접 호출하지 않을 것이기에 예외를 던지기로 했다.
+
+---
+
+## 19단계 - Spring Security와 Spring Boot로 JWT 리소스 설정하기 - 1
+
+지난 단계에서 JWT를 검증 로직 구현을 마쳤다. 그러나 현재 애플리케이션에는 검증할 JWT가 아직 구현되지 않았다.
+#### 과정
+1. JWT인코더 생성
+2. 인코더를 사용할 수 있는 JWT 리소스 생성 (인코딩의 대상)
+3. 특정 사용자 인증 후 JWT 토큰 발급
+
+##### JWT 인코더 생성
+```java
+//...(생략)
+public class JwtSecurityConfiguration {
+    //...(생략)
+    @Bean
+    public JwtEncoder jwtEncoder(JWKSource<SecurityContext> jwkSource) {
+	    return new NimbusJwtEncoder(jwkSource);
+    }
+}
+```
+- 인코더의 경우 공개키 뿐만 아니라 개인키도 사용해야 하며, 서명도 진행해야 하기 때문에 jwkSource를 사용한다.
+
+#### Authentication 객체 확인하기
+```java
+@RestController
+public class JwtAuthenticationResource {
+
+	@PostMapping("/authenticate")
+	public Authentication authenticate(Authentication authentication) {
+		return authentication;
+	}
+}
+```
+- 기본 인증으로 해당 API를 호출하면 아래의 응답을 받을 수 있다. 
+  - 기본 인증 유저가 없을 경우 삭제한 UserDetailsManager를 다시 선언.
+```json
+{
+    "authorities": [
+        {
+            "authority": "ROLE_USER"
+        }
+    ],
+    "details": {
+        "remoteAddress": "0:0:0:0:0:0:0:1",
+        "sessionId": null
+    },
+    "authenticated": true,
+    "principal": {
+        "password": null,
+        "username": "user",
+        "authorities": [
+            {
+                "authority": "ROLE_USER"
+            }
+        ],
+        "accountNonExpired": true,
+        "accountNonLocked": true,
+        "credentialsNonExpired": true,
+        "enabled": true
+    },
+    "credentials": null,
+    "name": "user"
+}
+```
+- authorities.authority : 사용자의 권한
+- authenticated : 인증 여부
 
 ---
