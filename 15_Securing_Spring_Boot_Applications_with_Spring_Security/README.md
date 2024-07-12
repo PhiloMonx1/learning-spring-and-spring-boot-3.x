@@ -30,6 +30,7 @@
 ---
 
 ## 0단계 - Spring Security 시작하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/61600ddd46d63fdc3ccd5f108fd1716d74762459)
 
 #### 챕터 학습 목표
 1. 6가지 보안 원칙 : 애플리케이션을 빌드할 때 고려해야 할 중요 보안 사항
@@ -50,6 +51,7 @@
 ---
 
 ## 1단계 - 보안의 기초 이해하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/1a09fdb480fc003ee17d42d193f1826d2a837be6)
 
 #### 인증
 - 사용자가 기억할 수 있는 정보 제공
@@ -75,6 +77,7 @@ ex) '사용자 A, B, X' 는 '데이터를 읽는 것'만 가능하고, '사용�
 ---
 
 ## 2단계 - 보안의 원칙 이해하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/72a16b97e13b1c7629e3c7ba5f9af97b4136f70a)
 
 #### 보안 원칙 6계명
 1. Trust Nothing : 무엇도 신뢰하지 말라
@@ -101,6 +104,7 @@ ex) '사용자 A, B, X' 는 '데이터를 읽는 것'만 가능하고, '사용�
 ---
 
 ## 3단계 - Spring Security 시작하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/0783dae262a5e5a3a29852c327304fd1adc95280)
 
 #### Spring MVC 작동 방식
 ![Request -> Dispatcher Servlet -> Controller(s)](image/MVC_Works.png)
@@ -117,6 +121,7 @@ ex) '사용자 A, B, X' 는 '데이터를 읽는 것'만 가능하고, '사용�
 ---
 
 ## 4단계 - Spring Security 기본 설정 살펴보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/848589e85cadd65d93fb4c7cc087f27b55952d0c)
 
 #### Spring Security Filter Chain
 요청이 들어왔을 때 Spring Security가 실행 시키는 일련의 필터 처리 과정
@@ -137,6 +142,7 @@ ex) '사용자 A, B, X' 는 '데이터를 읽는 것'만 가능하고, '사용�
 ---
 
 ## 5단계 - Spring Security용 Spring Boot 프로젝트 생성하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/2e2db0030f7aefaf0bdf5e33183d8ee90338af69)
 
 #### 프로젝트 생성
 ![Spring initializer 세팅](image/Spring-initializer.png)
@@ -149,6 +155,7 @@ ex) '사용자 A, B, X' 는 '데이터를 읽는 것'만 가능하고, '사용�
 ---
 
 ## 6단계 - Spring Security 살펴보기 - 폼 인증
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/e12692100507ddb952bf1679f55b313946f1e32e)
 
 #### Spring Security 기본 로그인
 ```java
@@ -186,6 +193,7 @@ public class HelloWorldResource {
 ---
 
 ## 7단계 - Spring Security 살펴보기 - 기본 인증
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/67329779e58982fef30ed02a95e85efa52897788)
 
 #### Basic 인증 기법
 - 사용자가 입력한 자격 증명 정보를 Base 64 인코딩해서 전달한다.
@@ -201,6 +209,7 @@ public class HelloWorldResource {
 ---
 
 ## 8단계 - Spring Security 살펴보기 - 크로스 사이트 요청 위조
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/e9348337d2fc05efc65bad7428c06fd6747a7245)
 
 #### CSRF 공격
 브라우저 쿠키 등에 인증 정보가 저장된 상태로 악성 웹사이트에 접근했을 때, 해당 웹사이트가 사용자 의도와 상관 없이 쿠키에 액세스 후 위조된 요청을 보내는 공격.
@@ -240,6 +249,7 @@ public class HelloWorldResource {
 ---
 
 ## 9단계 - Spring Security 살펴보기 - REST API에서의 CSRF
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/5681cfbb9d06e38b0b9a40f0a0552d6259f7f922)
 
 #### Spring Security의 기본 CSRF 방어 방식
 Spring Security는 CSRF 토큰을 사용한 방어 방식을 기본 값으로 수행한다.
@@ -276,6 +286,7 @@ public class SpringSecurityPlayResource {
 ---
 
 ## 10단계 - CSRF를 사용하지 않도록 Spring Security 설정 생성하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/36c82b8725a90ca167209bb1bd2ab343a6fabf22)
 
 #### SameSite 쿠키
 ```properties
@@ -317,6 +328,7 @@ public class BasicAuthSecurityConfiguration {
 ---
 
 ## 11단계 - Spring Security 살펴보기 - CORS 시작하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/9a0d0c1cbee3e92dcce90bdfbf3fce19d830b170)
 
 #### CORS (Cross-Origin Resource Sharing)
 웹 브라우저에서 다른 출처의 리소스에 접근할 수 있도록 하는 보안 메커니즘
@@ -399,6 +411,7 @@ public class BasicAuthSecurityConfiguration {
 ---
 
 ## 12단계 - Spring Security 살펴보기 - 메모리에 사용자 자격증명 저장하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/1fbe4b7f368332eba29509cc8df4afe4772598f6)
 
 #### Basic 인증 자격 증명(ID,PW) 커스텀하기
 ```properties
@@ -453,6 +466,7 @@ public class BasicAuthSecurityConfiguration {
 ---
 
 ## 13단계 - Spring Security 살펴보기 - JDBC를 사용해 사용자 자격증명 저장하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/e175c866169bee69955767de73a9d954f54badff)
 
 #### 라이브러리 설치
 ```gradle
@@ -565,6 +579,7 @@ public class BasicAuthSecurityConfiguration {
 ---
 
 ## 14단계 - 인코딩, 해싱, 암호화 이해하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/32d787ac6029f26cb67a9a5d29168b22c51f26fb)
 
 #### 인코딩
 데이터를 원래 형식에서 다른 형식으로 변환하는 과정 ex) base64, WAV, MP3
@@ -589,6 +604,7 @@ Key나 Password를 사용해 데이터를 인코딩하는 과정 ex) RSA
 ---
 
 ## 15단계 - Spring Security 살펴보기 - Bcrypt 인코딩 암호 저장하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/de5441399647397a3add392f2d68e2c77b6f71a4)
 
 #### SHA-256 해싱 알고리즘의 문제점
 - 시스템의 발전으로 연산 속도가 빨라져 무차별 대입 공격(brute-force attack)에 취약하다.
@@ -648,6 +664,7 @@ public class BasicAuthSecurityConfiguration {
 ---
 
 ## 16단계 - JWT 인증 시작하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/b9c9d033f319ac5fa9ab612ee497464efafbc9d1)
 
 #### Basic 인증의 문제점
 1. 만료시간이 없다.
@@ -689,6 +706,7 @@ JWT를 디코드, 검증, 생성할 수 있는 사이트
 ---
 
 ## 17단계 - Spring Security와 Spring Boot로 JWT 인증 설정하기 - 1
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/335f124f979d8beaf7e778666877f59ed29d0d50)
 
 #### JWT 인증 설정 과정
 Spring Boot의 OAuth2 리소스 서버를 이용해서 JWT 설정을 적용할 것이며, 다음의 과정으로 진행된다.
@@ -755,6 +773,7 @@ implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-ser
 ---
 
 ## 18단계 - Spring Security와 Spring Boot로 JWT 인증 설정하기 - 2
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/4116c30fa5cde8ff0ac8c9fc0d579ee12d88bd93)
 
 #### 개요
 JWT 인증 설정 과정에서
@@ -862,6 +881,7 @@ public class JwtSecurityConfiguration {
 ---
 
 ## 19단계 - Spring Security와 Spring Boot로 JWT 리소스 설정하기 - 1
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/ed56c592dafd689342d5f0f964cdc662827208d1)
 
 지난 단계에서 JWT를 검증 로직 구현을 마쳤다. 그러나 현재 애플리케이션에는 검증할 JWT가 아직 구현되지 않았다.
 #### 과정
@@ -930,6 +950,7 @@ public class JwtAuthenticationResource {
 ---
 
 ## 20단계 - Spring Security와 Spring Boot로 JWT 리소스 설정하기 - 2
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/c97330d2500f50d4637bbad06c2f8910f96d3a16)
 
 #### JWT 토큰 발급 구현
 ```java
@@ -997,6 +1018,7 @@ record JwtResponse(String token) { }
 ---
 
 ## 21단계 - Spring Security 인증이란?
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/6ff08bab5e26724ee50d474bb1bcf77e158060de)
 
 #### AuthenticationManager
 인증 담당 인터페이스
@@ -1030,6 +1052,7 @@ Spring Security에서는 다양한 타입의 AuthenticationProvider들이 동시
 ---
 
 ## 22단계 - Spring Security 인증의 이모저모
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/46698d622b6e12ccbf990b20301927c3bcb9171f)
 
 #### Spring Security 전역 보안
 ```java
@@ -1145,6 +1168,7 @@ public class TodoResource {
 ---
 
 ## 23단계 - Spring Security를 이용한 Spring Boot OAuth 프로젝트 만들기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/23baf4e8bfdab2fc14ed48f1406b6cedffae84ce)
 
 #### Spring Boot OAuth
 Spring Boot 애플리케이션에서 OAuth 2.0 프로토콜을 쉽게 구현할 수 있게 해주는 라이브러리
@@ -1164,6 +1188,7 @@ Spring Boot 애플리케이션에서 OAuth 2.0 프로토콜을 쉽게 구현할 
 ---
 
 ## 24단계 - Spring Boot와 OAuth2 시작하기 - Google을 이용한 로그인
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/540710e507fa3a6ff98a91225f77435ccdc577cd)
 
 #### 필터 체인 작성
 ```java
@@ -1252,6 +1277,7 @@ public class HelloWorldResource {
 ---
 
 ## 25단계 - 간단 복습 - Spring Security로 Spring Boot 앱 보호하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/f790a08ea8d4a84adae8b9d5c97d0c8255a81896)
 
 #### 학습 키워드
 1. 보안 원칙(Security Principles) :
