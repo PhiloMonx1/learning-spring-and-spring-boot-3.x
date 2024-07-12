@@ -22,6 +22,7 @@
 18. [Spring Security와 Spring Boot로 JWT 인증 설정하기 - 2](#18단계---spring-security와-spring-boot로-jwt-인증-설정하기---2)
 19. [Spring Security와 Spring Boot로 JWT 리소스 설정하기 - 1](#19단계---spring-security와-spring-boot로-jwt-리소스-설정하기---1)
 20. [Spring Security와 Spring Boot로 JWT 리소스 설정하기 - 2](#20단계---spring-security와-spring-boot로-jwt-리소스-설정하기---2)
+21. [Spring Security 인증이란?](#21단계---spring-security-인증이란)
 
 ---
 
@@ -989,5 +990,38 @@ record JwtResponse(String token) { }
 #### JWT 토큰 확인
 ![JWT 토큰 확인](image/check_jwt.png)
 - [jwt.io](https://jwt.io/)에서 발급된 JWT를 확인할 수 있다.
+
+---
+
+## 21단계 - Spring Security 인증이란?
+
+#### AuthenticationManager
+인증 담당 인터페이스
+
+![AuthenticationManager 주석](image/AuthenticationManager.png)
+- 주석을 확인해보면 "Authentication 객체의 인증을 시도하고 성공하면 완전히 채워진 Authentication 객체(부여된 권한 포함)를 반환한다"고 적혀있다.
+- 인터페이스 메서드는 `authenticate()` 단 하나이며 Authentication 객체를 파라미터로 받고 Authentication 객체를 리턴한다.
+
+#### Authentication 객체의 구조 : Spring Security의 인증 개념
+1. 자격증명 (username, password)
+2. 주체 (사용자 세부사항)
+3. 권한 (주체가 가지고 있는 권한 및 역할)
+
+AuthenticationManager의 `authenticate()`가 호출되기 전에 Authentication 객체에는 '자격증명'만 포함되어 있을 것이다.
+- 인증이 성공하면 Authentication 객체는 '주체'와 '권한'도 포함하게 된다.
+
+#### AuthenticationManager의 인증 방식
+AuthenticationManager는 수많은 AuthenticationProvider들과 상호작용을 한다.
+- AuthenticationProvider : 특정한 인증 타입을 제공하는 공급자 개념의 인터페이스
+- UserDetailsService : 사용자 데이터를 로딩하기 위한 핵심 인터페이스, AuthenticationProvider에 UserDetail 객체를 제공한다.
+- UserDetails : 인증에 필수적인 사용자의 데이터 (자격 증명 등)
+
+Spring Security에서는 다양한 타입의 AuthenticationProvider들이 동시에 작동하며, 
+동시에 작동하는 다수의 UserDetailsService 구현물이 있을 수 있다.
+- (AuthenticationManager는 다수의 AuthenticationProvider와 대화할 수 있고, 그에 관련된 UserDetailsService의 구현물도 다수 있을 수 있다.)
+
+#### 인증 성공 후 과정
+인증 결과는 SecurityContextHolder에 저장된다. (SecurityContextHolder 내부에는 SecurityContext가 있다.)
+- SecurityContext에서 Authentication, UserDetails 를 추출해서 로그인된 사용자(인증된 사용자)를 사용하는 것이 가능하다.
 
 ---
