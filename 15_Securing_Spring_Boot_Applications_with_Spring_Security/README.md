@@ -24,6 +24,7 @@
 20. [Spring Security와 Spring Boot로 JWT 리소스 설정하기 - 2](#20단계---spring-security와-spring-boot로-jwt-리소스-설정하기---2)
 21. [Spring Security 인증이란?](#21단계---spring-security-인증이란)
 22. [Spring Security 인증의 이모저모](#22단계---spring-security-인증의-이모저모)
+23. [Spring Security를 이용한 Spring Boot OAuth 프로젝트 만들기](#23단계---spring-security를-이용한-spring-boot-oauth-프로젝트-만들기)
 
 ---
 
@@ -1139,5 +1140,24 @@ public class TodoResource {
 'PreAuthorize', 'PreAuthorize' 가 유연성이 좋아 자주 사용된다. 표준을 중시한다면 'JSR-250' 사용이 적절하다.
 
 네 가지 모두 하나의 메서드에 섞어서 사용하는 것이 가능하다. (그러나 일반적으로 권장되지는 않는다.)
+
+---
+
+## 23단계 - Spring Security를 이용한 Spring Boot OAuth 프로젝트 만들기
+
+#### Spring Boot OAuth
+Spring Boot 애플리케이션에서 OAuth 2.0 프로토콜을 쉽게 구현할 수 있게 해주는 라이브러리
+- OAuth :  승인에 사용되는 업계 표준 프로토콜 
+- 소셜 로그인을 구현할 수 있다.
+  - ex) Spring Boot OAuth를 사용해서 스프링 애플리케이션에서 Google Drive의 파일에 대한 액세스 권한을 가져오는 것이 가능하다.
+
+#### Spring Boot OAuth 프로젝트 생성
+![Spring initializer 세팅 - Spring Boot OAuth](image/OAuth-Spring-initializer.png)
+- [Spring initializer](https://start.spring.io/) 를 통해 프로젝트를 생성한다.
+- 빌드 도구를 'Gradle - Groovy'로 설정한다.
+- 라이브러리 목록
+    - Spring Web
+    - OAuth2 Client
+    - Spring Boot DevTools
 
 ---
