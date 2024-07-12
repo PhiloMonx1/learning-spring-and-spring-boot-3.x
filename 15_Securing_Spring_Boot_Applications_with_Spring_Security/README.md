@@ -1250,3 +1250,26 @@ public class HelloWorldResource {
 - 사용자의 권한, 성명, 이메일, 프로필, 토큰 등 Google에서 제공하는 다양한 사용자 정보에 접근할 수 있다.
 
 ---
+
+## 25단계 - 간단 복습 - Spring Security로 Spring Boot 앱 보호하기
+
+#### 학습 키워드
+1. 보안 원칙(Security Principles) :
+   - 무엇도 신뢰하지 말라
+   - 최소권한만 할당하라
+   - 완전매개를 구축하라
+   - 심층적인 구조를 구현하라
+   - 보안체계는 간단하게 유지하라
+   - 개방성을 보장하라
+2. 보안 개념(Security Concepts) : 인증, 권한
+3. Spring Security 기초(Spring Security Fundamentals) : 디스패처 서블릿보다 선행하여 인증을 처리
+4. 필터 체인(Spring Security Filter Chain) : Spring Security가 동작하면서 실행시키는 일련의 과정 (서블릿 필터로 작동)
+5. Spring Security의 다양한 인증 방식
+   - Form 인증(Form Authentication) : HTML Form을 통한 인증 방식 (Spring Security의 기본값)
+   - 기본 인증(Basic Authentication) : base64 인코딩 방식으로 디코딩이 쉬워 프로덕트에 권장되지 않음
+   - JWT 인증(JWT Authentication) : Json Web Token. 권한 설정, 만료시간, 사용자 정보 등을 저장할 수 있는 토큰
+7. CSRF, CORS : 다른 출처에서 발생하는 공격에 대한 대응
+8. 비밀번호 관리(Managing Passwords) : 비밀번호 해싱 실습
+9. OAuth : 구글 소셜 로그인 실습
+
+---
