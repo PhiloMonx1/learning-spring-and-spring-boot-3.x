@@ -21,6 +21,7 @@
 17. [Spring Security와 Spring Boot로 JWT 인증 설정하기 - 1](#17단계---spring-security와-spring-boot로-jwt-인증-설정하기---1)
 18. [Spring Security와 Spring Boot로 JWT 인증 설정하기 - 2](#18단계---spring-security와-spring-boot로-jwt-인증-설정하기---2)
 19. [Spring Security와 Spring Boot로 JWT 리소스 설정하기 - 1](#19단계---spring-security와-spring-boot로-jwt-리소스-설정하기---1)
+20. [Spring Security와 Spring Boot로 JWT 리소스 설정하기 - 2](#20단계---spring-security와-spring-boot로-jwt-리소스-설정하기---2)
 
 ---
 
@@ -921,5 +922,72 @@ public class JwtAuthenticationResource {
 ```
 - authorities.authority : 사용자의 권한
 - authenticated : 인증 여부
+
+---
+
+## 20단계 - Spring Security와 Spring Boot로 JWT 리소스 설정하기 - 2
+
+#### JWT 토큰 발급 구현
+```java
+package com.in28minutes.learn_spring_security.jwt;
+
+import java.time.Instant;
+import java.util.stream.Collectors;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class JwtAuthenticationResource {
+
+	private final JwtEncoder jwtEncoder;
+
+	public JwtAuthenticationResource(JwtEncoder jwtEncoder) {
+		this.jwtEncoder = jwtEncoder;
+	}
+
+
+	@PostMapping("/authenticate")
+	public JwtResponse authenticate(Authentication authentication) {
+		return new JwtResponse(createToken(authentication));
+	}
+
+	private String createToken(Authentication authentication) {
+		JwtClaimsSet claims = JwtClaimsSet.builder()
+				.issuer("self")
+				.issuedAt(Instant.now())
+				.expiresAt(Instant.now().plusSeconds(60 * 15))
+				.subject(authentication.getName())
+				.claim("scope", createScope(authentication))
+				.build();
+
+		return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+	}
+
+	private String createScope(Authentication authentication) {
+		return authentication.getAuthorities().stream()
+				.map(authority -> authority.getAuthority())
+				.collect(Collectors.joining(" "));
+	}
+}
+
+record JwtResponse(String token) { }
+```
+1. JwtEncoder를 의존성으로 사용할 수 있도록 선언해준다.
+2. Authentication 객체를 받아 그 안에서 username(사용자 고유 값), 권한 등을 추출해 JwtClaimsSet에 담는다.
+   - 현재는 Basic 인증을 통해 인증이 완료된 사용자의 username을 기반으로 토큰을 발급하는 로직으로 구성되어 있다.
+   - 자격증명을 RequestBody(username, password)로 받을 경우 먼저 자격증명을 검증하고 검증된 자격증명을 토대로 Authentication를 생성해야 한다.
+3. Authentication 객체의 사용자 권한이 여러 개일 경우를 대비해 `createScope()`메서드(권한 추출 메서드)를 통해 권한을 추출해서 JwtClaimsSet 담는다.
+   - createScope() : 권한과 권한 사이에 공백을 포함에 권한 전체를 문자열로 연결
+4. JwtClaimsSet에는 발행자, 발행시간, 만료시간 등의 정보를 포함할 수 있다.
+5. 발행한 JwtClaimsSet을 JwtEncoderParameters에 담아서 jwtEncoder를 통해 인코딩한다.
+6. 인코딩된 토큰을 JwtResponse 레코드(DTO)에 담아서 응답으로 리턴한다.
+
+#### JWT 토큰 확인
+![JWT 토큰 확인](image/check_jwt.png)
+- [jwt.io](https://jwt.io/)에서 발급된 JWT를 확인할 수 있다.
 
 ---
