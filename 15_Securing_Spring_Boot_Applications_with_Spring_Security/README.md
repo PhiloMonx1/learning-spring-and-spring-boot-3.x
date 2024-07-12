@@ -25,6 +25,7 @@
 21. [Spring Security 인증이란?](#21단계---spring-security-인증이란)
 22. [Spring Security 인증의 이모저모](#22단계---spring-security-인증의-이모저모)
 23. [Spring Security를 이용한 Spring Boot OAuth 프로젝트 만들기](#23단계---spring-security를-이용한-spring-boot-oauth-프로젝트-만들기)
+24. [Spring Boot와 OAuth2 시작하기 - Google을 이용한 로그인](#24단계---spring-boot와-oauth2-시작하기---google을-이용한-로그인)
 
 ---
 
@@ -1159,5 +1160,93 @@ Spring Boot 애플리케이션에서 OAuth 2.0 프로토콜을 쉽게 구현할 
     - Spring Web
     - OAuth2 Client
     - Spring Boot DevTools
+
+---
+
+## 24단계 - Spring Boot와 OAuth2 시작하기 - Google을 이용한 로그인
+
+#### 필터 체인 작성
+```java
+@Configuration
+public class OauthSecurityConfiguration {
+
+	@Bean
+	public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+		return http
+				.authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+				.oauth2Login(Customizer.withDefaults())
+				.build();
+	}
+}
+```
+- oauth2Login()를 통해 Basic 인증 대신 oauth2를 통한 로그인을 인증 방식으로 채택했다.
+
+설정을 한 후 애플리케이션을 실행하면 아래 에러로그를 확인할 수 있다.
+```
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Method defaultSecurityFilterChain in com.in28minutes.learn_oauth.OauthSecurityConfiguration required a bean of type 'org.springframework.security.oauth2.client.registration.ClientRegistrationRepository' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'org.springframework.security.oauth2.client.registration.ClientRegistrationRepository' in your configuration.
+```
+- ClientRegistrationRepository 타입의 Bean을 정의하는 것을 고려해보라고 말하고 있다.
+
+#### Google Developer Console에서 API 키 발급 받기
+[Google Developer Console](https://console.cloud.google.com/) 
+
+![Google-OAuth-01](image/Google-OAuth-01.png)
+- 프로젝트 생성 후 -> API 서비스 -> 사용자 인증 정보 -> 사용자 인증 정보 만들기 -> OAuth 클라이언트 ID 
+
+![Google-OAuth-02](image/Google-OAuth-02.png)
+- 앱 이름과, 자용자 지원 이메일을 추가한 후 나머지는 설정하지 않고 다음으로 넘어갈 수 있다.
+
+![Google-OAuth-03](image/Google-OAuth-03.png)
+- 범위 추가 또는 삭제 -> email, profile 범위 선택 후 업데이트
+- 범위(scope) : 앱에 사용자를 승인하기 위해 사용자에게 요구하는 권한
+
+테스트 사용자는 생성하지 않고 완료 후 대시보드로 이동한다.
+
+![Google-OAuth-01](image/Google-OAuth-01.png)
+- OAuth 클라이언트 ID에 다시 접근한다.
+
+![Google-OAuth-04](image/Google-OAuth-04.png)
+- 애플리케이션 유형 : 웹 애플리케이션
+- 승인된 리디렉션 URL : `http://localhost:8080/login/oauth2/code/google`
+  - Spring Security의 기본 리디렉션 URI 패턴은 "/login/oauth2/code/{registrationId}"이다.
+
+'만들기' 버튼을 클릭해서 완료할 수 있다.
+
+구성이 완료된 후 '클라이언트 ID'와 '클라이언트 비밀키'를 받을 수 있다. (API 키)
+
+#### application.properties 설정 
+```properties
+spring.security.oauth2.client.registration.google.client-id=YOUR_GOOGLE_CLIENT_ID
+spring.security.oauth2.client.registration.google.client-secret=YOUR_GOOGLE_CLIENT_SECRET
+```
+
+#### 애플리케이션 실행
+애플리케이션을 실행하고 서버 도메인에 접근하면 Google 로그인 페이지로 리다이렉트 되며, 구글 로그인을 완료하여 애플리케이션 인증을 통과할 수 있다.
+- Srping Security가 application.properties 설정을 읽고 자동으로 ClientRegistrationRepository 의존성을 주입한 것이다.
+
+#### Google 로그인 인증 객체 확인
+```java
+@RestController
+public class HelloWorldResource {
+
+	@GetMapping("/")
+	public Authentication getAuthentication(Authentication authentication) {
+		return authentication;
+	}
+}
+```
+![Google-OAuth-05](image/Google-OAuth-05.png)
+- 사용자의 권한, 성명, 이메일, 프로필, 토큰 등 Google에서 제공하는 다양한 사용자 정보에 접근할 수 있다.
 
 ---
