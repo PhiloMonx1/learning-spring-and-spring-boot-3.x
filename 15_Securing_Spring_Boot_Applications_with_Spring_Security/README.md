@@ -23,6 +23,7 @@
 19. [Spring Security와 Spring Boot로 JWT 리소스 설정하기 - 1](#19단계---spring-security와-spring-boot로-jwt-리소스-설정하기---1)
 20. [Spring Security와 Spring Boot로 JWT 리소스 설정하기 - 2](#20단계---spring-security와-spring-boot로-jwt-리소스-설정하기---2)
 21. [Spring Security 인증이란?](#21단계---spring-security-인증이란)
+22. [Spring Security 인증의 이모저모](#22단계---spring-security-인증의-이모저모)
 
 ---
 
@@ -1023,5 +1024,120 @@ Spring Security에서는 다양한 타입의 AuthenticationProvider들이 동시
 #### 인증 성공 후 과정
 인증 결과는 SecurityContextHolder에 저장된다. (SecurityContextHolder 내부에는 SecurityContext가 있다.)
 - SecurityContext에서 Authentication, UserDetails 를 추출해서 로그인된 사용자(인증된 사용자)를 사용하는 것이 가능하다.
+
+---
+
+## 22단계 - Spring Security 인증의 이모저모
+
+#### Spring Security 전역 보안
+```java
+@Configuration
+public class JwtSecurityConfiguration {
+
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		return http
+				.authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+				//...(생략)
+				.build();
+	}
+	//...(생략)
+}
+```
+- `.authorizeHttpRequests` 메서드가 요청에 대한 보안 설정에 해당한다. (현재는 모든 요청에 인증을 요구한다.)
+
+```java
+@Configuration
+public class JwtSecurityConfiguration {
+
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		return http
+				.authorizeHttpRequests(auth -> auth
+						.requestMatchers("/users/**").hasRole("USER")
+						.requestMatchers(HttpMethod.GET, "/admin/public").hasRole("USER")
+						.requestMatchers("/admin/**").hasRole("ADMIN")
+						.anyRequest().authenticated()
+				)				
+                //...(생략)
+				.build();
+	}
+	//...(생략)
+}
+```
+- requestMatchers() : 특정한 패턴의 HTTP 요청을 매칭하는 메서드
+  - hasRole, hasAuthority, hasAnyAuthority, isAuthenticated 등의 다양한 매처가 존재한다.
+  - [스프링 Docs](https://docs.spring.io/spring-security/reference/servlet/authorization/authorize-http-requests.html)에서 사용 가능한 매처를 자세히 알아볼 수 있다.
+
+#### Spring Security 메서드 보안 (PreAuthorize, PostAuthorize)
+전역적으로 보안을 설정하는 것이 아닌 특정 메서드에 보안 설정을 따로 부여할 수 있다.
+- @EnableMethodSecurity 어노테이션을 설정 클래스에 부여해야 한다.
+
+```java
+@RestController
+public class TodoResource {
+
+	@GetMapping("/users/{username}/todos")
+	@PreAuthorize("(hasRole('USER') and #username == authentication.principal.username) or hasRole('ADMIN')")
+	public List<Todo> retrieveTodosForSpecificUser(@PathVariable String username) {
+		return TODOS.stream().filter(todo -> todo.username().equals(username)).toList();
+	}
+}
+```
+- @PreAuthorize : 메서드 호출 전 인증
+- @PreAuthorize 안에 인증 조건을 작성하는 것으로 사용 가능하다.
+  - USER 권한를 가지고 있으면서 패스 변수의 username이 인증에 있는 username과 일치하거나, ADMIN 권한을 가진 경우 리소스에 액세스할 수 있다.
+- 메서드 실행 전에 검사하므로 불필요한 메서드 실행을 방지할 수 있다.
+
+```java
+@RestController
+public class TodoResource {
+
+	@GetMapping("/users/{username}/todos")
+	@PostAuthorize("returnObject.username == authentication.name")
+	public List<Todo> retrieveTodosForSpecificUser(@PathVariable String username) {
+		return TODOS.stream().filter(todo -> todo.username().equals(username)).toList();
+	}
+}
+```
+- @PostAuthorize : 메서드 호출 후 인증
+- @PostAuthorize 안에 인증 조건을 작성하는 것으로 사용 가능하다.
+  - 반환 객체의 username이 인증의 name과 일치할 경우 응답을 반환 받을 수 있다.
+- 메서드가 실행된 후 결과를 기반으로 권한을 검사할 수 있어, 더 복잡한 권한 로직을 구현 가능하다.
+  
+#### Spring Security 메서드 보안 (JSR-250, Secured)
+
+```java
+@RestController
+public class TodoResource {
+
+	@GetMapping("/users/{username}/todos")
+	@RolesAllowed({"ADMIN", "USER"})
+	public List<Todo> retrieveTodosForSpecificUser(@PathVariable String username) {
+		return TODOS.stream().filter(todo -> todo.username().equals(username)).toList();
+	}
+}
+```
+- @EnableMethodSecurity(jsr250Enabled=true) 어노테이션을 설정 클래스에 부여해야 한다.
+- Roles(역할)을 직접 설정할 수 있다.
+
+```java
+@RestController
+public class TodoResource {
+
+	@GetMapping("/users/{username}/todos")
+	@Secured({"ROLE_ADMIN", "ROLE_USER"})
+	public List<Todo> retrieveTodosForSpecificUser(@PathVariable String username) {
+		return TODOS.stream().filter(todo -> todo.username().equals(username)).toList();
+	}
+}
+```
+- @EnableMethodSecurity(securedEnabled=true) 어노테이션을 설정 클래스에 부여해야 한다.
+  - @EnableMethodSecurity(jsr250Enabled=true, securedEnabled=true) 와 같이 쉼표로 구분하여 함께 사용할 수 있다.
+- 옛날 방식으로 현재는 `JSR-250`로 대체되어 잘 사용하지 않는다.
+
+'PreAuthorize', 'PreAuthorize' 가 유연성이 좋아 자주 사용된다. 표준을 중시한다면 'JSR-250' 사용이 적절하다.
+
+네 가지 모두 하나의 메서드에 섞어서 사용하는 것이 가능하다. (그러나 일반적으로 권장되지는 않는다.)
 
 ---
