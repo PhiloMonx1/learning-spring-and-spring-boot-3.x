@@ -7,6 +7,7 @@
 4. [Spring AOP에 필요한 Spring 컴포넌트 만들기](#4단계---spring-aop에-필요한-spring-컴포넌트-만들기)
 5. [AOP 로깅 애스펙트와 포인트컷 만들기](#5단계---aop-로깅-애스펙트와-포인트컷-만들기)
 6. [AOP 용어 훑어보기](#6단계---aop-용어-훑어보기)
+7. [AOP 어노테이션 @After, @AfterReturning, @AfterThrowing](#7단계---aop-어노테이션-after-afterreturning-afterthrowing)
 
 ---
 
@@ -215,5 +216,59 @@ public class LoggingAspect {
 1. 조인포인트(Join Point) : 런타임 환경에서 포인트컷 조건이 참일 때 실행되는 어드바이스 실행 인스턴스
    - 포인트컷 조건에 부합하는 메서드가 100개라면, 어드바이스도 100번 실행되고, 각각의 어드바이스에 조인포인트 인스턴스가 존재한다.
    - 인자, 클래스명, 메서드명 등의 포인트컷 조건 메서드에 관련된 정보를 확인할 수 있다.
+
+---
+
+## 7단계 - AOP 어노테이션 @After, @AfterReturning, @AfterThrowing
+
+####  @After, @AfterReturning, @AfterThrowing
+- @After : 메서드가 실행된 후 결과에 상관 없이 무조건 수행할 작업을 지정한다.
+  - 메서드의 결과가 성공인지 예외를 던지는지 상관없이 실행.
+- @AfterReturning : 메서드가 성공적으로 실행된 경우에 수행할 작업을 지정한다.
+- @AfterThrowing : 메서드가 실행 중 예외가 발생한 경우에 수행할 작업을 지정한다.
+
+#### 실습
+```java
+public class BusinessService1 {
+    //...(생략)
+	public int calculateMax() {
+		int[] data = dataService.retrieveData();
+		if (data.length == 0) {
+			throw new IllegalArgumentException("데이터가 비어 있습니다.");
+		}
+		return Arrays.stream(data).max().getAsInt();
+	}
+}
+```
+- data가 빈 배열일 경우 `IllegalArgumentException` 예외를 발생시키도록 로직을 변경했다.
+
+- @After
+    ```java
+    @After("execution(* com.in28minutes.learn_spring_aop.business.*.*(..))")
+    public void LogMethodCallAfter(JoinPoint joinPoint) {
+        logger.info("After 메소드 실행 : {}", joinPoint);
+    }
+    ```
+    - 메서드의 실행 성공 여부와 상관 없이 로그를 받을 수 있다.
+
+- @AfterReturning
+    ```java
+    @AfterThrowing(pointcut = "execution(* com.in28minutes.learn_spring_aop.business.*.*(..))", throwing = "exception")
+    public void LogMethodCallAfterThrowing(JoinPoint joinPoint, Exception exception) {
+        logger.info("AfterThrowing 메소드 예외 발생 : {}", joinPoint, exception);
+    }
+    ```
+    - 예외가 발생할 경우 해당 로그가 출력된다.
+    - `throwing = "exception"`를 추가하고, 해당 이름으로 Exception을 받는다.
+
+- @AfterThrowing
+    ```java
+    @AfterReturning(pointcut = "execution(* com.in28minutes.learn_spring_aop.business.*.*(..))", returning = "result")
+    public void LogMethodCallAfterReturning(JoinPoint joinPoint, Object result) {
+        logger.info("AfterReturning 메소드 실행 성공 : {}", joinPoint, result);
+    }
+    ```
+    - 예외 발생 없이 메서드가 성공할 경우 해당 로그가 출력된다.
+    - `returning = "result"`을 추가하고 해당 이름으로 리턴 객체를 받는다.
 
 ---

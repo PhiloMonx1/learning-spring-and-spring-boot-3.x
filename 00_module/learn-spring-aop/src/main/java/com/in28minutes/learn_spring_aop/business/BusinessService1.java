@@ -14,6 +14,9 @@ public class BusinessService1 {
 
 	public int calculateMax() {
 		int[] data = dataService.retrieveData();
-		return Arrays.stream(data).max().orElse(0);
+		if (data.length == 0) {
+			throw new IllegalArgumentException("데이터가 비어 있습니다.");
+		}
+		return Arrays.stream(data).max().getAsInt();
 	}
 }
