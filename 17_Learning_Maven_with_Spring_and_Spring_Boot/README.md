@@ -2,6 +2,7 @@
 
 ## 목록
 1. [Maven 소개](#1단계---maven-소개)
+2. [Maven으로 Spring Boot 프로젝트 생성하기](#2단계---maven으로-spring-boot-프로젝트-생성하기)
 
 ---
 
@@ -17,5 +18,18 @@
 - 라이브러리 관리
 - 프로젝트 빌드
 - 단위 테스트도 실행
+
+---
+
+## 2단계 - Maven으로 Spring Boot 프로젝트 생성하기
+
+#### 프로젝트 생성
+![Spring initializer 세팅](image/Spring-initializer.png)
+- [Spring initializer](https://start.spring.io/) 를 통해 프로젝트를 생성한다.
+- 빌드 도구를 'Maven"으로 설정한다.
+- 라이브러리는 추가하지 않았다.
+
+#### pom.xml 파일 확인
+프로젝트 경로 pom.xml 파일에서 프로젝트 세팅 및 의존성을 확인할 수 있다.
 
 ---
