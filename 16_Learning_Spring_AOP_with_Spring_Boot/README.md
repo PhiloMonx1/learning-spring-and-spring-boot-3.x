@@ -9,6 +9,7 @@
 6. [AOP 용어 훑어보기](#6단계---aop-용어-훑어보기)
 7. [AOP 어노테이션 @After, @AfterReturning, @AfterThrowing](#7단계---aop-어노테이션-after-afterreturning-afterthrowing)
 8. [Timer 클래스와 함께 Around AOP 어노테이션 배우기](#8단계---timer-클래스와-함께-around-aop-어노테이션-배우기)
+9. [베스트 프랙티스 - 공용 포인트컷 정의하기](#9단계---베스트-프랙티스---공용-포인트컷-정의하기)
 
 ---
 
@@ -320,5 +321,54 @@ public class PerformanceTrackingAspect {
 2024-07-13T23:01:18.738+09:00  INFO 26952 --- [learn-spring-aop] [           main] c.i.l.a.a.LoggingAspect$$SpringCGLIB$$0  : After 메소드 실행 : execution(int com.in28minutes.learn_spring_aop.business.BusinessService2.calculateMin())
 2024-07-13T23:01:18.738+09:00  INFO 26952 --- [learn-spring-aop] [           main] earnSpringAopApplication$$SpringCGLIB$$0 : 가장 작은 값은 11
 ```
+
+---
+
+## 9단계 - 베스트 프랙티스 - 공용 포인트컷 정의하기
+
+Spring AOP 사용실습을 하면서 포인트컷을 정의해보았다. 그런데 만약 포인트컷 매칭 정보가 변경되면 어떻게 해야 할까? 예를 들어 패키지명이 변경된 경우 모든 포인트컷의 패키지명을 변경해야 할 수 있다. 이 문제를 해결하기 위한 AOP 모법 사례를 알아보자.
+
+#### 포인트컷 선언부 개선
+```java
+@Configuration
+@Aspect
+public class CommonPointcutConfig {
+
+	@Pointcut("execution(* com.in28minutes.learn_spring_aop.business.*.*(..))")
+	void businessPackageConfig() {}
+
+	@Pointcut("execution(* com.in28minutes.learn_spring_aop.data.*.*(..))")
+	void dataPackageConfig() {}
+
+}
+
+//사용
+@Configuration
+@Aspect
+public class PerformanceTrackingAspect {
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+
+	@Around("com.in28minutes.learn_spring_aop.aopexample.aspect.CommonPointcutConfig.businessPackageConfig()"
+			+ " || com.in28minutes.learn_spring_aop.aopexample.aspect.CommonPointcutConfig.dataPackageConfig()")
+	public Object findExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
+		long start = System.currentTimeMillis();
+		Object result = joinPoint.proceed();
+		long end = System.currentTimeMillis();
+
+		String className = joinPoint.getTarget().getClass().getSimpleName();
+		String methodName = joinPoint.getSignature().getName();
+		logger.info("실행 메서드 : {}.{}(), 메서드 실행 시간 : {} ms" , className, methodName, (end - start));
+
+		return result;
+	}
+}
+```
+- 같은 패키지 내에서 사용하는 경우 패키지 전체 경로가 아닌 `CommonPointcutConfig.businessPackageConfig()`로 호출할 수 있다.
+- 다른 패키지의 경우 static import 등의 방법을 사용하는 것도 방법이다.
+- execution 지시자 대신 어노테이션 지시자나 bean 지시자 등을 사용하는 것도 방법이다.
+  - 어노테이션 지시자 예시 : `@annotation(org.springframework.stereotype.Service)`
+    - Service 어노테이션 대상 클래스의 메서드를 포인트컷으로 정의
+  - bean 지시자 예시 : `bean(*Service*)`
+    - 이름에 'Service'가 포함되어 있는 Bene에 포함된 메서드를 포인트컷으로 정의
 
 ---
