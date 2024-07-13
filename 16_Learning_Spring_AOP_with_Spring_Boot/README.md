@@ -3,7 +3,7 @@
 ## 목록
 1. [Spring AOP 시작하기 – 개요](#1단계---spring-aop-시작하기--개요)
 2. [관점 지향 프로그래밍이란](#2단계---관점-지향-프로그래밍이란)
-
+3. [Spring AOP를 이용한 Spring Boot 프로젝트 생성하기](#3단계---spring-aop를-이용한-spring-boot-프로젝트-생성하기)
 ---
 
 ## 1단계 - Spring AOP 시작하기 – 개요
@@ -51,5 +51,15 @@ AOP가 하는 작업
 #### Java 진영의 AOP
 - Spring AOP (Spring Aspect Oriented Programming) : Spring Bean을 이용해 사용
 - AspectJ : Spring Bean이 아니어도 사용할 수 있기 때문에 스프링을 사용하지 않을 경우 대안이 될 수 있다.
+
+---
+
+## 3단계 - Spring AOP를 이용한 Spring Boot 프로젝트 생성하기
+
+#### 프로젝트 생성
+![Spring initializer 세팅](image/Spring-initializer.png)
+- [Spring initializer](https://start.spring.io/) 를 통해 프로젝트를 생성한다.
+- 빌드 도구를 'Gradle - Groovy'로 설정한다.
+- 라이브러리는 추가하지 않았다.
 
 ---
