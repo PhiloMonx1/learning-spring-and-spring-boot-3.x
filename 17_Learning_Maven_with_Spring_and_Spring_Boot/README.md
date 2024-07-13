@@ -5,6 +5,7 @@
 2. [Maven으로 Spring Boot 프로젝트 생성하기](#2단계---maven으로-spring-boot-프로젝트-생성하기)
 3. [Spring Boot 프로젝트의 Maven pom.xml 살펴보기](#3단계---spring-boot-프로젝트의-maven-pomxml-살펴보기)
 4. [Spring Boot 프로젝트의 Maven 상위 POM 살펴보기](#4단계---spring-boot-프로젝트의-maven-상위-pom-살펴보기)
+5. [Maven 더 자세히 파헤치기](#5단계---maven-더-자세히-파헤치기)
 
 ---
 
@@ -101,5 +102,31 @@
   - 하위 프로젝트는 부모 프로젝트의 의존성을 상속 받는다.
   - 하위 프로젝트는 부모 프로젝트의 프로퍼티(속성 및 설정)를 상속 받는다. 
     - 필요한 경우 상위 POM의 설정을 오버라이딩 할 수 있다.
+
+---
+
+## 5단계 - Maven 더 자세히 파헤치기
+
+#### groupId, artifactId
+```xml
+<groupId>com.in28minutes</groupId>
+<artifactId>learn-maven</artifactId>
+```
+- Spring initializer를 통해 직접 생성한 groupId, artifactId 이다.
+  - 라이브러리 역시 groupId, artifactId로 구성되어 있음을 알 수 있다.
+  - 해당 프로젝트도 빌드 후 다른 프로젝트에서 라이브러리로 사용할 수 있다. 
+
+#### 버전
+```xml
+<version>0.0.1-SNAPSHOT</version>
+```
+- 버전 정보도 들어있다.
+- 수동으로 버전을 변경하여 버전 관리를 할 수 있다.
+  - 버전 변경 시기:
+    - 새로운 기능을 추가했을 때
+    - 중요한 버그를 수정했을 때
+    - 주요 리팩토링을 완료했을 때
+    - 릴리스 준비가 되었을 때 (SNAPSHOT 제거)
+      - SNAPSHOT : 개발 중인 버전임을 의미.
 
 ---
