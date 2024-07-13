@@ -16,6 +16,7 @@
 ---
 
 ## 1단계 - Spring AOP 시작하기 – 개요
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/29086ff55748e8578ee2983cf22f2c5623b64228)
 
 #### 학습 키워드
 1. AOP(관점 지향 프로그래밍, Aspect Oriented Programming)
@@ -32,6 +33,7 @@
 ---
 
 ## 2단계 - 관점 지향 프로그래밍이란
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/de0265b28440d0df04e8e90c6e0c8a55a3ecd584)
 
 #### 계층적 접근(Layered Architecture)
 소프트웨어 애플리케이션을 여러 개의 논리적 계층으로 나누어 구성하는 아키텍처 패턴, 애플리케이션에 따라 다양한 패턴의 계층 구조가 있을 수 있다.
@@ -63,6 +65,7 @@ AOP가 하는 작업
 ---
 
 ## 3단계 - Spring AOP를 이용한 Spring Boot 프로젝트 생성하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/fb6a7bada01411b169c8bcd9ccea5c51fb4d9163)
 
 #### 프로젝트 생성
 ![Spring initializer 세팅](image/Spring-initializer.png)
@@ -73,6 +76,7 @@ AOP가 하는 작업
 ---
 
 ## 4단계 - Spring AOP에 필요한 Spring 컴포넌트 만들기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/7ff762de1a49f4408fe8b14009b511edaaea8bd4)
 
 #### 데이터 레이어
 ```java
@@ -150,6 +154,7 @@ public class LearnSpringAopApplication implements CommandLineRunner {
 ---
 
 ## 5단계 - AOP 로깅 애스펙트와 포인트컷 만들기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/5d4c94a9ad008aef7a020cd81150e7a52f13933e)
 
 #### 라이브러리 추가
 ```
@@ -206,6 +211,7 @@ public class LoggingAspect {
 ---
 
 ## 6단계 - AOP 용어 훑어보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/92dd145ad3baeafcf55cefa75146ae25ea446681)
 
 #### 컴파일 타임 관련 용어
 1. 어드바이스(Advice) : 실행할 코드 ex) 로그 출력, 인증 등의 실제 로직이 담긴 코드
@@ -223,6 +229,7 @@ public class LoggingAspect {
 ---
 
 ## 7단계 - AOP 어노테이션 @After, @AfterReturning, @AfterThrowing
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/6d6306cc93ee29735484f0e6c7aa10b96c14dc43)
 
 ####  @After, @AfterReturning, @AfterThrowing
 - @After : 메서드가 실행된 후 결과에 상관 없이 무조건 수행할 작업을 지정한다.
@@ -277,6 +284,7 @@ public class BusinessService1 {
 ---
 
 ## 8단계 - Timer 클래스와 함께 Around AOP 어노테이션 배우기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/a722cae4e4e07b692d889843d2ebf4c4beeaac25)
 
 #### @Around
 포인트컷 메서드의 실행 전과 후 특정한 작업을 실행.
@@ -326,6 +334,7 @@ public class PerformanceTrackingAspect {
 ---
 
 ## 9단계 - 베스트 프랙티스 - 공용 포인트컷 정의하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/d556867981a0a65b0a7509d2de8661c687d72f87)
 
 Spring AOP 사용실습을 하면서 포인트컷을 정의해보았다. 그런데 만약 포인트컷 매칭 정보가 변경되면 어떻게 해야 할까? 예를 들어 패키지명이 변경된 경우 모든 포인트컷의 패키지명을 변경해야 할 수 있다. 이 문제를 해결하기 위한 AOP 모법 사례를 알아보자.
 
@@ -375,6 +384,7 @@ public class PerformanceTrackingAspect {
 ---
 
 ## 10단계 - TrackTime 어노테이션 만들어 보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/4647aa6c93e7faa7d76afbb040a6c174e25ada17)
 
 #### 커스텀 어노테이션 'TrackTime' 추가
 ```java
@@ -442,6 +452,7 @@ public class BusinessService1 {
 ---
 
 ## 11단계 - Spring AOP 시작하기 – 마무리
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/6dfa01a06cf4c78f47791a862cfd2210cad6d82c)
 
 #### 챕터 복습
 1. AOP : 애플리케이션의 여러 계층에 중복해서 적용해야 하는 인증, 로깅, 성능체크 등의 로직을 따로 관리해서 중복 코드 없이 동시 적용할 수 있도록 하는 프로그래밍 기법
