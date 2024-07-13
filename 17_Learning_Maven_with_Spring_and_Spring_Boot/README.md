@@ -4,6 +4,7 @@
 1. [Maven 소개](#1단계---maven-소개)
 2. [Maven으로 Spring Boot 프로젝트 생성하기](#2단계---maven으로-spring-boot-프로젝트-생성하기)
 3. [Spring Boot 프로젝트의 Maven pom.xml 살펴보기](#3단계---spring-boot-프로젝트의-maven-pomxml-살펴보기)
+4. [Spring Boot 프로젝트의 Maven 상위 POM 살펴보기](#4단계---spring-boot-프로젝트의-maven-상위-pom-살펴보기)
 
 ---
 
@@ -79,5 +80,26 @@
 ```
 - spring-boot-starter-web 라이브러리를 xml 문법에 맞게 작성하면 Maven이 해당 라이브러리를 중앙 저장소(Maven 서버)에서 식별해 자동으로 다운로드 한다.
 
+
+---
+
+## 4단계 - Spring Boot 프로젝트의 Maven 상위 POM 살펴보기
+
+#### 상위 POM (parent POM)
+```xml
+<parent>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-parent</artifactId>
+	<version>3.3.1</version>
+	<relativePath/> <!-- lookup parent from repository -->
+</parent>
+```
+- 현재 프로젝트의 POM이 상속받는 POM
+  - 현재 프로젝트의 부모 프로젝트 정보를 의미한다.
+- 상위 POM의 역할
+  - 여러 하위 프로젝트에서 공통으로 사용할 수 있는 설정을 정의한다. 
+  - 하위 프로젝트는 부모 프로젝트의 의존성을 상속 받는다.
+  - 하위 프로젝트는 부모 프로젝트의 프로퍼티(속성 및 설정)를 상속 받는다. 
+    - 필요한 경우 상위 POM의 설정을 오버라이딩 할 수 있다.
 
 ---
