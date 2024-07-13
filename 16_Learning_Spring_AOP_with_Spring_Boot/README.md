@@ -5,6 +5,7 @@
 2. [관점 지향 프로그래밍이란](#2단계---관점-지향-프로그래밍이란)
 3. [Spring AOP를 이용한 Spring Boot 프로젝트 생성하기](#3단계---spring-aop를-이용한-spring-boot-프로젝트-생성하기)
 4. [Spring AOP에 필요한 Spring 컴포넌트 만들기](#4단계---spring-aop에-필요한-spring-컴포넌트-만들기)
+5. [AOP 로깅 애스펙트와 포인트컷 만들기](#5단계---aop-로깅-애스펙트와-포인트컷-만들기)
 
 ---
 
@@ -140,5 +141,61 @@ public class LearnSpringAopApplication implements CommandLineRunner {
 ```
 - CommandLineRunner : 스프링 부트 애플리케이션의 구동 시점에 특정 코드를 실행하기 위해 사용되는 인터페이스
   - run() 메서드를 구현해야 하며 해당 메서드 내의 로직을 자동 실행한다.
+
+---
+
+## 5단계 - AOP 로깅 애스펙트와 포인트컷 만들기
+
+#### 라이브러리 추가
+```
+implementation 'org.springframework.boot:spring-boot-starter-aop'
+```
+
+#### 로깅 애스팩트 작성
+```java
+@Configuration
+@Aspect
+public class LoggingAspect {
+
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+
+	@Before("execution(* com.in28minutes.learn_spring_aop.business.*.*(..))")
+	public void LogMethodCall(JoinPoint joinPoint) {
+		logger.info("Before 메소드 실행 : {}", joinPoint);
+	}
+
+}
+```
+- @Aspect : 해당 클래스가 애스팩트임을 명시
+- @Before : JoinPoint가 실행되기 전에 LogMethodCall()의 로직이 먼저 실행됨
+  - 선언 방식 : execution() 안에 패키지 경로를 포함한 매칭 조인포인트를 입력 (패키지 기반이 아닌 어노테이션 기반 등 다양한 방식이 존재한다.)
+    - 첫 번째 * : 반환 타입 () 
+    - 두 번째 * : 클래스
+    - 세 번째 * : 메서드
+    - (..) : 파라미터
+    - ex) "execution(User com.example.service.UserService.getUser(String, int))"
+      - `User`를 반환하고, `com.example.service` 패키지에 속한 `UserService`의 `getUser()` 메서드 중 `String, int`를 파라미터로 받는 메서드를 대상으로 애스팩트 적용.
+- JoinPoint : 애스팩트 메서드를 실행할 타겟
+- 포인트컷 적용 Tip
+  - 애스팩트 메서드에 여러 개의 포인트컷을 적용하는 것이 가능하다.
+  - &&, ||, ! 연산자를 사용하여 여러 포인트컷을 결합하는 것이 가능하다.
+  - @Pointcut 어노테이션을 사용하여 포인트컷을 정의하고 재사용하는 것이 가능하다.
+    ```java
+    @Aspect
+    @Component
+    public class ReusablePointcutAspect {
+        @Pointcut("execution(* com.example.service.*.*(..))")
+        public void serviceLayer() {}
+    
+        @Pointcut("@annotation(org.springframework.transaction.annotation.Transactional)")
+        public void transactionalMethod() {}
+    
+        @Before("serviceLayer() && transactionalMethod()")
+        public void beforeTransactionalServiceMethod() {
+            // 서비스 레이어의 트랜잭션 메서드에 대한 로직
+        }
+    }
+    ```
+    -  com.example.service 패키지 내의 클래스 전체 중 Transactional 어노테이션이 붙은 전체 메서드를 대상으로 애스팩트 메서드를 적용.
 
 ---
