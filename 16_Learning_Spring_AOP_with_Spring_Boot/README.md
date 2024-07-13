@@ -8,6 +8,7 @@
 5. [AOP 로깅 애스펙트와 포인트컷 만들기](#5단계---aop-로깅-애스펙트와-포인트컷-만들기)
 6. [AOP 용어 훑어보기](#6단계---aop-용어-훑어보기)
 7. [AOP 어노테이션 @After, @AfterReturning, @AfterThrowing](#7단계---aop-어노테이션-after-afterreturning-afterthrowing)
+8. [Timer 클래스와 함께 Around AOP 어노테이션 배우기](#8단계---timer-클래스와-함께-around-aop-어노테이션-배우기)
 
 ---
 
@@ -270,5 +271,54 @@ public class BusinessService1 {
     ```
     - 예외 발생 없이 메서드가 성공할 경우 해당 로그가 출력된다.
     - `returning = "result"`을 추가하고 해당 이름으로 리턴 객체를 받는다.
+
+---
+
+## 8단계 - Timer 클래스와 함께 Around AOP 어노테이션 배우기
+
+#### @Around
+포인트컷 메서드의 실행 전과 후 특정한 작업을 실행.
+- 전, 후로 각각 다른 작업을 지정해서 실행하도록 할 수도 있다.
+
+#### 메서드 실행 시간 로깅 실습
+```java
+@Configuration
+@Aspect
+public class PerformanceTrackingAspect {
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+
+	@Around("execution(* com.in28minutes.learn_spring_aop.*.*.*(..))")
+	public Object findExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
+		long start = System.currentTimeMillis();
+		Object result = joinPoint.proceed();
+		long end = System.currentTimeMillis();
+
+		String className = joinPoint.getTarget().getClass().getSimpleName();
+		String methodName = joinPoint.getSignature().getName();
+		logger.info("실행 메서드 : {}.{}(), 메서드 실행 시간 : {} ms" , className, methodName, (end - start));
+
+		return result;
+	}
+}
+```
+- joinPoint.proceed() : 포인트컷 메서드를 실행한다.
+- joinPoint.proceed() 메서드의 앞 뒤로 현재 시각을 밀리세컨드 단위로 뽑아서 끝나는 시간에서 시작 시간을 빼면 메서드의 실행 시간을 도출할 수 있다.
+
+#### 로깅 결과
+```
+2024-07-13T23:01:18.727+09:00  INFO 26952 --- [learn-spring-aop] [           main] c.i.l.LearnSpringAopApplication          : Started LearnSpringAopApplication in 1.187 seconds (process running for 1.712)
+2024-07-13T23:01:18.732+09:00  INFO 26952 --- [learn-spring-aop] [           main] c.i.l.a.a.LoggingAspect$$SpringCGLIB$$0  : Before 메소드 실행 : execution(int com.in28minutes.learn_spring_aop.business.BusinessService1.calculateMax())
+2024-07-13T23:01:18.734+09:00  INFO 26952 --- [learn-spring-aop] [           main] erformanceTrackingAspect$$SpringCGLIB$$0 : 실행 메서드 : DataService.retrieveData(), 메서드 실행 시간 : 0 ms
+2024-07-13T23:01:18.735+09:00  INFO 26952 --- [learn-spring-aop] [           main] erformanceTrackingAspect$$SpringCGLIB$$0 : 실행 메서드 : BusinessService1.calculateMax(), 메서드 실행 시간 : 1 ms
+2024-07-13T23:01:18.736+09:00  INFO 26952 --- [learn-spring-aop] [           main] c.i.l.a.a.LoggingAspect$$SpringCGLIB$$0  : AfterReturning 메소드 실행 성공 : execution(int com.in28minutes.learn_spring_aop.business.BusinessService1.calculateMax())
+2024-07-13T23:01:18.736+09:00  INFO 26952 --- [learn-spring-aop] [           main] c.i.l.a.a.LoggingAspect$$SpringCGLIB$$0  : After 메소드 실행 : execution(int com.in28minutes.learn_spring_aop.business.BusinessService1.calculateMax())
+2024-07-13T23:01:18.736+09:00  INFO 26952 --- [learn-spring-aop] [           main] earnSpringAopApplication$$SpringCGLIB$$0 : 가장 큰 값은 55
+2024-07-13T23:01:18.736+09:00  INFO 26952 --- [learn-spring-aop] [           main] c.i.l.a.a.LoggingAspect$$SpringCGLIB$$0  : Before 메소드 실행 : execution(int com.in28minutes.learn_spring_aop.business.BusinessService2.calculateMin())
+2024-07-13T23:01:18.737+09:00  INFO 26952 --- [learn-spring-aop] [           main] erformanceTrackingAspect$$SpringCGLIB$$0 : 실행 메서드 : DataService.retrieveData(), 메서드 실행 시간 : 0 ms
+2024-07-13T23:01:18.738+09:00  INFO 26952 --- [learn-spring-aop] [           main] erformanceTrackingAspect$$SpringCGLIB$$0 : 실행 메서드 : BusinessService2.calculateMin(), 메서드 실행 시간 : 0 ms
+2024-07-13T23:01:18.738+09:00  INFO 26952 --- [learn-spring-aop] [           main] c.i.l.a.a.LoggingAspect$$SpringCGLIB$$0  : AfterReturning 메소드 실행 성공 : execution(int com.in28minutes.learn_spring_aop.business.BusinessService2.calculateMin())
+2024-07-13T23:01:18.738+09:00  INFO 26952 --- [learn-spring-aop] [           main] c.i.l.a.a.LoggingAspect$$SpringCGLIB$$0  : After 메소드 실행 : execution(int com.in28minutes.learn_spring_aop.business.BusinessService2.calculateMin())
+2024-07-13T23:01:18.738+09:00  INFO 26952 --- [learn-spring-aop] [           main] earnSpringAopApplication$$SpringCGLIB$$0 : 가장 작은 값은 11
+```
 
 ---
