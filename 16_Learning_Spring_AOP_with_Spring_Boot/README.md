@@ -4,6 +4,8 @@
 1. [Spring AOP 시작하기 – 개요](#1단계---spring-aop-시작하기--개요)
 2. [관점 지향 프로그래밍이란](#2단계---관점-지향-프로그래밍이란)
 3. [Spring AOP를 이용한 Spring Boot 프로젝트 생성하기](#3단계---spring-aop를-이용한-spring-boot-프로젝트-생성하기)
+4. [Spring AOP에 필요한 Spring 컴포넌트 만들기](#4단계---spring-aop에-필요한-spring-컴포넌트-만들기)
+
 ---
 
 ## 1단계 - Spring AOP 시작하기 – 개요
@@ -61,5 +63,82 @@ AOP가 하는 작업
 - [Spring initializer](https://start.spring.io/) 를 통해 프로젝트를 생성한다.
 - 빌드 도구를 'Gradle - Groovy'로 설정한다.
 - 라이브러리는 추가하지 않았다.
+
+---
+
+## 4단계 - Spring AOP에 필요한 Spring 컴포넌트 만들기
+
+#### 데이터 레이어
+```java
+package com.in28minutes.learn_spring_aop.data;
+
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class DataService {
+
+	public int[] retrieveData() {
+		return new int[] { 11, 22, 33, 44, 55 };
+	}
+
+}
+```
+
+#### 비즈니스 레이어
+```java
+package com.in28minutes.learn_spring_aop.business;
+
+import com.in28minutes.learn_spring_aop.data.DataService;
+import java.util.Arrays;
+import org.springframework.stereotype.Service;
+
+@Service
+public class BusinessService1 {
+	private final DataService dataService;
+
+	public BusinessService1(DataService dataService) {
+		this.dataService = dataService;
+	}
+
+	public int calculateMax() {
+		int[] data = dataService.retrieveData();
+		return Arrays.stream(data).max().orElse(0);
+	}
+}
+```
+
+#### 코드 사용부 `CommandLineRunner` 사용
+```java
+package com.in28minutes.learn_spring_aop;
+
+import com.in28minutes.learn_spring_aop.business.BusinessService1;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class LearnSpringAopApplication implements CommandLineRunner {
+
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	private final BusinessService1 businessService1;
+
+	public LearnSpringAopApplication(BusinessService1 businessService1) {
+		this.businessService1 = businessService1;
+	}
+
+	public static void main(String[] args) {
+		SpringApplication.run(LearnSpringAopApplication.class, args);
+	}
+
+	@Override
+	public void run(String... args) throws Exception {
+		logger.info( "가장 큰 값은 {}", businessService1.calculateMax() );
+	}
+}
+```
+- CommandLineRunner : 스프링 부트 애플리케이션의 구동 시점에 특정 코드를 실행하기 위해 사용되는 인터페이스
+  - run() 메서드를 구현해야 하며 해당 메서드 내의 로직을 자동 실행한다.
 
 ---
