@@ -10,6 +10,7 @@
 7. [AOP 어노테이션 @After, @AfterReturning, @AfterThrowing](#7단계---aop-어노테이션-after-afterreturning-afterthrowing)
 8. [Timer 클래스와 함께 Around AOP 어노테이션 배우기](#8단계---timer-클래스와-함께-around-aop-어노테이션-배우기)
 9. [베스트 프랙티스 - 공용 포인트컷 정의하기](#9단계---베스트-프랙티스---공용-포인트컷-정의하기)
+10. [TrackTime 어노테이션 만들어 보기](#10단계---tracktime-어노테이션-만들어-보기)
 
 ---
 
@@ -370,5 +371,72 @@ public class PerformanceTrackingAspect {
     - Service 어노테이션 대상 클래스의 메서드를 포인트컷으로 정의
   - bean 지시자 예시 : `bean(*Service*)`
     - 이름에 'Service'가 포함되어 있는 Bene에 포함된 메서드를 포인트컷으로 정의
+
+---
+
+## 10단계 - TrackTime 어노테이션 만들어 보기
+
+#### 커스텀 어노테이션 'TrackTime' 추가
+```java
+@Target({ElementType.METHOD})
+@Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+public @interface TrackTime { }
+```
+- @Target({ElementType.METHOD}) : 어노테이션을 부여할 수 있는 타겟 정의 (메서드로 지정)
+- @Retention : 어노테이션이 일하는 시점 정의 (런타임 지정)
+- 별도 로직은 정의하지 않고 라벨용 어노테이션을 만들었다.
+
+#### TrackTime 용 포인트컷 작성
+```java
+@Configuration
+@Aspect
+public class CommonPointcutConfig {
+	//...(기존 포인트컷)
+  
+	@Pointcut("@annotation(com.in28minutes.learn_spring_aop.aopexample.annotations.TrackTime)")
+	void trackTimeAnnotation() {}
+}
+
+@Configuration
+@Aspect
+public class PerformanceTrackingAspect {
+  private final Logger logger = LoggerFactory.getLogger(getClass());
+
+  @Around("CommonPointcutConfig.trackTimeAnnotation()")
+  public Object findExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
+    long start = System.currentTimeMillis();
+    Object result = joinPoint.proceed();
+    long end = System.currentTimeMillis();
+
+    String className = joinPoint.getTarget().getClass().getSimpleName();
+    String methodName = joinPoint.getSignature().getName();
+    logger.info("실행 메서드 : {}.{}(), 메서드 실행 시간 : {} ms" , className, methodName, (end - start));
+
+    return result;
+  }
+}
+```
+- findExecutionTime() 메서드의 포인트컷을 변경한다.
+
+```java
+@Service
+public class BusinessService1 {
+	private final DataService dataService;
+
+	public BusinessService1(DataService dataService) {
+		this.dataService = dataService;
+	}
+
+	@TrackTime
+	public int calculateMax() {
+		int[] data = dataService.retrieveData();
+		if (data.length == 0) {
+			throw new IllegalArgumentException("데이터가 비어 있습니다.");
+		}
+		return Arrays.stream(data).max().getAsInt();
+	}
+}
+```
+- 특정 메서드에 `@TrackTime` 어노테이션을 부여해서 해당 메서드의 성능만 체크하는 것이 가능해졌다.
 
 ---
