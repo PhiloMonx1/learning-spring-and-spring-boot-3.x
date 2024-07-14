@@ -5,6 +5,7 @@
 2. [Gradle로 Spring Boot 프로젝트 생성하기](#2단계---gradle로-spring-boot-프로젝트-생성하기)
 3. [Gradle 빌드 및 설정 파일 살펴보기](#3단계---gradle-빌드-및-설정-파일-살펴보기)
 4. [Java 및 Spring Boot용 Gradle 플러그인 살펴보기](#4단계---java-및-spring-boot용-gradle-플러그인-살펴보기)
+5. [Maven 또는 Gradle - Spring Boot 프로젝트에 어느 것을 사용해야 할까요?](#5단계---maven-또는-gradle---spring-boot-프로젝트에-어느-것을-사용해야-할까요)
 
 ---
 
@@ -116,5 +117,26 @@ plugins {
   - 자바 코드를 테스트하고 자바 파일을 빌드에 쓰이는 기본 레이아웃을 제공한다. (Maven과 같은 폴더 구조를 가지는 것도 해당 플러그인의 역할이다.)
 - id 'org.springframework.boot' version '3.3.1' : Spring Boot 플러그인
 - id 'io.spring.dependency-management' version '1.1.5' : 의존성 관리 플러그인
+
+---
+
+## 5단계 - Maven 또는 Gradle - Spring Boot 프로젝트에 어느 것을 사용해야 할까요?
+
+#### 유명한 프레임워크는 어떤 빌드 도구를 사용할까?
+- Gradle :
+  - Spring : v3.2.0(2012년) 부터 사용
+  - Spring Boot : v2.3.0 부터 사용
+- Maven : 
+  - Spring Cloud : 현재(2024-07)까지 Maven을 유지중이다.
+
+#### 비교
+- Maven 
+  - Gradle에 비해 단순한 사용법으로 학습이 쉽다.
+- Gradle
+  - Groovy 코드를 사용할 수 있어 유연하다. (JAVA 코드를 build.gradle에서 사용할 수도 있다.)
+    - 프로그램을 작성하고 빌드의 일부로 실행하는 것이 가능하다. 
+  - 빌드 시간이 Maven에 비해 짧다.
+
+빌드 시간을 단축하고 싶으시다면 Gradle을 사용하는 것이 권장되나 빌드가 단순하고, 클린 설치를 해서 빌드 스텝을 추가하지 않는다면 Maven이 더 나은 선택일 수 있다. 
 
 ---
