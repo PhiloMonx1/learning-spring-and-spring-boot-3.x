@@ -2,6 +2,7 @@
 
 ## 목록
 1. [Docker 시작하기](#1단계---Docker-시작하기)
+2. [Docker의 기초 이해하기](#2단계---docker의-기초-이해하기)
 
 ---
 
@@ -60,3 +61,35 @@ docker history [이미지 이름]
 
 ---
 
+## 2단계 - Docker의 기초 이해하기
+
+#### 실행중인 컨테이너 관리
+```
+docker container ls
+```
+- 해당 명령어를 통해 현재 구동 중인 컨테이너 리스트를 확인할 수 있다.
+  - `docker container ls -a` 를 사용하면 중지된 컨테이너를 포함해서 모든 컨테이너를 확인 가능하다. 
+
+```
+CONTAINER ID   IMAGE                                      COMMAND                   CREATED          STATUS          PORTS                    NAMES
+f563ea65b835   in28min/hello-world-python:0.0.1.RELEASE   "/bin/sh -c 'python …"   15 minutes ago   Up 15 minutes   0.0.0.0:5000->5000/tcp   determined_gauss
+```
+- 명령어 결과 값
+- 컨테이너를 중지하기 위해서는 `docker container stop [컨테이너 아이디]`를 입력하면 된다.
+  - ```
+    docker container stop f563ea65b835
+    ```
+    - 식별할 수 있기만 하면 ID의 일부만 입력해도 중지할 수 있다. ex) `docker container stop f5`
+
+#### 도커 이미지 실행 실습
+```
+docker container run -d -p 5000:5000 in28min/hello-world-python:0.0.1.RELEASE
+docker container run -d -p 5000:5000 in28min/hello-world-java:0.0.1.RELEASE
+docker container run -d -p 5000:5000 in28min/hello-world-node:0.0.1.RELEASE
+```
+- 순서대로 파이썬, 자바, 노드 컨테이너 환경을 구성하는 이미지이다.
+- 하나씩 실행 후 [localhost:5000](http://localhost:5000/)으로 접근하면 각 애플리케이션 구동을 확인할 수 있다.
+
+PC에 파이썬, 자바, 노드 그리고 각 애플리케이션을 구동하기 위한 여러 의존성이 존재하지 않아도 구동을 보장한다.
+
+---
