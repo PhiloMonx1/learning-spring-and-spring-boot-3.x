@@ -4,6 +4,7 @@
 1. [Gradle 시작하기](#1단계---gradle-시작하기)
 2. [Gradle로 Spring Boot 프로젝트 생성하기](#2단계---gradle로-spring-boot-프로젝트-생성하기)
 3. [Gradle 빌드 및 설정 파일 살펴보기](#3단계---gradle-빌드-및-설정-파일-살펴보기)
+4. [Java 및 Spring Boot용 Gradle 플러그인 살펴보기](#4단계---java-및-spring-boot용-gradle-플러그인-살펴보기)
 
 ---
 
@@ -98,5 +99,22 @@ tasks.named('test') {
 rootProject.name = 'learn-gradle'
 ```
 - 프로젝트 Artifact ID
+
+---
+
+## 4단계 - Java 및 Spring Boot용 Gradle 플러그인 살펴보기
+
+#### plugins
+```
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.1'
+	id 'io.spring.dependency-management' version '1.1.5'
+}
+```
+- id 'java' : 자바 컴파일 담당
+  - 자바 코드를 테스트하고 자바 파일을 빌드에 쓰이는 기본 레이아웃을 제공한다. (Maven과 같은 폴더 구조를 가지는 것도 해당 플러그인의 역할이다.)
+- id 'org.springframework.boot' version '3.3.1' : Spring Boot 플러그인
+- id 'io.spring.dependency-management' version '1.1.5' : 의존성 관리 플러그인
 
 ---
