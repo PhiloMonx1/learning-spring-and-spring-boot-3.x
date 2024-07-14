@@ -14,6 +14,7 @@
 ---
 
 ## 1단계 - Maven 소개
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/8136f26796fd8b0d294615c0814ed1e467045891)
 
 #### [Apache Maven 공식 사이트](https://maven.apache.org/)
 공식 홈페이지의 Maven 소개이다. "Apache Maven은 소프트웨어 프로젝트 관리 및 이해 도구입니다. 프로젝트 객체 모델(POM)의 개념을 기반으로 Maven은 중앙 정보에서 프로젝트의 빌드, 보고 및 문서를 관리할 수 있습니다."
@@ -29,6 +30,7 @@
 ---
 
 ## 2단계 - Maven으로 Spring Boot 프로젝트 생성하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/3c866a903656813f1cd3ea89337d554d3321ad23)
 
 #### 프로젝트 생성
 ![Spring initializer 세팅](image/Spring-initializer.png)
@@ -42,6 +44,7 @@
 ---
 
 ## 3단계 - Spring Boot 프로젝트의 Maven pom.xml 살펴보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/422e2579ed9a4f35008abcae96b871bcc6dd2e4e)
 
 #### Maven의 의존성(dependencies)
 의존성(dependencies) : 프로젝트에 사용하는 프레임워크 및 라이브러리
@@ -89,6 +92,7 @@
 ---
 
 ## 4단계 - Spring Boot 프로젝트의 Maven 상위 POM 살펴보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/180163b8165a20dae467b09b8eb0415151f691f2)
 
 #### 상위 POM (parent POM)
 ```xml
@@ -110,6 +114,7 @@
 ---
 
 ## 5단계 - Maven 더 자세히 파헤치기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/b4753e5ec8d67c9d0a39f0279d57782fc9149af0)
 
 #### groupId, artifactId
 ```xml
@@ -136,6 +141,7 @@
 ---
 
 ## 6단계 - Spring Boot 프로젝트로 Maven 빌드 생명주기 살펴보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/d04299afca33b56d4b6bc9a692e634008ea6d8f5)
 
 #### Maven 빌드 생명주기
 프로젝트 빌드와 배포의 여러 단계를 정의한 것
@@ -159,6 +165,7 @@ Maven 명령어를 사용하여 특정 단계까지 빌드를 실행할 수 있�
 ---
 
 ## 7단계 - Maven의 작동 원리
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/bedfee37e18c80910be6a35fc96ffcb6c51b650a)
 
 #### 파일 구조
 - Maven은 사전 정의된 폴더 구조를 제공하며 이로 인해 자바 프로젝트의 일관성을 만들어 의존성을 관리하는 것이 가능하다.
@@ -173,6 +180,7 @@ Maven 명령어를 사용하여 특정 단계까지 빌드를 실행할 수 있�
 ---
 
 ## 8단계 - Maven 명령어 실행하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/1d130563db69a7472989c917b8441ad25c6ad6a5)
 
 #### Maven 주요 명령어
 1. mvn --version : Maven 버전 확인
@@ -189,6 +197,7 @@ Maven 명령어를 사용하여 특정 단계까지 빌드를 실행할 수 있�
 ---
 
 ## 9단계 - Spring 프로젝트 버전 관리 규칙 알아보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/6fd396b6b01cdc8bb02ae295bd209fe14c2114f2)
 
 #### Spring 프로젝트의 버전 규칙
 - '주 버전.부 버전.패치 버전[-수정자]'
