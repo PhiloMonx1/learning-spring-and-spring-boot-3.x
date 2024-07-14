@@ -3,6 +3,7 @@
 ## 목록
 1. [Gradle 시작하기](#1단계---gradle-시작하기)
 2. [Gradle로 Spring Boot 프로젝트 생성하기](#2단계---gradle로-spring-boot-프로젝트-생성하기)
+3. [Gradle 빌드 및 설정 파일 살펴보기](#3단계---gradle-빌드-및-설정-파일-살펴보기)
 
 ---
 
@@ -38,5 +39,64 @@ Maven의 pom.xml 에 대응하는 파일
   - 멀티 모듈 프로젝트 : 하나의 프로젝트에 여러 모듈로 구성된 프로젝트 
     - 하나의 애플리케이션 내에서 코드를 논리적으로 분리한 것으로 아키텍처 자체가 독립적인 MSA 와는 다르다.
   - 프로젝트 구조를 정의하고, 하위 모듈을 포함시키는 데 사용
+
+---
+
+## 3단계 - Gradle 빌드 및 설정 파일 살펴보기
+
+#### build.gradle
+```
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.1'
+	id 'io.spring.dependency-management' version '1.1.5'
+}
+```
+- 프로젝트가 사용중인 플러그인 정보
+
+```
+group = 'com.in28minutes'
+version = '0.0.1-SNAPSHOT'
+```
+- 프로젝트 정보
+  - 프로젝트 Artifact ID는 'settings.gradle' 에서 확인할 수 있다.
+
+```
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(22)
+	}
+}
+```
+- JAVA 버전
+
+```
+repositories {
+	mavenCentral()
+}
+```
+- 레포지토리 저장소 : 레포지토리를 설치하는 곳을 `mavenCentral()`를 통해 Maven 중앙 저장소로 설정
+
+```
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+```
+- 라이브리러 목록
+
+```
+tasks.named('test') {
+	useJUnitPlatform()
+}
+```
+- 그레이들이 테스트를 진행할 때 사용할 툴 정의 (JUnit 사용)
+
+#### settings.gradle
+```
+rootProject.name = 'learn-gradle'
+```
+- 프로젝트 Artifact ID
 
 ---
