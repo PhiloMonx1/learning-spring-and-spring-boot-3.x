@@ -10,6 +10,7 @@
 ---
 
 ## 1단계 - Gradle 시작하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/bdf5b42b50dba10afd3e8ea4aceedb8bb2d34d49)
 
 오픈 소스 빌드 자동화 도구, Maven을 대체할 수 있다.
 
@@ -24,6 +25,7 @@ Gradle은 Maven의 대체제로 사용할 수 있으며, 특히 Maven과 동일�
 ---
 
 ## 2단계 - Gradle로 Spring Boot 프로젝트 생성하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/7104ea91ee43ee7d56ecf56c074c9a69fc4f2409)
 
 #### 프로젝트 생성
 ![Spring initializer 세팅](image/Spring-initializer.png)
@@ -45,6 +47,7 @@ Maven의 pom.xml 에 대응하는 파일
 ---
 
 ## 3단계 - Gradle 빌드 및 설정 파일 살펴보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/fce5ec02f32b69a0f474588fb7e5a388c5e3ca3b)
 
 #### build.gradle
 ```
@@ -104,6 +107,7 @@ rootProject.name = 'learn-gradle'
 ---
 
 ## 4단계 - Java 및 Spring Boot용 Gradle 플러그인 살펴보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/83998316ff84ae9c35370cf0c0cf2f3e16f086c9)
 
 #### plugins
 ```
@@ -121,6 +125,7 @@ plugins {
 ---
 
 ## 5단계 - Maven 또는 Gradle - Spring Boot 프로젝트에 어느 것을 사용해야 할까요?
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/2c6bb3de750513dc24f532c27fe5d91254d96b34)
 
 #### 유명한 프레임워크는 어떤 빌드 도구를 사용할까?
 - Gradle :
