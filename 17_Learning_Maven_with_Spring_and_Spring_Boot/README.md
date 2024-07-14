@@ -7,6 +7,7 @@
 4. [Spring Boot 프로젝트의 Maven 상위 POM 살펴보기](#4단계---spring-boot-프로젝트의-maven-상위-pom-살펴보기)
 5. [Maven 더 자세히 파헤치기](#5단계---maven-더-자세히-파헤치기)
 6. [Spring Boot 프로젝트로 Maven 빌드 생명주기 살펴보기](#6단계---spring-boot-프로젝트로-maven-빌드-생명주기-살펴보기)
+7. [Maven의 작동 원리](#7단계---maven의-작동-원리)
 
 ---
 
@@ -152,5 +153,19 @@ Maven 명령어를 사용하여 특정 단계까지 빌드를 실행할 수 있�
 - mvn test: 컴파일 후 단위 테스트를 실행.
 - mvn package: 컴파일, 테스트 후 패키징.
 - mvn install: 패키지를 로컬 저장소에 설치.
+
+---
+
+## 7단계 - Maven의 작동 원리
+
+#### 파일 구조
+- Maven은 사전 정의된 폴더 구조를 제공하며 이로 인해 자바 프로젝트의 일관성을 만들어 의존성을 관리하는 것이 가능하다.
+  - ex) 'src/main/resources', 'src/test/java'
+  - 이러한 폴더 구조 설정 역시 오버라이드가 가능하다.
+
+#### Maven 중앙 저장소
+[Mvn Repository](https://mvnrepository.com/)
+- 해당 사이트에서 버전별로 정리된 라이브러리들을 확인할 수 있다.
+- 필요한 의존성의 groupId, artifactId, version만 명시하면 Maven이 자동으로 해당 라이브러리를 다운로드한다.
 
 ---
