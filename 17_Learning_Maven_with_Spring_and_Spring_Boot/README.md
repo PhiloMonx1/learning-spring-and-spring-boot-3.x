@@ -8,6 +8,7 @@
 5. [Maven 더 자세히 파헤치기](#5단계---maven-더-자세히-파헤치기)
 6. [Spring Boot 프로젝트로 Maven 빌드 생명주기 살펴보기](#6단계---spring-boot-프로젝트로-maven-빌드-생명주기-살펴보기)
 7. [Maven의 작동 원리](#7단계---maven의-작동-원리)
+8. [Maven 명령어 실행하기](#8단계---maven-명령어-실행하기)
 
 ---
 
@@ -167,5 +168,21 @@ Maven 명령어를 사용하여 특정 단계까지 빌드를 실행할 수 있�
 [Mvn Repository](https://mvnrepository.com/)
 - 해당 사이트에서 버전별로 정리된 라이브러리들을 확인할 수 있다.
 - 필요한 의존성의 groupId, artifactId, version만 명시하면 Maven이 자동으로 해당 라이브러리를 다운로드한다.
+
+---
+
+## 8단계 - Maven 명령어 실행하기
+
+#### Maven 주요 명령어
+1. mvn --version : Maven 버전 확인
+2. mvn compile : 소스 컴파일
+   - mvn test-compile : 테스트 코드만 컴파일
+3. mvn install : Maven 빌드 생명주기를 따라 컴파일, 테스트, 패키징, 빌드를 하는 일련의 과정 실행
+4. mvn clean : 빌드를 통해서 생성된 'target' 폴더 삭제
+5. mvn test : 테스트 실행
+6. mvn help:effective-pom : 프로젝트의 유효한(effective) POM을 보여준다.
+   - 최종 POM, 상속 구조, 기본 설정 등의 사항을 보다 자세하게 볼 수 있다.
+7. mvn dependency:tree : 프로젝트의 의존성 트리를 보여준다.
+   - 프로젝트에서 사용되는 모든 라이브러리와 그들 간의 의존 관계를 계층 구조로 볼 수 있다.
 
 ---
