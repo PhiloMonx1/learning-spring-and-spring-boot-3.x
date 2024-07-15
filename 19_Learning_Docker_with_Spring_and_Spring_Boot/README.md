@@ -7,7 +7,8 @@
 4. [Docker 용어 이해하기](#4단계---docker-용어-이해하기)
 5. [Spring Boot 프로젝트용 Docker 이미지 생성하기 - Dockerfile](#5단계---spring-boot-프로젝트용-docker-이미지-생성하기---dockerfile)
 6. [Multi Stage Dockerfile을 사용하여 Spring Boot Docker 이미지 빌드하기](#6단계---multi-stage-dockerfile을-사용하여-spring-boot-docker-이미지-빌드하기)
-7. [7단계 - Spring Boot Docker 이미지 빌드하기 - Dockerfile 최적화하기](#7단계---spring-boot-docker-이미지-빌드하기---dockerfile-최적화하기)
+7. [Spring Boot Docker 이미지 빌드하기 - Dockerfile 최적화하기](#7단계---spring-boot-docker-이미지-빌드하기---dockerfile-최적화하기)
+8. [Spring Boot Maven 플러그인으로 Docker 이미지 빌드하기](#8단계---spring-boot-maven-플러그인으로-docker-이미지-빌드하기)
 
 ---
 
@@ -318,5 +319,21 @@ RUN mvn -f /home/app/pom.xml clean package
   - pom.xml, RestfulWebServicesApplication.java 파일 중 하나라도 변경되면 `RUN mvn -f /home/app/pom.xml clean package` 과정이 실행된다.
 - 애플리케이션 계층 혹은 도메인 마다 레이어를 분리하는 기법으로 큰 프로젝트 빌드를 최적화 할 수 있다.
   - 분리된 레이어마다 빌드를 진행해줘야 의미가 있다.
+
+---
+
+## 8단계 - Spring Boot Maven 플러그인으로 Docker 이미지 빌드하기
+
+#### Docker 이미지 빌드 Maven 명령어
+```
+mvn spring-boot:build-image
+```
+
+#### Maven 통해 Spring Boot 애플리케이션의 도커 이미지 생성의 장점
+- 별도의 Dockerfile을 작성할 필요가 없다.
+- Spring Boot가 자동으로 최적화된 이미지를 생성한다.
+  - Cloud Native Buildpacks를 사용하여 이미지를 생성한다.
+    - Cloud Native Buildpacks : 애플리케이션 소스 코드를 감지, 분석하여 필요한 런타임, 의존성, 프레임워크를 자동으로 감지하여 도커 이미지로 변환하는 도구
+  - 내부적으로 의존성 캐싱, 멀티 스테이지, 보안 최적화, JVM 설정, 환경 변수 처리 등을 사용한다.
 
 ---
