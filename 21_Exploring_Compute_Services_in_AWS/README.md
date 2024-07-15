@@ -8,6 +8,7 @@
 4. [IaaS vs PaaS - AWS 클라우드 컴퓨팅](#4단계---iaas-vs-paas---aws-클라우드-컴퓨팅)
 5. [AWS Elastic Beanstalk 시작하기](#5단계---aws-elastic-beanstalk-시작하기)
 6. [데모 - AWS Elastic Beanstalk로 웹 애플리케이션 구성하기](#6단계---데모---aws-elastic-beanstalk로-웹-애플리케이션-구성하기)
+7. [데모 - AWS Elastic Beanstalk 사용하기](#7단계---데모---aws-elastic-beanstalk-사용하기)
 
 ---
 
@@ -155,5 +156,20 @@ Elastic Beanstalk는 관리할 웹 앱을 기반으로 설정을 구성하는 �
   - 오토 스케일링 : 스케일링 기준을 설정할 수 있다.
   - 데이터 베이스 연결 : RDS를 연결할 수 있다.
   - 보안, 모니터링, 플랫폼 자동 업데이트, Elastic Beanstalk에서 발생하는 이벤트에 따른 알림 등을 설정할 수 있다.
+
+---
+
+## 7단계 - 데모 - AWS Elastic Beanstalk 사용하기
+
+#### Elastic Beanstalk 사용
+구성된 환경에 애플리케이션을 업로드해서 배포할 수 있다.
+- 자동으로 EC2 인스턴스가 생성된다.
+  - 오토스케일링 그룹에 의해 생성된 것이다.
+- 로드밸런서도 설정된 것을 볼 수 있다. (설정을 했다면)
+- 상세 페이지에서 환경의 상태, 사용 중인 플랫폼 등의 정보를 확인할 수 있다.
+- 로그 탭에서 서버 로그를 다운로드 할 수 있다. (자동 로깅)
+- 트래픽 등의 모니터링을 지원한다.
+- 콘솔을 통해 EC2에 접근 가능하다.
+- ...
 
 ---
