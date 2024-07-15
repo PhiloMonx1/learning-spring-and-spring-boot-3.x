@@ -6,6 +6,7 @@
    [2z단계 - 데모 - Amazon EC2 인스턴스에 웹 서버 구성하기](#2z단계---데모---amazon-ec2-인스턴스에-웹-서버-구성하기)
 3. [주요 EC2 개념 복습하기](#3단계---주요-ec2-개념-복습하기)
 4. [IaaS vs PaaS - AWS 클라우드 컴퓨팅](#4단계---iaas-vs-paas---aws-클라우드-컴퓨팅)
+5. [AWS Elastic Beanstalk 시작하기](#5단계---aws-elastic-beanstalk-시작하기)
 
 ---
 
@@ -120,5 +121,20 @@ IaaS의 대안으로 기반뿐 아니라 애플리케이션 개발 및 실행에
   - AWS : Elastic Beanstalk
   - Azure : Azure App Service
   - Google Cloud : Google App Engine
+
+---
+
+
+## 5단계 - AWS Elastic Beanstalk 시작하기
+
+#### AWS Elastic Beanstalk
+AWS에서 제공하는 PaaS 서비스
+- 애플리케이션 구동 환경 조성 대부분을 위탁할 수 있다.
+- Elastic Beanstalk 사용 자체에는 비용이 발생하지 않으나, 구성되는 리소스(EC2, ELB)에 대한 비용은 지불해야 한다.
+
+#### Elastic Beanstalk 의 주요 기능
+- 자동 로드밸런싱 : 트래픽을 적절하게 분배시켜 인스턴스가 부담을 나눠 가지도록 하는 기술
+- 오토 스케일링 : 트래픽이 과다하게 발생하면 유동적으로 서버 사양을 늘리는 기술
+- CI/CD : 무중단 배포
 
 ---
