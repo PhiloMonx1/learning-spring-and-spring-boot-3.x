@@ -9,6 +9,7 @@
 6. [Multi Stage Dockerfile을 사용하여 Spring Boot Docker 이미지 빌드하기](#6단계---multi-stage-dockerfile을-사용하여-spring-boot-docker-이미지-빌드하기)
 7. [Spring Boot Docker 이미지 빌드하기 - Dockerfile 최적화하기](#7단계---spring-boot-docker-이미지-빌드하기---dockerfile-최적화하기)
 8. [Spring Boot Maven 플러그인으로 Docker 이미지 빌드하기](#8단계---spring-boot-maven-플러그인으로-docker-이미지-빌드하기)
+9. [Spring Boot와 Docker에 관한 간단한 복습](#9단계---spring-boot와-docker에-관한-간단한-복습)
 
 ---
 
@@ -335,5 +336,21 @@ mvn spring-boot:build-image
   - Cloud Native Buildpacks를 사용하여 이미지를 생성한다.
     - Cloud Native Buildpacks : 애플리케이션 소스 코드를 감지, 분석하여 필요한 런타임, 의존성, 프레임워크를 자동으로 감지하여 도커 이미지로 변환하는 도구
   - 내부적으로 의존성 캐싱, 멀티 스테이지, 보안 최적화, JVM 설정, 환경 변수 처리 등을 사용한다.
+
+---
+
+## 9단계 - Spring Boot와 Docker에 관한 간단한 복습
+
+1. 도커의 이해 : 도커는 동일한 애플리케이션 구동 환경을 구축하기 위한 가상화 툴이다.
+   - 이미지 : 애플리케이션 구동 환경의 사양을 담은 바이트 코드 집합
+   - 컨테이너 : 이미지를 통해 구성된 독립적인 가상화 환경
+2. 도커와 전통 가상화의 차이 : 도커는 os의 커널을 공유하며, 컨테이너 구성에 필요한 파일 또한 공유하여 리소스를 절약한다.
+3. 도커 레포지토리 : 깃 허브처럼 도커 이미지를 공유하고 관리하는 도커의 중앙 저장소이다.
+4. 이미지 생성 방법 : Dockerfile에 정해진 문법으로 애플리케이션 구동 환경을 작성하고 명령어를 통해 생성한다.
+5. 멀티 스테이지 : Dockerfile에 단계별(의존성 설치, 빌드 등) 작업을 선언하고 실행하도록 하는 이미지 실행 기법.
+6. 레이어 : Dockerfile의 명령어 중 FROM, RUN, COPY, ADD 등의 명령어를 실행할 때 생성되는 작업의 단위.
+7. 레이어 캐싱 : 도커는 Dockerfile에 작성된 명령을 수행할 때 레이어 마다 캐싱을 진행한다.
+8. 최적화 : 의존성 설치 레이어와 프로젝트 빌드 레이어를 분리하여 작성하는 방식 등으로 빌드 최적화를 할 수 있다.
+9. Spring Boot Maven 플러그인 : 해당 플러그인으로 애플리케이션 도커 이미지를 생성할 수 있으며, 소스코드를 분석해 최적화된 이미지를 자동으로 생성해준다.
 
 ---
