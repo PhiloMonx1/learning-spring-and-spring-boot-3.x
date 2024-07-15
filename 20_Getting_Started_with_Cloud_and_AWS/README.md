@@ -10,6 +10,7 @@
 ---
 
 ## 1단계 - 클라우드 및 AWS 소개 - 장점
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/7b97f82884d8abfedf0918b6ac39480170dc03b6)
 
 #### 클라우드
 인터넷을 통해 접근할 수 있는 서버, 소프트웨어, 데이터베이스 및 다양한 컴퓨팅 리소스의 네트워크
@@ -42,6 +43,7 @@
 ---
 
 ## 2단계 - AWS 계정 생성하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/23b5b4e7fc97027b4753b247eeab0d493fdc02f0)
 
 #### 준비물
 1. 주소를 포함한 개인 정보
@@ -54,6 +56,7 @@
 ---
 
 ## 3단계 - IAM 사용자 생성하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/7b553c3df72d6026088c5087ccc0a3f8a05bd6d5)
 
 나는 AWS 진행 실습을 하지 않기로 했다. (이미 프리티어가 끝났기 때문) 또한 AWS의 경우 UI가 복잡하고 자주 바뀌는 것을 경험하기도 했기 때문에 실습을 따라하기 보다는 각 단계의 주요 개념에 대해 노트하기로 했다.
 
@@ -110,6 +113,7 @@ IAM을 설정하는 이유는 IAM을 통해 Spring Boot 애플리케이션 코�
 ---
 
 ## 4단계 - 리전 및 영역의 필요성 이해하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/f62dd6fbee9095cf132e52b4ef1b8331be38fde5)
 
 #### 전통적인 방식의 애플리케이션 배포에서 발생할 수 있는 주요 문제
 1. 긴 지연 시간 : 데이터센터가 한국에 있을 경우 지리적으로 멀리 떨어진 중동 지역의 사용자들은 긴 지연 시간을 경험하게 된다.
@@ -119,6 +123,7 @@ IAM을 설정하는 이유는 IAM을 통해 Spring Boot 애플리케이션 코�
 ---
 
 ## 5단계 - AWS 리전 및 가용 영역 살펴보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/a33250537c250649a4acd7b8f184392eb32b4871)
 
 AWS 클라우드 서비스를 이용하면 애플리케이션을 몇 분 만에 전 세계 곳곳에 배포할 수 있다. 인터넷 역시 전기 신호이므로 물리적 영향을 받는데 어떻게 이렇게 빠른 배포가 가능한 것일까?
 #### 리전(지역)과 영역
