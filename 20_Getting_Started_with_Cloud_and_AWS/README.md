@@ -2,6 +2,7 @@
 
 ## 목록
 1. [클라우드 및 AWS 소개 - 장점](#1단계---클라우드-및-aws-소개---장점)
+2. [AWS 계정 생성하기](#2단계---aws-계정-생성하기)
 
 ---
 
@@ -34,5 +35,17 @@
 - Azure 
 - Google Cloud
 - Oracle
+
+---
+
+## 2단계 - AWS 계정 생성하기
+
+#### 준비물
+1. 주소를 포함한 개인 정보
+2. 유효한 직불 카드 or 신용 카드 정보
+3. 전화 번호
+
+#### 계정 생성
+[AWS 계정 생성](https://signin.aws.amazon.com/signup?request_type=register)
 
 ---
