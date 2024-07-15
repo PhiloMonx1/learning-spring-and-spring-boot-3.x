@@ -7,6 +7,7 @@
 4. [Docker 용어 이해하기](#4단계---docker-용어-이해하기)
 5. [Spring Boot 프로젝트용 Docker 이미지 생성하기 - Dockerfile](#5단계---spring-boot-프로젝트용-docker-이미지-생성하기---dockerfile)
 6. [Multi Stage Dockerfile을 사용하여 Spring Boot Docker 이미지 빌드하기](#6단계---multi-stage-dockerfile을-사용하여-spring-boot-docker-이미지-빌드하기)
+7. [7단계 - Spring Boot Docker 이미지 빌드하기 - Dockerfile 최적화하기](#7단계---spring-boot-docker-이미지-빌드하기---dockerfile-최적화하기)
 
 ---
 
@@ -267,5 +268,55 @@ ENTRYPOINT [ "sh", "-c", "java -jar /app.jar" ]
 #### 멀티 스테이징의 장점
 빌드 때 로컬 머신에 빌드된 어느 것도 사용하지 않는다.
 - 개발, 테스트, 프로덕션 환경의 일관성 유지 가능
+
+---
+
+## 7단계 - Spring Boot Docker 이미지 빌드하기 - Dockerfile 최적화하기
+
+6단계의 Multi Stage의 단점은 빌드 시간이 꽤나 소요되기 때문에 코드가 조금만 변경되어도 빌드까지의 시간이 걸린다는 점이었다. 빌드를 하기 위해서는 전체 애플리케이션을 빌드해야 하기 때문이다.
+
+#### 레이어링
+도커 이미지의 구조를 설명하는 개념
+- 각 레이어는 이미지 빌드 과정의 한 단계를 나타낸다.
+- 이미지는 여러 읽기 전용 레이어의 스택으로 구성된다.
+- Dockerfile의 각 명령어는 일반적으로 새로운 레이어를 생성한다.
+  - 주요 레이어 생성 명령어: FROM, RUN, COPY, ADD
+  - ROM 명령어는 새로운 빌드 스테이지를 시작하며, 이전 스테이지의 레이어를 포함하지 않는다.
+
+#### 레이어 캐시
+이전에 빌드된 레이어 중 변경되지 않은 레이어를 캐시에서 가져와 재사용하여 빌드 시간을 단축시키는 도커의 빌드 프로세스 최적화 메커니즘
+```
+FROM maven:3.9.6-amazoncorretto-21-al2023 AS build
+WORKDIR /home/app
+
+COPY ./pom.xml /home/app/pom.xml
+COPY ./src/main/java/com/in28minutes/rest/webservices/restfulwebservices/RestfulWebServicesApplication.java	/home/app/src/main/java/com/in28minutes/rest/webservices/restfulwebservices/RestfulWebServicesApplication.java
+
+RUN mvn -f /home/app/pom.xml clean package
+
+COPY . /home/app
+RUN mvn -f /home/app/pom.xml clean package
+
+FROM openjdk:21-jdk-slim
+EXPOSE 5000
+COPY --from=build /home/app/target/*.jar app.jar
+ENTRYPOINT [ "sh", "-c", "java -jar /app.jar" ]
+```
+
+중간 라인에
+```
+COPY ./pom.xml /home/app/pom.xml
+COPY ./src/main/java/com/in28minutes/rest/webservices/restfulwebservices/RestfulWebServicesApplication.java	/home/app/src/main/java/com/in28minutes/rest/webservices/restfulwebservices/RestfulWebServicesApplication.java
+
+RUN mvn -f /home/app/pom.xml clean package
+```
+해당 부분이 추가 되었다.
+- pom.xml 파일 및 애플리케이션 메인 파일만 먼저 복제하여 메이븐을 통해 의존성을 설치한다.
+- 의존성 설치부터 빌드까지 통합되어 있던 빌드 레이어를 분리했다.
+- 이 경우 도커는 자동으로 각 레이어의 캐싱을 가지고 이전 빌드와의 차이가 없다면 같은 작업을 굳이 반복하지 않는다.
+- 결과적으로 의존성이 변하지 않는 경우 프로젝트가 업데이트가 되더라도 의존성 설치 과정 없이 프로젝트 변경 사항만 빌드할 수 있다.
+  - pom.xml, RestfulWebServicesApplication.java 파일 중 하나라도 변경되면 `RUN mvn -f /home/app/pom.xml clean package` 과정이 실행된다.
+- 애플리케이션 계층 혹은 도메인 마다 레이어를 분리하는 기법으로 큰 프로젝트 빌드를 최적화 할 수 있다.
+  - 분리된 레이어마다 빌드를 진행해줘야 의미가 있다.
 
 ---
