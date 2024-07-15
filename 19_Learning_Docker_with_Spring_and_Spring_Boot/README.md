@@ -6,6 +6,7 @@
 3. [Docker의 작동 방식 이해하기](#3단계---docker의-작동-방식-이해하기)
 4. [Docker 용어 이해하기](#4단계---docker-용어-이해하기)
 5. [Spring Boot 프로젝트용 Docker 이미지 생성하기 - Dockerfile](#5단계---spring-boot-프로젝트용-docker-이미지-생성하기---dockerfile)
+6. [Multi Stage Dockerfile을 사용하여 Spring Boot Docker 이미지 빌드하기](#6단계---multi-stage-dockerfile을-사용하여-spring-boot-docker-이미지-빌드하기)
 
 ---
 
@@ -222,5 +223,49 @@ docker rmi {이미지 ID}
 - 이름 : IntelliJ IDEA 내에서 식별하기 위한 이름으로 도커 이미지 이름과 관련이 없다.
 - Dockerfile : Dockerfile 파일 경로
 - 이미지 태그 : 이미지 이름:태그
+
+---
+
+## 6단계 - Multi Stage Dockerfile을 사용하여 Spring Boot Docker 이미지 빌드하기
+
+#### 로컬 빌드
+로컬 컴퓨터에서 애플리케이션을 빌드. (JAR 파일 생성)
+- 문제점 : 로컬 환경에 따라 결과물이 달라질 수 있다. 
+  - 각 운영 체제는 파일 시스템, 환경 변수, 라이브러리 등 빌드 환경이 다르기 때문이다.
+
+#### 멀티 스테이지 (Multi Stage)
+Docker 이미지를 생성할 때 여러 단계(stage)를 사용하는 기법
+- 빌드 단계를 정의해서 도커 이미지를 실행할 때 호스트 환경에 맞춰 애플리케이션 빌드를 진행할 수 있다.
+
+#### 멀티 스테이지 Dockerfile 작성
+```
+FROM maven:3.9.6-amazoncorretto-21-al2023 AS build
+WORKDIR /home/app
+COPY . /home/app
+RUN mvn -f /home/app/pom.xml clean package
+
+FROM openjdk:21-jdk-slim
+EXPOSE 5000
+COPY --from=build /home/app/target/*.jar app.jar
+ENTRYPOINT [ "sh", "-c", "java -jar /app.jar" ]
+```
+- 두 단계로 코드를 나누었다. 
+  - 윗 단 : 빌드 과정
+  - 아랫 단 : 기존의 jdk 설치, 포트 설정, jar 전송, 실행 명령 단계
+    - jar 파일 복제 라인에서 원본 폴더는 빌드 폴더 경로로 다시 설정해주었다. (첫 번째 단계에서 빌드된 파일을 컨테이너로 복제)
+    - jar 실행 명령어는 'sh -c'로 쉘 스크립트를 사용했다.
+      - 도커 컨테이너가 쉘 스크립트를 지원하기 때문에 대부분의 환경에서 명령어의 성공을 보장받을 수 있다.
+- 빌드 과정 자세히 보기
+  - FROM : 베이스 이미지 설정
+    - [maven:3.9.6-amazoncorretto-21-al2023](https://hub.docker.com/layers/library/maven/3.9.6-amazoncorretto-21-al2023/images/sha256-38e87febb36764f5e258cc18c3649b899e86ebe927041baeadc83e64d566a97c) : 빌드를 위한 Maven과 실행을 위한 jdk를 포함한 이미지, 특정 버전을 지정해서 버전 일관성을 유지함과 동시에 이미지 용량을 최적화 했다.
+  - AS : 해당 단게 (FROM으로 시작해서 다음 FROM 전 까지)의 이름을 지정 (build로 지정했다.)
+  - WORKDIR : 작업 디렉토리 경로
+  - COPY : 현재 디렉토리(.)의 모든 파일을 '/home/app'(작업 디렉토리)에 복제
+  - RUN : 실행 명령어 `mvn -f /home/app/pom.xml clean package`를 사용해서 pom.xml 파일 지정해서(-f) 메이븐 명령어를 실행한다. 
+    - clean package : 이전 빌드를 제거하고 새로 패키징
+
+#### 멀티 스테이징의 장점
+빌드 때 로컬 머신에 빌드된 어느 것도 사용하지 않는다.
+- 개발, 테스트, 프로덕션 환경의 일관성 유지 가능
 
 ---
