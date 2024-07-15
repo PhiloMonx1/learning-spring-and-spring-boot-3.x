@@ -7,3 +7,4 @@ application.properties
 /00_module/junit-in-5-steps/.idea/
 /out/
 /lib/
+/00_module/hello-world-java/target/

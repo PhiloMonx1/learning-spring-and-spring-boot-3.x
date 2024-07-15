@@ -5,6 +5,7 @@
 2. [Docker의 기초 이해하기](#2단계---docker의-기초-이해하기)
 3. [Docker의 작동 방식 이해하기](#3단계---docker의-작동-방식-이해하기)
 4. [Docker 용어 이해하기](#4단계---docker-용어-이해하기)
+5. [Spring Boot 프로젝트용 Docker 이미지 생성하기 - Dockerfile](#5단계---spring-boot-프로젝트용-docker-이미지-생성하기---dockerfile)
 
 ---
 
@@ -148,5 +149,78 @@ CONTAINER ID   IMAGE                                    COMMAND                 
   - 내부에 Docker 저장소를 만들 수 있으며, 저장소는 특정 앱, 특정 마이크로서비스, 특정 소프트웨어에 대한 Docker 이미지를 가진다.
 - [Docker 허브](https://hub.docker.com/) : 가장 인기 있는 Docker 레지스트리 중 하나
 - Dockerfile : 도커 이미지를 생성하기 위한 스크립트 파일
+
+---
+
+## 5단계 - Spring Boot 프로젝트용 Docker 이미지 생성하기 - Dockerfile
+
+#### 예시 프로젝트
+[hello-world-java](https://github.com/in28minutes/master-spring-and-spring-boot/tree/main/83-docker/hello-world-java) 프로젝트를 깃헙에서 다운 받아 예시 프로젝르를 세팅한다.
+- 간단한 HelloWorld API가 포함된 프로젝트이다.
+- 포트 5000번에서 웹 서버가 열리는 프로젝트이다. (application.properties 파일에서 확인할 수 있다.)
+  ```properties
+  logging.level.org.springframework = debug
+  server.port = 5000
+  ```
+  
+#### Dockerfile
+도커 이미지를 생성할 때 설정 스크립트를 작성한 후 이미지 빌드에 설정을 포함할 수 있도록 하는 파일.
+- 일반적으로 프로젝트 루트 경로에 생성한다.
+- 애플리케이션의 구조와 빌드 과정을 보여주는 문서이므로 깃 허브에 올리는 것도 좋다.
+- API 키 등 보안적으로 민감한 정보는 포함해선 안된다.
+
+#### Docker 이미지 생성
+[hello-world-java 프로젝트의 README.md](..%2F00_module%2Fhello-world-java%2FREADME.md) 파일 참고
+
+- Docker 이미지 빌드
+    ```
+    docker build -t in28min/hello-world-docker:v1 [Dockerfile이 있는 디렉토리 경로]
+    ```
+    - Dockerfile을 생성하고 도커 이미지 빌드 명령에 뒤에 경로를 입력해주면 된다.
+    - 만약 명령어 입력 경로에 Dockerfile 파일이 있다면 경로를 명시하지 않고 '.'을 사용할 수 있다.
+      - `docker build -t in28min/hello-world-docker:v1 .`
+
+#### Dockerfile 작성
+```
+FROM openjdk:21-jdk-slim
+COPY target/*.jar app.jar
+EXPOSE 5000
+ENTRYPOINT ["java","-jar","/app.jar"]
+```
+- FROM : 베이스 이미지 설정 (해당 이미지를 기반으로 새로운 이미지를 만든다.)
+- COPY : 호스트 시스템의 target 디렉토리에서 모든 .jar 파일을 찾아 컨테이너 내부의 app.jar로 복사
+  - 명령어를 입력하는 경로를 기준으로 한다.
+  - 빌드 프로젝트의 jar 파일 이름은 중요하지 않다. `*.jar`에 해당하는 파일을 찾아서 컨테이너 내부에 `app.jar` 이름으로 복사한다.
+    - 프로젝트 target 폴더의 jar 파일이 여러개라면 예상치 못한 결과를 초래할 수 있다.
+- EXPOSE : 컨테이너의 포트를 명시. README 처럼 명시를 할 뿐 실제 컨테이너의 포트를 강제하지는 않는다.
+- ENTRYPOINT : 컨테이너가 시작될 때 실행할 명령어 지정
+  - JSON 배열 형식을 사용하여 각 인자를 개별 요소로 지정할 수 있다.
+    - "java","-jar","/app.jar" : `java -jar /app.jar` 쌍따옴표를 모두 지우고 쉼표를 공백으로 바꾸면 실제 입력되는 명령어가 된다.
+  - 자바 애플리케이션을 실행하기 위해 jar 파일을 실행하는 명령어를 작성했다.
+
+자바 애플리케이션 환경 조성을 위해 jdk를 설치하고, jar 파일을 전송하고, 자바 명령어로 실행시키는 과정이 이미지에 담긴다.
+
+프로젝트를 빌드 후 `docker build -t in28min/hello-world-docker:v1 .` 입력하면 이미지 생성을 할 수 있다.
+```
+$ docker image ls
+REPOSITORY                   TAG             IMAGE ID       CREATED          SIZE
+in28min/hello-world-docker   v1              312bf231989e   25 seconds ago   459MB
+...
+```
+`docker image ls` 명령어를 통해 생성된 이미지를 확인할 수 있다.
+
+#### Docker 이미지 삭제 명령어
+```
+docker rmi {이미지 ID}
+```
+
+#### 인텔리제이 도커 지원
+![인텔리제이 Dockerfile 파일_01](image/IntelliJ_docker_01.png)
+- 인텔리제이 IDE에서는 Dockerfile 파일을 읽고 GUI를 사용해서 이미지를 생성할 수 있도록 지원한다.
+
+![인텔리제이 Dockerfile 파일_02](image/IntelliJ_docker_02.png)
+- 이름 : IntelliJ IDEA 내에서 식별하기 위한 이름으로 도커 이미지 이름과 관련이 없다.
+- Dockerfile : Dockerfile 파일 경로
+- 이미지 태그 : 이미지 이름:태그
 
 ---
