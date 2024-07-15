@@ -14,6 +14,7 @@
 ---
 
 ## 1단계 - Docker 시작하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/db51679b3b4b9f12ca7152d5f1b53cd742d0856c)
 
 #### Docker
 컨테이너 이미지를 생성하고 실행하는 툴
@@ -69,6 +70,7 @@ docker history [이미지 이름]
 ---
 
 ## 2단계 - Docker의 기초 이해하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/589e231605058bf2a152c1cf6c8da8a31c10872a)
 
 #### 실행중인 컨테이너 관리
 ```
@@ -102,6 +104,7 @@ PC에 파이썬, 자바, 노드 그리고 각 애플리케이션을 구동하기
 ---
 
 ## 3단계 - Docker의 작동 방식 이해하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/89647cc4077ad3e2688624c0dc16b29c05ad943d)
 
 #### 도커가 제공하는 것들
 - 표준화된 애플리케이션 패키징 : 모든 유형의 애플리케이션에 대해 동일한 패키징을 포함하는 Docker 이미지를 생성할 수 있는 방법을 제공한다.
@@ -146,6 +149,7 @@ CONTAINER ID   IMAGE                                    COMMAND                 
 ---
 
 ## 4단계 - Docker 용어 이해하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/1bebc6fd6b30914cd01136647b182d88199d70bc)
 
 #### 주요 Docker 용어
 - 이미지 : 애플리케이션의 특정 버전을 나타내는 패키지
@@ -157,6 +161,7 @@ CONTAINER ID   IMAGE                                    COMMAND                 
 ---
 
 ## 5단계 - Spring Boot 프로젝트용 Docker 이미지 생성하기 - Dockerfile
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/04a13dfdf3ec16d665daadd5369aaab1b932fc81)
 
 #### 예시 프로젝트
 [hello-world-java](https://github.com/in28minutes/master-spring-and-spring-boot/tree/main/83-docker/hello-world-java) 프로젝트를 깃헙에서 다운 받아 예시 프로젝르를 세팅한다.
@@ -230,6 +235,7 @@ docker rmi {이미지 ID}
 ---
 
 ## 6단계 - Multi Stage Dockerfile을 사용하여 Spring Boot Docker 이미지 빌드하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/053136b21149cd363d00b830b4b67a73d46c0e01)
 
 #### 로컬 빌드
 로컬 컴퓨터에서 애플리케이션을 빌드. (JAR 파일 생성)
@@ -274,6 +280,7 @@ ENTRYPOINT [ "sh", "-c", "java -jar /app.jar" ]
 ---
 
 ## 7단계 - Spring Boot Docker 이미지 빌드하기 - Dockerfile 최적화하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/0923ecf469772d3f3cf017eaa6157d404f6ccb94)
 
 6단계의 Multi Stage의 단점은 빌드 시간이 꽤나 소요되기 때문에 코드가 조금만 변경되어도 빌드까지의 시간이 걸린다는 점이었다. 빌드를 하기 위해서는 전체 애플리케이션을 빌드해야 하기 때문이다.
 
@@ -324,6 +331,7 @@ RUN mvn -f /home/app/pom.xml clean package
 ---
 
 ## 8단계 - Spring Boot Maven 플러그인으로 Docker 이미지 빌드하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/97469b52472279e2ebca324d9f25f17e331ae685)
 
 #### Docker 이미지 빌드 Maven 명령어
 ```
@@ -340,6 +348,7 @@ mvn spring-boot:build-image
 ---
 
 ## 9단계 - Spring Boot와 Docker에 관한 간단한 복습
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/7d516608101d3ca530327b5ab06b73a357d094b2)
 
 1. 도커의 이해 : 도커는 동일한 애플리케이션 구동 환경을 구축하기 위한 가상화 툴이다.
    - 이미지 : 애플리케이션 구동 환경의 사양을 담은 바이트 코드 집합
