@@ -8,6 +8,7 @@
 5. [AWS Elastic Beanstalk 및 Amazon RDS 살펴보기 - Spring Boot REST API](#5단계---aws-elastic-beanstalk-및-amazon-rds-살펴보기---spring-boot-rest-api)
 6. [Spring Boot 및 React 풀스택 앱 살펴보기](#6단계---spring-boot-및-react-풀스택-앱-살펴보기)
 7. [AWS Elastic Beanstalk에 풀스택 Spring Boot REST API 배포하기](#7단계---aws-elastic-beanstalk에-풀스택-spring-boot-rest-api-배포하기)
+8. [Amazon S3에 풀스택 React App 배포하기](#8단계---amazon-s3에-풀스택-react-app-배포하기)
 
 ---
 
@@ -177,5 +178,68 @@ export const apiClient = axios.create(
 );
 ```
 - baseURL 변경 후 API 요청을 테스트 해본다.
+
+---
+
+## 8단계 - Amazon S3에 풀스택 React App 배포하기
+
+#### 애플리케이션 빌드
+```
+npm run build
+```
+- 배포 가능한 프로덕션 패키지를 빌드한다.
+  - 소스 코드를 최적화하고 압축
+  - build 폴더에 프로덕션 패키지가 생성된다.
+
+#### Amazon S3(Amazon Simple Storage Service)
+AWS에서 제공하는 객체 스토리지 서비스, 파일을 객체로 저장한다.
+- 클라우드 드라이브와 유사하게 파일을 저장할 수 있다.
+  - 키-값 구조로 데이터를 저장한다.
+
+빌드된 프론트엔드 애플리케이션을 S3에 업로드해서 배포할 것이다.
+
+#### S3 버킷
+S3 버킷 : 데이터를 저장하는 기본 컨테이너
+- 한 계정이 여러 개의 독립적인 버킷을 생성할 수 있다.
+- 버킷마다 다른 보안 정책, 관리 정책을 설정할 수 있다.
+- GitHub의 레포지토리와 비슷하다.
+
+#### S3 버킷 생성
+1. 버킷 이름 설정 : 버킷 이름은 전 세계에서 유일해야 한다.
+2. 버킷 리전 설정 : 버킷은 특정 AWS 리전에 생성된다. (리전을 변경할 시 기존 리전의 버킷이 안 보일 수 있다.)
+3. 공개 액세스 허용 : 외부에서 프론트엔드 애플리케이션에 접근할 수 있도록 `Block all public access`를 비활성화 한다.
+   - S3는 기본적으로 저장된 파일에 대한 공개 액세스가 차단된다.
+
+#### 프로젝트 배포
+1. 버킷에 프로덕션 빌드 패키지를 업로드한다.
+2. 'Properties' 탭에서 'Static website hosting'에 접근한다.
+   - index 설정 : 인덱스 html 설정 (index.html)
+3. S3가 제공하는 엔드포인트 URL이 생성된다. (애플리케이션 접근 URL)
+    
+#### 버킷 정책 (Bucket policy) 설정
+S3 버킷에 대한 액세스를 제어하는 리소스 기반 보안 정책
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+          {
+            "Sid": "Statement1",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::your-bucket-name/*"
+          }
+    ]
+}
+```
+- Sid : 정책 문의 식별자
+- Effect : 정책이 가진 효과 ("Allow" 또는 "Deny")
+  - 특정 액션을 명시적으로 허용하거나 차단하는 방식으로 설정한다.
+- Principal : 정책이 적용될 엔티티(사용자, 역할, 서비스 등)
+- Action : 'Effect'를 통해 허용되거나 차단될 작업
+  - "s3:GetObject" : S3에 저장된 객체를 읽는 작업
+- Resource : 정책을 적용할 버킷내의 리소스 `your-bucket-name` 부분을 실제 버킷 이름으로 변경해야 한다.
+
+버킷 정책까지 설정한 후 S3가 제공하는 엔드포인트 URL을 통해 애플리케이션에 접근할 수 있게 된다.
 
 ---
