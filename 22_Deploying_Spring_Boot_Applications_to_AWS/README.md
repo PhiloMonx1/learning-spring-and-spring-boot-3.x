@@ -4,6 +4,7 @@
 1. [Hello World Spring Boot 앱 AWS에 배포하기](#1단계---hello-world-spring-boot-앱-aws에-배포하기)
 2. [AWS Elastic Beanstalk 살펴보기 - AWS에 배포한 첫 번째 Spring Boot 앱](#2단계---aws-elastic-beanstalk-살펴보기---aws에-배포한-첫-번째-spring-boot-앱)
 3. [MySQL 데이터베이스를 통해 Docker 컨테이너로 Spring Boot REST API 실행하기](#3단계---mysql-데이터베이스를-통해-docker-컨테이너로-spring-boot-rest-api-실행하기)
+4. [MySQL을 이용하여 AWS Elastic Beanstalk에 Spring Boot REST API 배포하기](#4단계---mysql을-이용하여-aws-elastic-beanstalk에-spring-boot-rest-api-배포하기)
 
 ---
 
@@ -95,5 +96,22 @@ mvn clean package
 1. Docker MySQL 컨테이너 실행
 2. 애플리케이션 실행
 3. 애플리케이션 API 테스트
+
+---
+
+## 4단계 - MySQL을 이용하여 AWS Elastic Beanstalk에 Spring Boot REST API 배포하기
+
+#### Beanstalk 배포
+2단계와 동일하지만 MySQL 데이터베이스를 Beanstalk에 연결하는 부분이 추가된다.
+- RDS(Relational Database Service) : AWS에서 제공하는 관리형 SQL 데이터베이스 서비스
+
+1. 배포 페이지에서 추가 설정에 진입
+2. 데이터베이스 섹션 설정
+   - 데이터 베이스 모델 및 사양 설정
+   - 데이터 베이스 아이디, 비밀번호 설정
+   - 데이터 베이스 삭제 정책 설정 : 환경이 종료될 때 데이터 베이스를 어떻게 할지에 대한 설정이다.
+     - Create snapshot : 스냅샷(복제본)을 생성 후 데이터 베이스를 삭제한다.
+     - Retain : 환경이 종료돼도 데이터 베이스는 삭제되지 않는다. (데이터 베이스가 Elastic Beanstalk 외부에서 분리되어 동작한다.)
+     - Delete : 환경이 종료될 대 함께 종료한다.
 
 ---
