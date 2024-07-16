@@ -7,6 +7,7 @@
 4. [MySQL을 이용하여 AWS Elastic Beanstalk에 Spring Boot REST API 배포하기](#4단계---mysql을-이용하여-aws-elastic-beanstalk에-spring-boot-rest-api-배포하기)
 5. [AWS Elastic Beanstalk 및 Amazon RDS 살펴보기 - Spring Boot REST API](#5단계---aws-elastic-beanstalk-및-amazon-rds-살펴보기---spring-boot-rest-api)
 6. [Spring Boot 및 React 풀스택 앱 살펴보기](#6단계---spring-boot-및-react-풀스택-앱-살펴보기)
+7. [AWS Elastic Beanstalk에 풀스택 Spring Boot REST API 배포하기](#7단계---aws-elastic-beanstalk에-풀스택-spring-boot-rest-api-배포하기)
 
 ---
 
@@ -152,5 +153,29 @@ RDS에 할당된 보안그룹을 확인할 수 있다.
 - npm 라이브러리 설치 : 테스트가 필요하다면 `npm install`을 입력해서 프로젝트 npm 라이브러리를 설치한다. (npm 라이브러리는 GitHub에 공유하지 않는 것이 일반적이다.)
 - apiClient 확인 : '/todo-app/src/components/todo/api/ApiClient.js' 경로에서 apiClient의 baseURL을 확인한다. 
   - 서버의 포트가 바뀌었기에 바꿔줘야 한다. & 서버가 AWS에 배포되면 바꿔줘야 한다.
+
+---
+
+## 7단계 - AWS Elastic Beanstalk에 풀스택 Spring Boot REST API 배포하기
+
+#### 백엔드 애플리케이션 배포
+1. 벡엔드 애플리케이션 빌드
+2. 백엔드 Beanstalk 환경 구성 및 배포 (h2를 사용하기에 RDS 연결은 진행하지 않는다.)
+3. 배포 완료 후 URL 링크 복사
+
+#### 프론트엔드 애플리케이션 배포
+백엔드 배포 완료 후 웹 애플리케이션 URL을 프론트엔드 애플리케이션의 baseURL로 사용해야 한다.
+```js
+// '/todo-app/src/components/todo/api/ApiClient.js'
+import axios from 'axios'
+
+export const apiClient = axios.create(
+    {
+        // baseURL: 'http://localhost:5000' //#CHANGE
+        baseURL: 'http://YOUR_BACKEND_API_URL.elasticbeanstalk.com/' 
+    }
+);
+```
+- baseURL 변경 후 API 요청을 테스트 해본다.
 
 ---
