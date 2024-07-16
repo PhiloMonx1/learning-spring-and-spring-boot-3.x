@@ -6,6 +6,7 @@
 3. [필터로 Java 함수형 프로그램 개선하기](#3단계---필터로-java-함수형-프로그램-개선하기)
 4. [람다식으로 함수형 프로그램 개선하기](#4단계---람다식으로-함수형-프로그램-개선하기)
 5. [스트림, 필터, 람다를 사용해 함수형 프로그램 예제 실습하기](#5단계---스트림-필터-람다를-사용해-함수형-프로그램-예제-실습하기)
+6. [함수형 프로그램에서 map 사용하기 - 예제 포함](#6단계---함수형-프로그램에서-map-사용하기---예제-포함)
 
 ---
 
@@ -186,5 +187,51 @@ List<Integer> numbers = List.of(12, 9, 13, 4, 6, 2, 4, 12, 15);
 2. `courses`의 모든 요소 콘솔 출력 메서드
 3. `courses`의 요소 중 "Spring"이라는 문자열이 포함된 것만 콘솔 출력 메서드
 4. `courses`의 요소 중 문자열의 길이가 4 이상인 것만 콘솔 출력 메서드
+
+---
+
+## 6단계 - 함수형 프로그램에서 map 사용하기 - 예제 포함
+
+#### map() 사용 실습 : printSquaresOfEvenNumbers() 신규 메서드 작성 (짝수 숫자만 제곱해서 콘솔에 출력하기)
+```java
+private static int SquaresNumber(int number) {
+        return number * number;
+}
+
+private static void printSquaresOfEvenNumbers(List<Integer> numbers) {
+        numbers.stream()
+        .filter(number -> number % 2 == 0)
+        .map(FP01Functional::SquaresNumber)
+        .forEach(System.out::println);
+}
+```
+- map() : 각 요소를 다른 요소로 매핑(변환)한다.
+
+#### printSquaresOfEvenNumbers() 람다식으로 개선
+```java
+private static void printSquaresOfEvenNumbers(List<Integer> numbers) {
+    numbers.stream()
+            .filter(number -> number % 2 == 0)
+            .map(number -> number * number)
+            .forEach(System.out::println);
+}
+```
+
+#### 부록 : 함수형 프로그램 패러다임의 이해.
+- 추상화
+  - 함수형 프로그래밍은 프로그래밍에서 반복되된 특정 작업을 추상화 시키는 인터페이스가 중요하다.
+  - 스트림의 filter, map 모두 필터링, 매핑이라는 작업을 추상화 시켰다.
+    - "필터링 해야 해", "매핑해야 해"만 존재하고 어떻게 할지는 알려주지 않는다.
+- 선언적 프로그래밍
+  - "필터링 해야 해", "매핑해야 해"라고 선언만 한다. 어떻게 할지는 아직도 추상적이다.
+    - 그래서 '무엇을'에 집중한다고 하는 것이다. "필터링을 해야 해"라고만 선언하고 어떻게 할지는 신경쓰지 않는다.
+
+이러한 관점을 이해하기 위해서는 단순히 스트림을 사용하는 것이 아닌 스트림을 만든 입장에서 이해해야 한다.
+
+스트림을 만든 사람은 "필터링 해야 해", "매핑해야 해"만 선언했다. 그것을 어떻게 할지는 사용자의 몫으로 두었다.
+
+이와 같이 스트림을 만든 입장에서 바라볼 때 함수형 프로그래밍의 개념을 이해할 수 있다.
+
+즉, 스트림을 만든 사람 처럼 '무엇을' 할지 작업을 선언하고, 이것을 '어떻게' 할지는 나중에 생각하는 것이 함수형 프로그래밍 방식이다.
 
 ---

@@ -39,4 +39,11 @@ public class FP01Exercises {
 				.filter(course -> course.length() >= 4)
 				.forEach(System.out::println);
 	}
+
+	private static void printSquaresOfEvenNumbers(List<Integer> numbers) {
+		numbers.stream()
+				.filter(number -> number % 2 == 0)
+				.map(number -> number * number)
+				.forEach(System.out::println);
+	}
 }
