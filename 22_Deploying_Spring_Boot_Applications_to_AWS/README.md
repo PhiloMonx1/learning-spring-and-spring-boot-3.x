@@ -13,6 +13,7 @@
 ---
 
 ## 1단계 - Hello World Spring Boot 앱 AWS에 배포하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/717839b00894023b45cba18fd6c7d5d89bc40bc8)
 
 #### 배포할 애플리케이션 프로젝트
 [링크](https://github.com/in28minutes/master-spring-and-spring-boot/tree/main/91-aws)를 통해 배포할 애플리케이션 프로젝트를 다운받을 수 있다.
@@ -42,6 +43,7 @@ mvn clean package
 ---
 
 ## 2단계 - AWS Elastic Beanstalk 살펴보기 - AWS에 배포한 첫 번째 Spring Boot 앱
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/acc5a101b8842bf3674f0cb17d14f9c214d07a8c)
 
 #### Beanstalk 애플리케이션 관리 기능
 - 상태 모니터링
@@ -75,6 +77,7 @@ mvn clean package
 ---
 
 ## 3단계 - MySQL 데이터베이스를 통해 Docker 컨테이너로 Spring Boot REST API 실행하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/db2d07ee11869f29805f744aba092037fda0dc12)
 
 #### 애플리케이션 변경점
 [rest-api-mysql](https://github.com/in28minutes/master-spring-and-spring-boot/tree/main/91-aws/02-rest-api-mysql) : mySQL과 연결된 Rest API 애플리케이션
@@ -104,6 +107,7 @@ mvn clean package
 ---
 
 ## 4단계 - MySQL을 이용하여 AWS Elastic Beanstalk에 Spring Boot REST API 배포하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/15cdb269995c5bdf06360a6d235bb05eb19e0f04)
 
 #### Beanstalk 배포
 2단계와 동일하지만 MySQL 데이터베이스를 Beanstalk에 연결하는 부분이 추가된다.
@@ -121,6 +125,7 @@ mvn clean package
 ---
 
 ## 5단계 - AWS Elastic Beanstalk 및 Amazon RDS 살펴보기 - Spring Boot REST API
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/c4c204dab5ef642ea35c6c93e048badc5b1f78e1)
 
 #### 환경 변수
 ```properties
@@ -140,6 +145,7 @@ RDS에 할당된 보안그룹을 확인할 수 있다.
 ---
 
 ## 6단계 - Spring Boot 및 React 풀스택 앱 살펴보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/e0ffc5e74fa4c2c755984ad4f21c4e43d216c75c)
 
 #### 백엔드 애플리케이션
 [rest-api-full-stack-h2](https://github.com/in28minutes/master-spring-and-spring-boot/tree/main/91-aws/03-rest-api-full-stack-h2) : 풀스택용 백엔드 애플리케이션
@@ -158,6 +164,7 @@ RDS에 할당된 보안그룹을 확인할 수 있다.
 ---
 
 ## 7단계 - AWS Elastic Beanstalk에 풀스택 Spring Boot REST API 배포하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/e200c6174c1c50ab20017ea3b0e3423c35ee9dff)
 
 #### 백엔드 애플리케이션 배포
 1. 벡엔드 애플리케이션 빌드
@@ -182,6 +189,7 @@ export const apiClient = axios.create(
 ---
 
 ## 8단계 - Amazon S3에 풀스택 React App 배포하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/724a7abaad425c9730d4a7ca37938c0513e18694)
 
 #### 애플리케이션 빌드
 ```
