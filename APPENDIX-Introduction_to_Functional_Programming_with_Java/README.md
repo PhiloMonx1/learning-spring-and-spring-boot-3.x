@@ -7,6 +7,7 @@
 4. [람다식으로 함수형 프로그램 개선하기](#4단계---람다식으로-함수형-프로그램-개선하기)
 5. [스트림, 필터, 람다를 사용해 함수형 프로그램 예제 실습하기](#5단계---스트림-필터-람다를-사용해-함수형-프로그램-예제-실습하기)
 6. [함수형 프로그램에서 map 사용하기 - 예제 포함](#6단계---함수형-프로그램에서-map-사용하기---예제-포함)
+7. [Java Optional 클래스 이해하기](#7단계---java-optional-클래스-이해하기)
 
 ---
 
@@ -233,5 +234,49 @@ private static void printSquaresOfEvenNumbers(List<Integer> numbers) {
 이와 같이 스트림을 만든 입장에서 바라볼 때 함수형 프로그래밍의 개념을 이해할 수 있다.
 
 즉, 스트림을 만든 사람 처럼 '무엇을' 할지 작업을 선언하고, 이것을 '어떻게' 할지는 나중에 생각하는 것이 함수형 프로그래밍 방식이다.
+
+---
+
+## 7단계 - Java Optional 클래스 이해하기
+
+자바는 타입에 예민한 언어이며, Null에도 예민한 언어이다.
+`Java.lang.NullPointerException` 자주 발생하며, 귀찮은 예외처리로 여겨진다.
+
+이건 JVM 말도 들어봐야 하는 게 값을 가지고 일을 처리하라고 해놓고 값이 없으면 일 자체가 불가능 하니 어쩔 수가 없는거다.
+
+#### Optional
+Java에서 null 사용의 문제를 해결하는 방법
+- Null 안전성 : 값이 존재하지 않을 수도 있다는 것을 명시적으로 표현하는 객체이다. (JVM도 값이 없을 수 있다는 사실에 동의한다 ㅎㅎ)
+  - isPresent(), isEmpty() 메서드로 값의 존재 여부를 확인
+  - orElse(), orElseGet() 등의 메서드로 값이 없을 때의 대안을 제공
+- 함수형 스타일 : map(), flatMap(), filter() 등의 메서드를 제공
+- 예외 처리: orElseThrow() 메서드로 값이 없을 때 예외를 발생시킬 수 있다.
+- 불변성 : Optional 객체 자체는 불변(immutable)하다.
+
+#### Optional 실습
+```java
+public static void main(String[] args) {
+    List<String> fruits = List.of("apple", "banana", "mango", "pineapple");
+
+    Predicate<String> predicate = fruit -> fruit.startsWith("b");
+
+    Optional<String> startsWithBFruits = fruits.stream()
+            .filter(predicate)
+            .findFirst();
+}
+```
+- Predicate : 인자를 받아서 boolean 값을 반환하는 함수형 인터페이스
+  - "검증해" 라는 작업의 선언만 있고, 어떤 것을 검증할지에 대한 내용은 추상화.
+- Optional : `fruit.startsWith("b");` 조건에 해당하는 과일이 있을지 없을지 모른다.
+  - 그러니 있을 수도 있고 없을 수도 있다는 추상적인 컨테이너를 제시한다. (슈뢰딩거의 고양이)
+
+#### Optional 활용법
+```java
+System.out.println(startsWithBFruits);
+System.out.println(startsWithBFruits.isEmpty());
+System.out.println(startsWithBFruits.isPresent());
+System.out.println(startsWithBFruits.get());
+```
+[Optional이 제공하는 다양한 메서드](https://docs.oracle.com/en/java/javase/22/docs/api/java.base/java/util/Optional.html)를 사용해서 효율성을 극대화할 수 있다.
 
 ---
