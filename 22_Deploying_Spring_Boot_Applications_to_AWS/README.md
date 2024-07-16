@@ -5,6 +5,7 @@
 2. [AWS Elastic Beanstalk 살펴보기 - AWS에 배포한 첫 번째 Spring Boot 앱](#2단계---aws-elastic-beanstalk-살펴보기---aws에-배포한-첫-번째-spring-boot-앱)
 3. [MySQL 데이터베이스를 통해 Docker 컨테이너로 Spring Boot REST API 실행하기](#3단계---mysql-데이터베이스를-통해-docker-컨테이너로-spring-boot-rest-api-실행하기)
 4. [MySQL을 이용하여 AWS Elastic Beanstalk에 Spring Boot REST API 배포하기](#4단계---mysql을-이용하여-aws-elastic-beanstalk에-spring-boot-rest-api-배포하기)
+5. [AWS Elastic Beanstalk 및 Amazon RDS 살펴보기 - Spring Boot REST API](#5단계---aws-elastic-beanstalk-및-amazon-rds-살펴보기---spring-boot-rest-api)
 
 ---
 
@@ -113,5 +114,24 @@ mvn clean package
      - Create snapshot : 스냅샷(복제본)을 생성 후 데이터 베이스를 삭제한다.
      - Retain : 환경이 종료돼도 데이터 베이스는 삭제되지 않는다. (데이터 베이스가 Elastic Beanstalk 외부에서 분리되어 동작한다.)
      - Delete : 환경이 종료될 대 함께 종료한다.
+
+---
+
+## 5단계 - AWS Elastic Beanstalk 및 Amazon RDS 살펴보기 - Spring Boot REST API
+
+#### 환경 변수
+```properties
+spring.datasource.url=jdbc:mysql://${RDS_HOSTNAME:localhost}:${RDS_PORT:3306}/${RDS_DB_NAME:social-media-database}
+spring.datasource.username=${RDS_USERNAME:social-media-user}
+spring.datasource.password=${RDS_PASSWORD:dummypassword}
+```
+- RDS_HOSTNAME, RDS_PORT, RDS_DB_NAME, RDS_USERNAME, RDS_PASSWORD 라는 이름은 AWS Elastic Beanstalk 환경에서 자동으로 인식하는 환경변수 이다.
+
+#### 보안 그룹
+RDS에 할당된 보안그룹을 확인할 수 있다.
+- RDS 인바운드 규칙은 EC2와 연결되어 있으며 EC2에서 발생하는 트래픽만을 허용한다.
+  - local에서 RDS에 바로 연결하고자 해도 연결할 수 없다.
+
+환경 변수와 보안 그룹 등의 설정을 사용자가 직접하지 않아도 Elastic Beanstalk가 자동으로 진행한다.
 
 ---
