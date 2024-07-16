@@ -3,6 +3,7 @@
 ## 목록
 1. [Java에서 함수형 프로그래밍 시작하기](#1단계---java에서-함수형-프로그래밍-시작하기)
 2. [Java 함수형 프로그램 처음 작성하기](#2단계---java-함수형-프로그램-처음-작성하기)
+3. [필터로 Java 함수형 프로그램 개선하기](#3단계---필터로-java-함수형-프로그램-개선하기)
 
 ---
 
@@ -75,5 +76,80 @@ public class FP01Functional {
 - 간결성 : 코드를 더 짧고 읽기 쉽게 만든다.
 - 가독성 향상 : 메서드 이름을 직접 사용햐서 코드의 의도가 명확해진다
 - 재사용성 : 특정 로직에 의존적이지 않은 코드를 선언해 쉽게 재사용 할 수 있다.
+
+---
+
+## 3단계 - 필터로 Java 함수형 프로그램 개선하기
+
+#### 코드 개선 printAllNumbersInListFunctional() 메서드 개선
+```java
+private static void printAllNumbersInListFunctional(List<Integer> numbers) {
+    numbers.stream()
+            .forEach(System.out::println);
+}
+```
+- 새로 작성한 printInt() 메서드 대신 내장 메서드인 sout을 직접 사용해서 코드를 개선했다.
+  - 함수형 접근법 : 요소 리스트가 있으면 각 요소에 수행할 작업을 정의하고, 이를 지정하기만 하면 된다.
+  - 구조적 접근법 : 숫자에 루프를 실행하는 방법을 결정한 후 출력해야 한다.
+
+아직까지는 추상적으로 느껴지고, 명확한 장점이 있는지 잘 모르겠다. 그럼 예제를 좀 더 복잡하게 만들어보자.
+
+#### 추가 요건 : 리스트에서 짝수인 숫자만 노출하기
+- 구조적 프로그래밍
+  ```java
+  private static void printEvenNumbersInListStructured(List<Integer> numbers) {
+      for (int number : numbers) {
+          if(number % 2 == 0) {
+              System.out.println(number);
+          }
+      }
+  }
+  ```
+  - for문 안에 if문이 들어오면서 들여쓰기가 두 번 발생했다. (가독성이 떨어짐)
+
+- 함수형 프로그래밍
+```java
+private static boolean isEven(int number) {
+    return number % 2 == 0;
+}
+
+private static void printEvenNumbersInListFunctional(List<Integer> numbers) {
+    numbers.stream()
+    .filter(FP01Functional::isEven)
+    .forEach(System.out::println);
+}
+```
+- filter()을 통해 '필터링'을 할 것이라는 추상적인 구현을 먼저한 후, '어떻게 필터링' 할 것인지는 주입하는 방식으로 구현했다.
+
+#### 구조적 프로그래밍 vs 함수형 프로그래밍
+- 구조적 프로그래밍 : 짝수를 구분하는 방법을 '어떻게' 할지 고민하고 구현한다.
+  - 문제 해결 과정의 각 단계를 명시적으로 기술한다.
+  - 제어 흐름(조건문, 반복문 등)을 직접 관리한다.
+- 함수형 프로그래밍 : 짝수를 구분하기 위해 '무엇을' 할지 고민하고 구현한다. (isEven을 사용한다.)
+  - 문제를 작은 함수들의 조합으로 해결한다.
+
+만약 isEven() 메서드를 자신이 아닌 다른 개발자가 구현해 놓았고 이것을 사용한다고 가정해보자.
+
+```java
+numbers.stream()
+    .filter()
+    .forEach();
+```
+해당 코드는 '필터링'하고, '작업하라'로 이해할 수 있다. 구체적이지 않고 추상적인 방법이다. (누군가 이렇게 업무를 지시했다고 생각해보자)
+
+```java
+numbers.stream()
+.filter(FP01Functional::isEven)
+.forEach(System.out::println);
+```
+이제 요구사항이 명확해진다. isEven()를 사용해서 짝수만 필터링하고, sout()을 사용해서 콘솔에 노출 시켜라.
+
+이와 같이 함수형 프로그램의 핵심 개념은 '추상화된 연산'으로 먼저 구조화 하고, '구체적 주입'으로 구체적인 작업을 지시한다.
+
+직접 방법을 작성하는 코드보다는 뭔가 더 세련된 느낌을 준다. 
+
+'필터링을 담당하는 filter'와 '작업을 담당하는 forEach'에게 각각 자신이 수행할 수 있는 수준의 작업을 지시해서
+
+최종 결과물로 "짝수만 콘솔에 노출"하는 큰 작업을 얻어낸 것이다.
 
 ---
