@@ -21,6 +21,7 @@
 ---
 
 ## 1단계 - EC2 시작하기 - AWS의 가상 서버
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/9c023c004b3a5f697271134f844fb6f20f0475bf)
 
 #### EC2 (Elastic Compute Cloud)
 AWS에서 제공하는 핵심적인 클라우드 컴퓨팅 서비스
@@ -42,6 +43,7 @@ EC2 인스턴스에 연결하여 사용할 수 있는 가상 하드 드라이브
 ---
 
 ## 2단계 - 데모 - Amazon EC2를 사용해 가상 머신 생성하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/61f0d1452c06f954cd4fbe583235f73bc1b8d8ed)
 
 #### EC2 가상 머신 생성
 가상 머신 생성에 필요한 내용만 노트
@@ -71,6 +73,7 @@ EC2 인스턴스에 연결하여 사용할 수 있는 가상 하드 드라이브
 ---
 
 ## 2z단계 - 데모 - Amazon EC2 인스턴스에 웹 서버 구성하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/bb6efc2494c74fb2db726ba7f37f009f2d31a3fd)
 
 #### EC2 인스턴스에 Apache 웹 애플리케이션 설치
 1. 인스턴스에 연결
@@ -97,6 +100,7 @@ systemctl start httpd
 ---
 
 ## 3단계 - 주요 EC2 개념 복습하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/caa393dc59cb401f21a9bc66639ff234453b4aaf)
 
 #### 주요 개념
 - AMI : EC2에 사용할 운영체제(OS)와 소프트웨어
@@ -113,6 +117,7 @@ systemctl start httpd
 ---
 
 ## 4단계 - IaaS vs PaaS - AWS 클라우드 컴퓨팅
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/8f495c772fa67cdc8daeba7d29d04348fc191af6)
 
 #### IaaS (Infrastructure as a Service)
 클라우드 제공자가 제공한 기반(Infrastructure)만을 사용하는 것
@@ -135,6 +140,7 @@ IaaS의 대안으로 기반뿐 아니라 애플리케이션 개발 및 실행에
 ---
 
 ## 5단계 - AWS Elastic Beanstalk 시작하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/7e9b2f5dfc5e8a8ed78d0bf2fb0dcedc253a788e)
 
 #### AWS Elastic Beanstalk
 AWS에서 제공하는 PaaS 서비스
@@ -149,6 +155,7 @@ AWS에서 제공하는 PaaS 서비스
 ---
 
 ## 6단계 - 데모 - AWS Elastic Beanstalk로 웹 애플리케이션 구성하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/40a32175a843e609c721d13f25224255ad095d4b)
 
 #### Elastic Beanstalk 구성
 Elastic Beanstalk는 관리할 웹 앱을 기반으로 설정을 구성하는 방식이다.
@@ -167,6 +174,7 @@ Elastic Beanstalk는 관리할 웹 앱을 기반으로 설정을 구성하는 �
 ---
 
 ## 7단계 - 데모 - AWS Elastic Beanstalk 사용하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/8b5cac9887ec2b14a2d4e0ca8dbf1b4e2aca1884)
 
 #### Elastic Beanstalk 사용
 구성된 환경에 애플리케이션을 업로드해서 배포할 수 있다.
@@ -182,6 +190,7 @@ Elastic Beanstalk는 관리할 웹 앱을 기반으로 설정을 구성하는 �
 ---
 
 ## 8단계 - Docker와 컨테이너가 필요한 이유 알아보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/37df106f02736abbb0dbb8652bc686940ee3cbdc)
 
 #### MSA(Microservice Architecture)
 하나의 대형 애플리케이션을 만드는 대신 아주 작고 독립적으로 배포할 수 있는 마이크로서비스의 집합으로 애플리케이션을 구성하는 개발 방법론
@@ -205,6 +214,7 @@ Elastic Beanstalk는 관리할 웹 앱을 기반으로 설정을 구성하는 �
 ---
 
 ## 9단계 - AWS의 컨테이너 오케스트레이션
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/58fd506eb524e6602d9154dcf834765489ae41e5)
 
 #### 컨테이너 오케스트레이션의 필요성
 여러 컨테이너의 배포, 관리, 확장, 네트워킹을 자동화하는 프로세스 (k8s가 대표적인 컨테이너 오케스트레이션이다.)
@@ -229,6 +239,7 @@ Elastic Beanstalk는 관리할 웹 앱을 기반으로 설정을 구성하는 �
 ---
 
 ## 10단계 - 데모 - AWS Fargate로 ECS 클러스터 구성하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/33b5d530442fc707b480c2e5e1e4cf8d78afdcc2)
 
 #### ECS 클러스터
 - 클러스터 : 사용자 관점에서는 MSA 애플리케이션이 동작할 '가상의 컴퓨터'라고 생각할 수 있다.
@@ -257,6 +268,7 @@ Elastic Beanstalk는 관리할 웹 앱을 기반으로 설정을 구성하는 �
 ---
 
 ## 11단계 - 데모 - Amazon ECS 사용하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/728b17f755c6a3fcd4c62173a715598d764df4f2)
 
 #### Amazon ECS 사용하기
 - 클러스터 및 서비스 확인
@@ -287,6 +299,7 @@ Elastic Beanstalk는 관리할 웹 앱을 기반으로 설정을 구성하는 �
 ---
 
 ## 12단계 - AWS의 서버리스에 대해 알아보기 - AWS Lambda
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/b7a93e31ea3751f15f5fa20a6b870bee71a2ee3f)
 
 #### 애플리케이션을 배포할 때 고려할 것
 1. 어떤 하드웨어 사양을 선택할지
@@ -322,6 +335,7 @@ AWS 서비스들 사이에서 동작하는 이벤트 핸들러 역할이다. 내
 ---
 
 ## 13단계 - 데모 - 첫 Lambda 함수 생성하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/cd0e598a4410c9e64c298083db507dbd4475dcb6)
 
 ![AWS Lambda 콘솔 데모](image/aws_lambda_console.png)
 [AWS Lambda](https://ap-northeast-2.console.aws.amazon.com/lambda)에서 언어별 AWS Lambda 예시를 실행해볼 수 있다. (AWS 로그인 필수)
@@ -339,6 +353,7 @@ AWS 서비스들 사이에서 동작하는 이벤트 핸들러 역할이다. 내
 ---
 
 ## 14단계 - 데모 - Lambda 함수 자세히 알아보기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/d0861040c616c3e8a60cef2c13169afd604885bf)
 
 #### Lambda 함수 관리
 - 함수 모니터링
@@ -360,6 +375,7 @@ AWS 서비스들 사이에서 동작하는 이벤트 핸들러 역할이다. 내
 ---
 
 ## 15단계 - AWS 클라우드 컴퓨팅 - 컴퓨팅 서비스 복습하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/d5c8e5be88d29a3cb29bf318e64500360f1009cc)
 
 #### 복습
 - EC2 : AWS에서 애플리케이션을 실행하는 가장 기본적인 방법
