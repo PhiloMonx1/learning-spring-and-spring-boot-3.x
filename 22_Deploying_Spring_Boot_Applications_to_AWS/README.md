@@ -3,6 +3,7 @@
 ## 목록
 1. [Hello World Spring Boot 앱 AWS에 배포하기](#1단계---hello-world-spring-boot-앱-aws에-배포하기)
 2. [AWS Elastic Beanstalk 살펴보기 - AWS에 배포한 첫 번째 Spring Boot 앱](#2단계---aws-elastic-beanstalk-살펴보기---aws에-배포한-첫-번째-spring-boot-앱)
+3. [MySQL 데이터베이스를 통해 Docker 컨테이너로 Spring Boot REST API 실행하기](#3단계---mysql-데이터베이스를-통해-docker-컨테이너로-spring-boot-rest-api-실행하기)
 
 ---
 
@@ -65,5 +66,34 @@ mvn clean package
 - 리소스 관리
   - 애플리케이션 및 환경 삭제
   - 리소스 사용 최적화
+
+---
+
+## 3단계 - MySQL 데이터베이스를 통해 Docker 컨테이너로 Spring Boot REST API 실행하기
+
+#### 애플리케이션 변경점
+[rest-api-mysql](https://github.com/in28minutes/master-spring-and-spring-boot/tree/main/91-aws/02-rest-api-mysql) : mySQL과 연결된 Rest API 애플리케이션
+1. 시큐리티 필터체인
+  ```java
+  .requestMatchers("/").permitAll()
+  ```
+  Spring Security 필터체인에 애플리케이션 루트 엔드포인트 요청을 허용으로 바꿨다.
+  - 상태 확인
+    - 애플리케이션이 요청에 응답할 준비가 되어 있는지 (정상적으로 실행되고 있는지) 확인하는 과정
+    - '/' 기본 루트로 AWS가 요청을 보낸 후 200이 돌아오면 정상 상태로 인식한다.
+2. application.properties
+  ```properties
+  spring.datasource.url=jdbc:mysql://${RDS_HOSTNAME:localhost}:${RDS_PORT:3306}/${RDS_DB_NAME:social-media-database}
+  spring.datasource.username=${RDS_USERNAME:social-media-user}
+  spring.datasource.password=${RDS_PASSWORD:dummypassword}
+  ```
+  - 환경 변수를 사용해서 설정하도록 변경했다. (초기 값 설정도 진행함)
+    - AWS Beanstalk 애플리케이션 관리 웹 페이지에서 환경 변수를 설정하고 애플리케이션에 전달하는 것이 가능하다.
+
+#### 애플리케이션 실행
+배포 전 애플리케이션을 테스트하기 위해 실행해보자.
+1. Docker MySQL 컨테이너 실행
+2. 애플리케이션 실행
+3. 애플리케이션 API 테스트
 
 ---
