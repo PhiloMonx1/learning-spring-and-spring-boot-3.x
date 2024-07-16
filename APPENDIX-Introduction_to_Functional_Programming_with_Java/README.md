@@ -13,6 +13,7 @@
 ---
 
 ## 1단계 - Java에서 함수형 프로그래밍 시작하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/414cfc693dd1bd2b11cf5b810985108a2ec7c8ab)
 
 부록을 통해 java 함수형 프로그래밍이 무엇인지 배울 것이다. 한 가지 팁이 있다면 함수형 프로그래밍을 마스터하려면 "문제 해결에 관한 사고 방식을 바꿔야 한다"는 것이다.
 
@@ -49,6 +50,7 @@ public class FP01Structured {
 ---
 
 ## 2단계 - Java 함수형 프로그램 처음 작성하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/cc3c1022773a5f4d293894a29f5270c3195283b2)
 
 #### 함수형 프로그래밍으로 1단계 메서드 개선하기
 ```java
@@ -85,6 +87,7 @@ public class FP01Functional {
 ---
 
 ## 3단계 - 필터로 Java 함수형 프로그램 개선하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/80e83452c016298657abd695d313d0db9d6bec63)
 
 #### 코드 개선 printAllNumbersInListFunctional() 메서드 개선
 ```java
@@ -160,6 +163,8 @@ numbers.stream()
 ---
 
 ## 4단계 - 람다식으로 함수형 프로그램 개선하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/809f45492f3efbcd7290d6cb101c6bcfeff52031)
+
 람다식 : 이름 없는 익명 함수. 
 - 함수가 무엇을 하는지만 명확하게 알려주면 굳이 이름이 필요없다. (컴퓨터 입장에서)
 ```java
@@ -178,6 +183,7 @@ private static void printEvenNumbersInListFunctional(List<Integer> numbers) {
 ---
 
 ##  5단계 - 스트림, 필터, 람다를 사용해 함수형 프로그램 예제 실습하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/a6ef40021a17d88e655c72720b27ed29a7aefce3)
 
 #### 예제 과제
 ```java
@@ -193,6 +199,7 @@ List<Integer> numbers = List.of(12, 9, 13, 4, 6, 2, 4, 12, 15);
 ---
 
 ## 6단계 - 함수형 프로그램에서 map 사용하기 - 예제 포함
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/d98e1409a96f826927bc854bb6c847a3e83828b0)
 
 #### map() 사용 실습 : printSquaresOfEvenNumbers() 신규 메서드 작성 (짝수 숫자만 제곱해서 콘솔에 출력하기)
 ```java
@@ -239,6 +246,7 @@ private static void printSquaresOfEvenNumbers(List<Integer> numbers) {
 ---
 
 ## 7단계 - Java Optional 클래스 이해하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/9d555417c2d0d0fd4f07f9070af9c202338fe961)
 
 자바는 타입에 예민한 언어이며, Null에도 예민한 언어이다.
 `Java.lang.NullPointerException` 자주 발생하며, 귀찮은 예외처리로 여겨진다.
@@ -283,6 +291,7 @@ System.out.println(startsWithBFruits.get());
 ---
 
 ## 8단계 - 함수형 프로그래밍 기본 간단히 복습하기
+[커밋 내역](https://github.com/PhiloMonx1/learning-spring-and-spring-boot-3.x/commit/11721094da660f27149b7411eed6b31d31002be6)
 
 함수형 프로그램은 수행할 작업을 지정, 선언하는 데 초점을 맞춘다.
 - 무언가 작업을 해야 한다는 선언을 하고, 어떻게 하는지는 나중 문제로 둔다.
