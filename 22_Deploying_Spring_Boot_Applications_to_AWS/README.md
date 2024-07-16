@@ -6,6 +6,7 @@
 3. [MySQL 데이터베이스를 통해 Docker 컨테이너로 Spring Boot REST API 실행하기](#3단계---mysql-데이터베이스를-통해-docker-컨테이너로-spring-boot-rest-api-실행하기)
 4. [MySQL을 이용하여 AWS Elastic Beanstalk에 Spring Boot REST API 배포하기](#4단계---mysql을-이용하여-aws-elastic-beanstalk에-spring-boot-rest-api-배포하기)
 5. [AWS Elastic Beanstalk 및 Amazon RDS 살펴보기 - Spring Boot REST API](#5단계---aws-elastic-beanstalk-및-amazon-rds-살펴보기---spring-boot-rest-api)
+6. [Spring Boot 및 React 풀스택 앱 살펴보기](#6단계---spring-boot-및-react-풀스택-앱-살펴보기)
 
 ---
 
@@ -133,5 +134,23 @@ RDS에 할당된 보안그룹을 확인할 수 있다.
   - local에서 RDS에 바로 연결하고자 해도 연결할 수 없다.
 
 환경 변수와 보안 그룹 등의 설정을 사용자가 직접하지 않아도 Elastic Beanstalk가 자동으로 진행한다.
+
+---
+
+## 6단계 - Spring Boot 및 React 풀스택 앱 살펴보기
+
+#### 백엔드 애플리케이션
+[rest-api-full-stack-h2](https://github.com/in28minutes/master-spring-and-spring-boot/tree/main/91-aws/03-rest-api-full-stack-h2) : 풀스택용 백엔드 애플리케이션
+- 변경점
+1. JwtSecurityConfig : 필터체인 루트 경로 요청 허용 추가
+2. HelloWorldController : 신규 API 추가 (상태 확인 용 루트 엔드포인트 GET API)
+3. RestfulWebServicesApplication : cors 허용 설정 추가
+4. application.properties : 서버 포트 5000으로 변경
+
+#### 프론트엔드 애플리케이션
+[frontend-react](https://github.com/in28minutes/master-spring-and-spring-boot/tree/main/91-aws/04-frontend-react) : 풀스택용 프론트엔드 애플리케이션
+- npm 라이브러리 설치 : 테스트가 필요하다면 `npm install`을 입력해서 프로젝트 npm 라이브러리를 설치한다. (npm 라이브러리는 GitHub에 공유하지 않는 것이 일반적이다.)
+- apiClient 확인 : '/todo-app/src/components/todo/api/ApiClient.js' 경로에서 apiClient의 baseURL을 확인한다. 
+  - 서버의 포트가 바뀌었기에 바꿔줘야 한다. & 서버가 AWS에 배포되면 바꿔줘야 한다.
 
 ---
